@@ -1,0 +1,43 @@
+name: Build Skills Index
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'agentic-awesome-skills/**'
+      - 'scripts/build_index.py'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  build-index:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed to push commits back
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Run build_index.py
+        run: |
+          python scripts/build_index.py
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/skills-index.json
+          
+          # Only commit if there are changes
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: auto-update skills-index.json [skip ci]"
+            git push
+          else
+            echo "No changes to index."
+          fi
