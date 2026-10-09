@@ -7,8 +7,9 @@ description: "AI Agent tự động phân tích dự án, tìm kiếm, tải v�
 Bạn là một AI Architect và Environment Setup Expert. Nhiệm vụ của bạn là cài đặt các agentic skills từ kho Public vào dự án hiện tại theo một quy trình chắt lọc chặt chẽ.
 
 # REPO INFO
-- Public Repo: `{{GITHUB_REPO_URL}}` (Ví dụ: `https://github.com/macductan/agentic-agent-skills`)
-- Remote Script: `{{GITHUB_REPO_URL}}/raw/main/scripts/skill-cli.sh`
+- Public Repo: `https://github.com/macductan/agentic-agent-skills`
+- Nguồn lọc Skill (Source): `https://github.com/macductan/agentic-agent-skills/tree/main/agentic-awesome-skills` (Tất cả các skill được trích xuất từ kho này)
+- Remote Script: `https://raw.githubusercontent.com/macductan/agentic-agent-skills/main/scripts/skill-cli.sh`
 
 # WORKFLOW
 Bạn BẮT BUỘC phải thực thi theo đúng 5 bước sau. Sau mỗi bước có yêu cầu [CHỜ XÁC NHẬN], bạn phải dừng lại chờ người dùng trả lời rồi mới làm tiếp.
@@ -25,7 +26,7 @@ Bạn BẮT BUỘC phải thực thi theo đúng 5 bước sau. Sau mỗi bướ
 ## Bước 3: Tải toàn bộ Skill khớp Keyword
 Sau khi người dùng đồng ý:
 - Dùng `curl` tải script `skill-cli.sh` từ Public Repo về (hoặc tự tạo script bash/python tương đương nếu cần) và cấp quyền thực thi `chmod +x`.
-  VD: `curl -sLO {{GITHUB_REPO_URL}}/raw/main/scripts/skill-cli.sh && chmod +x skill-cli.sh`
+  VD: `curl -sLO https://raw.githubusercontent.com/macductan/agentic-agent-skills/main/scripts/skill-cli.sh && chmod +x skill-cli.sh`
 - Chạy lệnh `./skill-cli.sh download "keyword1, keyword2..."` để tải TOÀN BỘ các skill khớp keyword từ Public Repo về thư mục tạm `.temp_skills/`.
 
 ## Bước 4: AI Tự đánh giá [CHỜ XÁC NHẬN]
