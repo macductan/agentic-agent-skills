@@ -64,17 +64,23 @@ if [ -z "$MATCHES" ]; then
 fi
 
 echo "Found matching skills. Downloading from GitHub..."
-# For public repos, using svn export is usually easiest for single folders.
-# If svn is not available, we use curl + tar.
+# Collect all patterns into an array
+TAR_PATTERNS=()
 for skill in $MATCHES; do
-    echo "-> Downloading $skill..."
-    # We download the tarball and extract only the specific skill folder
-    curl -sL "https://github.com/$GITHUB_REPO/tarball/$BRANCH" | tar -xz -C "$TARGET_DIR" --strip-components=2 --wildcards "*/$SKILLS_DIR/$skill" > /dev/null 2>&1
-    
+    echo "-> Queueing $skill..."
+    TAR_PATTERNS+=("*/$SKILLS_DIR/$skill")
+done
+
+# Download the tarball once and extract all matched folders
+echo "Downloading repository archive and extracting skills..."
+curl -sL "https://github.com/$GITHUB_REPO/tarball/$BRANCH" | tar -xz -C "$TARGET_DIR" --strip-components=2 --wildcards "${TAR_PATTERNS[@]}" > /dev/null 2>&1
+
+for skill in $MATCHES; do
     # Check if tar succeeded. If not, it means the wildcard failed or tar syntax differs (Mac vs Linux).
     if [ ! -d "$TARGET_DIR/$skill" ]; then
         # Fallback to svn if tar wildcard fails (e.g., on some OS)
         if command -v svn >/dev/null 2>&1; then
+             echo "-> Fallback: Downloading $skill via svn..."
              svn export --force -q "https://github.com/$GITHUB_REPO/trunk/$SKILLS_DIR/$skill" "$TARGET_DIR/$skill" > /dev/null 2>&1
         else
             echo "   Failed to extract $skill. Please install 'svn' or GNU 'tar'."
