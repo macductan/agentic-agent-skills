@@ -69,7 +69,7 @@ echo "Found matching skills. Downloading from GitHub..."
 for skill in $MATCHES; do
     echo "-> Downloading $skill..."
     # We download the tarball and extract only the specific skill folder
-    curl -sL "https://github.com/$GITHUB_REPO/tarball/$BRANCH" | tar -xz --strip-components=2 --wildcards "*/$SKILLS_DIR/$skill" -C "$TARGET_DIR" > /dev/null 2>&1
+    curl -sL "https://github.com/$GITHUB_REPO/tarball/$BRANCH" | tar -xz -C "$TARGET_DIR" --strip-components=2 --wildcards "*/$SKILLS_DIR/$skill" > /dev/null 2>&1
     
     # Check if tar succeeded. If not, it means the wildcard failed or tar syntax differs (Mac vs Linux).
     if [ ! -d "$TARGET_DIR/$skill" ]; then
