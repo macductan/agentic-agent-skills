@@ -1563,6 +1563,10 @@
     "name": "project-development",
     "description": "This skill covers the principles for identifying tasks suited to LLM processing, designing effective project architectures, and iterating rapidly using agent-assisted development."
   },
+  "plugins": {
+    "name": "plugins",
+    "description": ""
+  },
   "electron-drive-skill": {
     "name": "electron-drive-skill",
     "description": "Launch the project's Electron app on a scratch profile and drive it: click, type, screenshot, run renderer or main-process code, read logs. Use to verify UI changes end to end."
@@ -1806,6 +1810,10 @@
   "bumblebee": {
     "name": "bumblebee",
     "description": "Run Bumblebee supply-chain inventory and exposure scans on macOS/Linux to detect compromised packages, extensions, and MCP host configs."
+  },
+  ".claude-plugin": {
+    "name": ".claude-plugin",
+    "description": ""
   },
   "nfs-storage": {
     "name": "nfs-storage",
@@ -2446,6 +2454,10 @@
   "auto-research": {
     "name": "auto-research",
     "description": "Research uncertain questions with an explicit, user-approved web search or ChatGPT consultation, then present options and wait for implementation approval."
+  },
+  "tools": {
+    "name": "tools",
+    "description": ""
   },
   "hunt-rag-vector": {
     "name": "hunt-rag-vector",
@@ -3847,6 +3859,10 @@
     "name": "aws-cost-optimization",
     "description": "Reduce AWS spend with rightsizing, autoscaling, commitment planning,"
   },
+  "assets": {
+    "name": "assets",
+    "description": ""
+  },
   "bash-scripting": {
     "name": "bash-scripting",
     "description": "Bash scripting workflow for creating production-ready shell scripts with defensive patterns, error handling, and testing."
@@ -3874,6 +3890,10 @@
   "security-auditor": {
     "name": "security-auditor",
     "description": "Expert security auditor specializing in DevSecOps, comprehensive cybersecurity, and compliance frameworks."
+  },
+  "verification": {
+    "name": "verification",
+    "description": ""
   },
   "seo-meta-optimizer": {
     "name": "seo-meta-optimizer",
@@ -4647,6 +4667,10 @@
     "name": "paid-ads",
     "description": "You are an expert performance marketer with direct access to ad platform accounts. Your goal is to help create, optimize, and scale paid advertising campaigns that drive efficient customer acquisition."
   },
+  "apps": {
+    "name": "apps",
+    "description": ""
+  },
   "dbos-typescript": {
     "name": "dbos-typescript",
     "description": "Guide for building reliable, fault-tolerant TypeScript applications with DBOS durable workflows. Use when adding DBOS to existing TypeScript code, creating workflows and steps, or using queues for concurrency control."
@@ -5175,6 +5199,10 @@
     "name": "new-relic",
     "description": "Configure New Relic observability platform for infrastructure and application"
   },
+  ".agents": {
+    "name": ".agents",
+    "description": ""
+  },
   "data-quality-frameworks": {
     "name": "data-quality-frameworks",
     "description": "Implement data quality validation with Great Expectations, dbt tests, and data contracts. Use when building data quality pipelines, implementing validation rules, or establishing data contracts."
@@ -5242,6 +5270,10 @@
   "azure-storage-file-share-ts": {
     "name": "azure-storage-file-share-ts",
     "description": "Azure File Share JavaScript/TypeScript SDK (@azure/storage-file-share) for SMB file share operations."
+  },
+  "data": {
+    "name": "data",
+    "description": ""
   },
   "rag-observability-evals": {
     "name": "rag-observability-evals",
@@ -5598,6 +5630,10 @@
   "privacy-mask": {
     "name": "privacy-mask",
     "description": "Mask, redact, anonymize and censor sensitive information (PII) in screenshots and images — phone numbers, emails, IDs, API keys, crypto wallets, credit cards, passwords, and more."
+  },
+  "scripts": {
+    "name": "scripts",
+    "description": ""
   },
   "warp-delegate": {
     "name": "warp-delegate",
@@ -7967,6 +8003,10 @@
     "name": "agent-squad",
     "description": "Main agent orchestrator that coordinates a specialized squad of agents"
   },
+  "skills": {
+    "name": "skills",
+    "description": ""
+  },
   "mentorship-program": {
     "name": "mentorship-program",
     "description": "Mentorship register: mentor and mentee pair, department, focus area, mentee goal, session counts, last and next session, overall rating, progress notes and status. Use for mentorship tracking."
@@ -8591,6 +8631,10 @@
     "name": "sql-optimization-patterns",
     "description": "Diagnose slow SQL with query plans, preserve query results, and verify indexing or query changes against representative data."
   },
+  "skill_categorization": {
+    "name": "skill_categorization",
+    "description": ""
+  },
   "wordpress-centric-high-seo-optimized-blogwriting-skill": {
     "name": "wordpress-centric-high-seo-optimized-blogwriting-skill",
     "description": "Generate clean, human-sounding, SEO-optimized WordPress blog posts with optional Yoast metadata, JSON-LD schema markup, and image SEO planning. Supports modular batch output."
@@ -8693,7 +8737,7 @@
   },
   "skill-installer": {
     "name": "skill-installer",
-    "description": "Instala, valida, registra e verifica novas skills no ecossistema. 10 checks de seguranca, copia, registro no orchestrator e verificacao pos-instalacao."
+    "description": "AI Agent chủ động phân tích sâu dự án (đọc package, FE state), tự phản biện, tìm kiếm và chắt lọc các skills tối ưu từ kho Public."
   },
   "review-and-simplify-changes": {
     "name": "review-and-simplify-changes",
@@ -8739,6 +8783,10 @@
     "name": "apify-generate-output-schema",
     "description": "Generate output schemas (dataset_schema.json, output_schema.json, key_value_store_schema.json)"
   },
+  "docs_zh-CN": {
+    "name": "docs_zh-CN",
+    "description": ""
+  },
   "reverse-browser-automation": {
     "name": "reverse-browser-automation",
     "description": "Automate browsers (Playwright) and Windows desktop applications (UI automation) for reverse-engineering evidence collection, UI-driven workflows, and network observation during analysis."
@@ -8750,6 +8798,10 @@
   "azure-resource-manager-postgresql-dotnet": {
     "name": "azure-resource-manager-postgresql-dotnet",
     "description": "Azure PostgreSQL Flexible Server SDK for .NET. Database management for PostgreSQL Flexible Server deployments."
+  },
+  "docs": {
+    "name": "docs",
+    "description": ""
   },
   "security-arsenal": {
     "name": "security-arsenal",
@@ -10114,6 +10166,10 @@
   "serply-search-mcp": {
     "name": "serply-search-mcp",
     "description": "Search Google, Bing, Google News and Google Scholar, and read public pages, with the Serply MCP server. Use when the user chooses Serply or its connected tools for current information and source verification."
+  },
+  "schemas": {
+    "name": "schemas",
+    "description": ""
   },
   "basecamp-automation": {
     "name": "basecamp-automation",
