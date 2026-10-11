@@ -14104,6 +14104,25 @@
       "runtime_files": []
     },
     {
+      "id": "datacircle",
+      "path": "skills/datacircle",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "datadog",
       "path": "skills/datadog",
       "targets": {
@@ -37874,6 +37893,25 @@
       "runtime_files": []
     },
     {
+      "id": "qrx",
+      "path": "skills/qrx",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "quality-nonconformance",
       "path": "skills/quality-nonconformance",
       "targets": {
@@ -39210,6 +39248,25 @@
     {
       "id": "reverse-engineer",
       "path": "skills/reverse-engineer",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "reverse-engineer-anything",
+      "path": "skills/reverse-engineer-anything",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -48311,6 +48368,25 @@
       "runtime_files": []
     },
     {
+      "id": "uxkin-research",
+      "path": "skills/uxkin-research",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "uxui-principles",
       "path": "skills/uxui-principles",
       "targets": {
@@ -51248,10 +51324,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2671,
+    "total_skills": 2675,
     "supported": {
-      "codex": 2584,
-      "claude": 2609
+      "codex": 2588,
+      "claude": 2613
     },
     "blocked": {
       "codex": 87,

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-09T08:09:47.000Z",
+  "generatedAt": "2026-10-10T09:03:24.000Z",
   "bundles": {
     "core-dev": {
       "description": "Core development skills across languages, frameworks, and backend/frontend fundamentals.",
@@ -176,6 +176,7 @@
         "cross-platform-contract-propagation-audit",
         "cucumber-skill",
         "cypress-skill",
+        "datacircle",
         "dbos-golang",
         "dbos-python",
         "dbos-typescript",
@@ -495,6 +496,7 @@
         "usage-based-pricing",
         "uv-package-manager",
         "ux-audit",
+        "uxkin-research",
         "vercel-ai-sdk-expert",
         "vercel-deployments",
         "vercel-react-view-transitions",
@@ -1728,6 +1730,7 @@
         "prototype",
         "puppeteer-skill",
         "purchase-accounting",
+        "qrx",
         "rag-implementation",
         "receipt-accounting",
         "recognition-rewards",
@@ -2145,7 +2148,8 @@
         "update-swiftui-apis",
         "upgrading-expo",
         "use-dom",
-        "ux-audit"
+        "ux-audit",
+        "uxkin-research"
       ]
     },
     "seo-core": {
@@ -2319,6 +2323,7 @@
         "presentation-deck",
         "puppeteer-skill",
         "python-pptx-generator",
+        "qrx",
         "readme",
         "seo-aeo-blog-writer",
         "seo-aeo-landing-page-writer",

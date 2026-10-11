@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-09T08:09:47.000Z",
-  "total": 2671,
+  "generatedAt": "2026-10-10T09:03:24.000Z",
+  "total": 2675,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -21992,6 +21992,38 @@
         "gaps"
       ],
       "path": "skills/database-security/SKILL.md"
+    },
+    {
+      "id": "datacircle",
+      "canonical_id": "datacircle",
+      "name": "datacircle",
+      "description": "Look up LinkedIn profiles by URL through Datacircle (Up2Data or HarvestAPI, no markup), over its hosted MCP server or REST API, with the user's yes before each paid call.",
+      "category": "data",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "b2b-data",
+        "linkedin",
+        "enrichment",
+        "rest-api",
+        "mcp"
+      ],
+      "triggers": [
+        "b2b-data",
+        "linkedin",
+        "enrichment",
+        "rest-api",
+        "mcp",
+        "datacircle",
+        "look",
+        "up",
+        "profiles",
+        "url",
+        "through",
+        "up2data"
+      ],
+      "path": "skills/datacircle/SKILL.md"
     },
     {
       "id": "datadog",
@@ -58939,6 +58971,42 @@
       "path": "skills/qoder-delegate/SKILL.md"
     },
     {
+      "id": "qrx",
+      "canonical_id": "qrx",
+      "name": "qrx",
+      "description": "Make branded, print-ready art QR codes that always scan with QRX (qrx.codes). Use when a link needs a QR code that looks like artwork or matches a brand for print, packaging, signs, slides or event badges, and to list or re-point QRX codes. Not for plain QR codes the agent makes locally.",
+      "category": "design",
+      "risk": "critical",
+      "source": "https://github.com/qrxcodes/qrx-mcp/tree/main/skills/qrx",
+      "source_type": "official",
+      "source_repo": "qrxcodes/qrx-mcp",
+      "license": "MIT",
+      "license_source": "https://github.com/qrxcodes/qrx-mcp/blob/main/LICENSE",
+      "tags": [
+        "qr-code",
+        "design",
+        "branding",
+        "mcp",
+        "rest-api",
+        "print"
+      ],
+      "triggers": [
+        "qr-code",
+        "design",
+        "branding",
+        "mcp",
+        "rest-api",
+        "print",
+        "qrx",
+        "branded",
+        "art",
+        "qr",
+        "codes",
+        "always"
+      ],
+      "path": "skills/qrx/SKILL.md"
+    },
+    {
       "id": "quality-nonconformance",
       "canonical_id": "quality-nonconformance",
       "name": "quality-nonconformance",
@@ -61031,6 +61099,38 @@
         "ghidra"
       ],
       "path": "skills/reverse-engineer/SKILL.md"
+    },
+    {
+      "id": "reverse-engineer-anything",
+      "canonical_id": "reverse-engineer-anything",
+      "name": "reverse-engineer-anything",
+      "description": "Use REA to investigate shipped apps, binaries, packages, and runtimes; trace features with evidence, compare versions, or guide reconstruction. Skip ordinary source-code analysis.",
+      "category": "uncategorized",
+      "risk": "safe",
+      "source": "https://github.com/morluto/rea/tree/main/skill-src/reverse-engineer-anything",
+      "source_type": "community",
+      "source_repo": "morluto/rea",
+      "license": "MIT",
+      "license_source": "https://github.com/morluto/rea/blob/main/LICENSE",
+      "tags": [
+        "reverse",
+        "anything"
+      ],
+      "triggers": [
+        "reverse",
+        "anything",
+        "engineer",
+        "rea",
+        "investigate",
+        "shipped",
+        "apps",
+        "binaries",
+        "packages",
+        "runtimes",
+        "trace",
+        "features"
+      ],
+      "path": "skills/reverse-engineer-anything/SKILL.md"
     },
     {
       "id": "reverse-engineering",
@@ -75036,6 +75136,42 @@
         "invoke"
       ],
       "path": "skills/ux-persuasion-engineer/SKILL.md"
+    },
+    {
+      "id": "uxkin-research",
+      "canonical_id": "uxkin-research",
+      "name": "uxkin-research",
+      "description": "Research how real products handle a screen, flow or visual style before designing it: search UXKIN's real iOS screens, user journeys and website design systems, compare several and report what they share.",
+      "category": "frontend",
+      "risk": "safe",
+      "source": "https://github.com/uxkin/agent/tree/main/skills/uxkin-research",
+      "source_type": "official",
+      "source_repo": "uxkin/agent",
+      "license": "MIT",
+      "license_source": "https://github.com/uxkin/agent/blob/main/LICENSE",
+      "tags": [
+        "ui",
+        "ux",
+        "design",
+        "research",
+        "mcp",
+        "design-system"
+      ],
+      "triggers": [
+        "ui",
+        "ux",
+        "design",
+        "research",
+        "mcp",
+        "design-system",
+        "uxkin",
+        "how",
+        "real",
+        "products",
+        "handle",
+        "screen"
+      ],
+      "path": "skills/uxkin-research/SKILL.md"
     },
     {
       "id": "uxui-principles",
