@@ -27132,6 +27132,25 @@
       "runtime_files": []
     },
     {
+      "id": "kernel-prompt",
+      "path": "skills/kernel-prompt",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "keyword-extractor",
       "path": "skills/keyword-extractor",
       "targets": {
@@ -42415,6 +42434,25 @@
       "runtime_files": []
     },
     {
+      "id": "skeleton-first",
+      "path": "skills/skeleton-first",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "skill-audit",
       "path": "skills/skill-audit",
       "targets": {
@@ -51324,10 +51362,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2675,
+    "total_skills": 2677,
     "supported": {
-      "codex": 2588,
-      "claude": 2613
+      "codex": 2590,
+      "claude": 2615
     },
     "blocked": {
       "codex": 87,

@@ -8,17 +8,18 @@ interface Props {
   catalog: Skill[];
   shortlistIds: string[];
   onToggleShortlist: (skillId: string) => void;
+  initialQuery?: string;
 }
 
-function WorkflowCard({ workflow, catalog, shortlistIds, onToggleShortlist }: Props & { workflow: Workflow }): React.ReactElement {
-  const [open, setOpen] = useState(false);
+function WorkflowCard({ workflow, catalog, shortlistIds, onToggleShortlist, initialQuery }: Props & { workflow: Workflow }): React.ReactElement {
+  const [open, setOpen] = useState(() => initialQuery === workflow.id);
   const byId = useMemo(() => new Map(catalog.map((skill) => [skill.id, skill])), [catalog]);
   const ids = workflowSkillIds(workflow);
   const missingIds = ids.filter((id) => !byId.has(id));
   const unselectedIds = ids.filter((id) => !shortlistIds.includes(id) && byId.has(id));
 
   return (
-    <article className="workflow-card">
+    <article className="workflow-card" id={`workflow-${workflow.id}`}>
       <header className="workflow-card__header">
         <div>
           <p className="workflow-card__eyebrow">{workflow.category} · {workflow.steps.length} phases</p>
@@ -76,8 +77,8 @@ function WorkflowCard({ workflow, catalog, shortlistIds, onToggleShortlist }: Pr
   );
 }
 
-export function WorkflowExplorer({ catalog, shortlistIds, onToggleShortlist }: Props): React.ReactElement {
-  const [query, setQuery] = useState('');
+export function WorkflowExplorer({ catalog, shortlistIds, onToggleShortlist, initialQuery = '' }: Props): React.ReactElement {
+  const [query, setQuery] = useState(initialQuery);
   const visibleWorkflows = useMemo(() => filterWorkflows(workflows, query), [query]);
 
   return (
@@ -96,7 +97,7 @@ export function WorkflowExplorer({ catalog, shortlistIds, onToggleShortlist }: P
       <p className="workflow-explorer__count" role="status">{visibleWorkflows.length} of {workflows.length} workflows</p>
       {visibleWorkflows.length ? (
         <div className="workflow-explorer__grid">
-          {visibleWorkflows.map((workflow) => <WorkflowCard key={workflow.id} workflow={workflow} catalog={catalog} shortlistIds={shortlistIds} onToggleShortlist={onToggleShortlist} />)}
+          {visibleWorkflows.map((workflow) => <WorkflowCard key={workflow.id} workflow={workflow} initialQuery={initialQuery} catalog={catalog} shortlistIds={shortlistIds} onToggleShortlist={onToggleShortlist} />)}
         </div>
       ) : <p className="workflow-explorer__empty">No workflows match “{query}”. Try a product, security, testing, architecture, or agent goal.</p>}
     </section>

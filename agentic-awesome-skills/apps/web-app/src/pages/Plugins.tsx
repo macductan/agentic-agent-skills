@@ -1,5 +1,7 @@
-import { useMemo, useState } from 'react';
-import { Link } from 'react-router';
+import { useEffect, useMemo, useState } from 'react';
+import { Link, useLocation } from 'react-router';
+import { CatalogNavigation } from '../components/CatalogNavigation';
+import './CatalogExperience.css';
 import { Icon } from '../components/ui/Icon';
 import { specializedPlugins, type SpecializedPlugin } from '../data/specializedPlugins';
 import { usePageMeta } from '../hooks/usePageMeta';
@@ -13,6 +15,12 @@ const gettingStartedDocUrl = () => `${import.meta.env.BASE_URL}docs/getting-star
 
 export function Plugins(): React.ReactElement {
   const [query, setQuery] = useState('');
+  const { hash } = useLocation();
+  useEffect(() => {
+    const plugin = specializedPlugins.find((entry) => `#${entry.id}` === hash);
+    if (plugin) document.getElementById(plugin.id)?.scrollIntoView({ block: 'start' });
+    else if (!hash) window.scrollTo(0, 0);
+  }, [hash]);
   usePageMeta(buildPluginsMeta(specializedPlugins.length));
 
   const filtered = useMemo(() => {
@@ -25,6 +33,7 @@ export function Plugins(): React.ReactElement {
 
   return (
     <div className="plugins-page">
+      <CatalogNavigation active="packs" />
       <header className="plugins-hero">
         <h1>Choose the focused AAS plugin for the job.</h1>
         <p>AAS specialized plugins are domain-specific distributions of the full skill library — smaller scope, clearer activation, faster starts.</p>

@@ -2,9 +2,9 @@ const assert = require('node:assert');
 const { assertLiveSeoDocuments } = require('../check-live-seo-geo');
 
 const expected = { countLabel: '1,987+', releaseLabel: 'V15.3.0', pluginCount: 21 };
-const description = 'Open-source AI coding skills for Codex, Claude Code, Cursor, and more. Explore 1,987+ playbooks and AAS Core catalog search, selection, and plan preview.';
+const description = 'AAS Core records and validates your agent’s skill selection and previews a plan before project changes. Explore 1,987+ reusable skills';
 const documents = {
-  home: `Agentic Awesome Skills | Agent-first skill catalog and AAS Core <meta name="description" content="${description}"> SoftwareSourceCode FAQ specialized plugin`,
+  home: `AAS Core | Your agent chooses. You stay in control. <meta name="description" content="${description}"> SoftwareSourceCode FAQ specialized plugin`,
   plugins: 'AAS Specialized Plugins | 21 AI coding workflow packs specialized plugin packs numberOfItems',
   sitemap: 'https://aaskills.tech/plugins',
   llms: 'https://aaskills.tech/plugins Current release: V15.3.0. 1,987+',

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-10T09:03:24.000Z",
+  "generatedAt": "2026-10-11T17:57:03.000Z",
   "bundles": {
     "core-dev": {
       "description": "Core development skills across languages, frameworks, and backend/frontend fundamentals.",
@@ -1181,6 +1181,7 @@
         "seo-programmatic",
         "seo-schema",
         "seo-technical",
+        "skeleton-first",
         "skill-gap-analysis",
         "skill-optimizer",
         "skill-security-audit",
@@ -1408,6 +1409,7 @@
         "shipping-and-launch",
         "shipvela-publish",
         "shopify-review-triage",
+        "skeleton-first",
         "skill-installer",
         "skill-security-audit",
         "slo-implementation",
@@ -1766,6 +1768,7 @@
         "shopify-automation",
         "shopify-development",
         "shopify-review-triage",
+        "skeleton-first",
         "skill-creator",
         "skill-gap-analysis",
         "skyvern-browser-automation",

@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-10T09:03:24.000Z",
-  "total": 2675,
+  "generatedAt": "2026-10-11T17:57:03.000Z",
+  "total": 2677,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -21997,7 +21997,7 @@
       "id": "datacircle",
       "canonical_id": "datacircle",
       "name": "datacircle",
-      "description": "Look up LinkedIn profiles by URL through Datacircle (Up2Data or HarvestAPI, no markup), over its hosted MCP server or REST API, with the user's yes before each paid call.",
+      "description": "Look up LinkedIn profiles by URL through Datacircle (Up2Data, HarvestAPI or Fetchin, no markup), over its hosted MCP server or REST API, with the user's yes before each paid call.",
       "category": "data",
       "risk": "critical",
       "source": "self",
@@ -42008,6 +42008,40 @@
         "quality"
       ],
       "path": "skills/kaizen/SKILL.md"
+    },
+    {
+      "id": "kernel-prompt",
+      "canonical_id": "kernel-prompt",
+      "name": "kernel-prompt",
+      "description": "Use when composing or improving an LLM prompt or agent instruction. Asks one round of questions, then returns only the prompt; never performs the task.",
+      "category": "productivity",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "codegiveness/kernel-prompt",
+      "license": "MIT",
+      "license_source": "https://github.com/codegiveness/kernel-prompt/blob/main/LICENSE",
+      "tags": [
+        "prompt-engineering",
+        "meta-prompting",
+        "prompt-optimization",
+        "agent-handoff"
+      ],
+      "triggers": [
+        "prompt-engineering",
+        "meta-prompting",
+        "prompt-optimization",
+        "agent-handoff",
+        "kernel",
+        "prompt",
+        "composing",
+        "improving",
+        "llm",
+        "agent",
+        "instruction",
+        "asks"
+      ],
+      "path": "skills/kernel-prompt/SKILL.md"
     },
     {
       "id": "keyword-extractor",
@@ -65974,6 +66008,42 @@
         "mapping"
       ],
       "path": "skills/site-architecture/SKILL.md"
+    },
+    {
+      "id": "skeleton-first",
+      "canonical_id": "skeleton-first",
+      "name": "skeleton-first",
+      "description": "Prove a data/AI/agent workflow end to end on a tiny sample, find cheap wins, then scale in cost-gated steps within budget.",
+      "category": "workflow",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "llm",
+        "cost",
+        "pipeline",
+        "etl",
+        "rag",
+        "dbt",
+        "snowflake",
+        "budget",
+        "data-engineering"
+      ],
+      "triggers": [
+        "llm",
+        "cost",
+        "pipeline",
+        "etl",
+        "rag",
+        "dbt",
+        "snowflake",
+        "budget",
+        "data-engineering",
+        "skeleton",
+        "first",
+        "prove"
+      ],
+      "path": "skills/skeleton-first/SKILL.md"
     },
     {
       "id": "skill-audit",
