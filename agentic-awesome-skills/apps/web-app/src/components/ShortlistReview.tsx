@@ -1,6 +1,7 @@
+import { catalogNavigationState } from '../utils/catalogNavigation';
 import { useState } from 'react';
 import { InstallationHandoff } from './InstallationHandoff';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 import type { Skill } from '../types';
 import { SkillRequirements } from './SkillRequirements';
 import { buildShortlistBrief, type BriefTarget } from '../utils/shortlistBrief';
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export function ShortlistReview({ skills, onRemove, onClear, suggestedGoal, shared = false }: Props): React.ReactElement {
+  const location = useLocation();
   const [goal, setGoal] = useState('');
   const [target, setTarget] = useState<BriefTarget>('codex:project');
   const [message, setMessage] = useState('');
@@ -86,7 +88,7 @@ export function ShortlistReview({ skills, onRemove, onClear, suggestedGoal, shar
               <tbody>{skills.map((skill) => (
                 <tr key={skill.id}>
                   <th scope="row">
-                    <Link to={`/skill/${encodeURIComponent(skill.id)}/`}>{skill.id}</Link>
+                    <Link state={catalogNavigationState(location)} to={`/skill/${encodeURIComponent(skill.id)}/`}>{skill.id}</Link>
                     <button type="button" aria-label={`Remove ${skill.id}`} onClick={() => onRemove(skill.id)}>Remove</button>
                   </th>
                   <td>{skill.description}</td>
@@ -111,7 +113,7 @@ export function ShortlistReview({ skills, onRemove, onClear, suggestedGoal, shar
             <p>Your goal stays in this page until you copy it. {shared ? 'This shared selection is saved only when you add it to your shortlist.' : 'Only shortlisted IDs are saved in this browser.'}</p>
             <div className="catalog-shortlist__actions">
               <button type="button" aria-label="Copy agent brief" disabled={!goal.trim()} onClick={() => void copy(brief, 'Agent brief copied. Paste it into your coding agent to start the review.')}>{message.startsWith('Agent brief copied') ? 'Brief copied' : 'Copy agent brief'}</button>
-              <Link to="/workbench/">Review the resulting stack and plan</Link>
+              <Link state={catalogNavigationState(location)} to="/workbench/">Review the resulting stack and plan</Link>
             </div>
             <details open={copyFailed || undefined}>
               <summary>Preview the brief</summary>

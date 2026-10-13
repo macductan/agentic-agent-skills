@@ -1,5 +1,6 @@
+import { catalogNavigationState } from '../utils/catalogNavigation';
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 import type { Skill } from '../types';
 import { filterWorkflows, workflowSkillIds, workflows, type Workflow } from '../data/workflows';
 import { toIndexableRoutePath } from '../utils/seo';
@@ -12,6 +13,7 @@ interface Props {
 }
 
 function WorkflowCard({ workflow, catalog, shortlistIds, onToggleShortlist, initialQuery }: Props & { workflow: Workflow }): React.ReactElement {
+  const location = useLocation();
   const [open, setOpen] = useState(() => initialQuery === workflow.id);
   const byId = useMemo(() => new Map(catalog.map((skill) => [skill.id, skill])), [catalog]);
   const ids = workflowSkillIds(workflow);
@@ -60,7 +62,7 @@ function WorkflowCard({ workflow, catalog, shortlistIds, onToggleShortlist, init
                     const skill = byId.get(id);
                     return (
                       <li key={id}>
-                        {skill ? <Link to={toIndexableRoutePath(`/skill/${encodeURIComponent(id)}`)}>@{id}</Link> : <code>@{id}</code>}
+                        {skill ? <Link state={catalogNavigationState(location)} to={toIndexableRoutePath(`/skill/${encodeURIComponent(id)}`)}>@{id}</Link> : <code>@{id}</code>}
                         {skill ? <button type="button" aria-pressed={shortlistIds.includes(id)} onClick={() => onToggleShortlist(id)}>{shortlistIds.includes(id) ? 'Shortlisted' : 'Add'}</button> : null}
                       </li>
                     );

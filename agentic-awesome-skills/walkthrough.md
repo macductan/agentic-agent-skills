@@ -1,3 +1,11 @@
+## Complete agent setup and skill-page corrections (October 12, 2026)
+
+Completed the Codex and Claude Code guides through configuration preview, digest-bound approval with backups, client connection checks, first agent-owned selection, validation/plan review and a separate direct-installer preview. Shared command generation keeps both guides pinned to the same release. Corrected 18 template descriptions without changing their bodies or IDs and added a narrow regression gate to the existing validator.
+
+Skill instructions now precede related content. Copy SKILL.md copies the original file without optional prompt context; catalog-return navigation preserves query and filters, including subsequent similar-skill navigation. Topic cards use public summaries instead of internal editorial intent.
+
+Validation: 132 repository test groups, 312 web tests/coverage, production build/prerender, typecheck, changed-source lint, references/security, 0/0 warning budget and zero root dependency vulnerabilities. Published 19.5.0 was exercised with both temporary host configurations and actual MCP stdio through reading, composition, validation, planning and installer-preview preparation. No native agent session or user configuration was changed. See [the scoped review](docs/maintainers/agent-setup-catalog-review-2026-10-12.md) for exact fingerprints, checks and residual corpus debt. Generated distributions remain owned by canonical sync.
+
 ## Core-first UX, selected visual direction (October 11, 2026)
 
 Implemented the user's third displayed design as the Core homepage: one primary setup action, a navigable recorded example, and contextual Codex/Claude setup links. The example renders actual committed historical manifest/plan data and discloses its v16.7.0 catalog when inspected; it performs no live AI or project writes. The homepage is outside CatalogRouteProvider, avoiding initial catalog requests and persistence initialization.
