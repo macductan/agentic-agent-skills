@@ -17,7 +17,7 @@ export function Plugins(): React.ReactElement {
   const [query, setQuery] = useState('');
   const { hash } = useLocation();
   useEffect(() => {
-    const plugin = specializedPlugins.find((entry) => `#${entry.id}` === hash);
+    const plugin = specializedPlugins.find((entry) => `#${entry.id}` === hash || entry.aliases.some((alias) => `#${alias}` === hash));
     if (plugin) document.getElementById(plugin.id)?.scrollIntoView({ block: 'start' });
     else if (!hash) window.scrollTo(0, 0);
   }, [hash]);
@@ -26,7 +26,7 @@ export function Plugins(): React.ReactElement {
   const filtered = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     if (!normalized) return specializedPlugins;
-    return specializedPlugins.filter((plugin) => [plugin.name, plugin.id, plugin.audience, plugin.why, ...plugin.skills, ...plugin.defaultPrompts]
+    return specializedPlugins.filter((plugin) => [plugin.name, plugin.id, ...plugin.aliases, plugin.audience, plugin.why, ...plugin.skills, ...plugin.defaultPrompts]
       .some((value) => value.toLowerCase().includes(normalized)));
   }, [query]);
 

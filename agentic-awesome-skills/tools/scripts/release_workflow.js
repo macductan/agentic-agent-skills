@@ -265,6 +265,20 @@ function stageReleaseFiles(projectRoot, contract) {
   runCommand("git", ["add", ...filesToStage], projectRoot);
 }
 
+// Prepare only: settle HEAD-dependent generated metadata before publishing a branch.
+function convergePreparedRelease(projectRoot, contract, options = {}) {
+  const run = options.runCommand || runCommand;
+  run("npm", ["run", "sync:release-state"], projectRoot);
+  stageReleaseFiles(projectRoot, contract);
+  const changed = run("git", ["diff", "--cached", "--name-only"], projectRoot, { capture: true });
+  if (changed) {
+    // No remote branch or tag exists yet. Preserve the author date so doc lastmods settle.
+    run("git", ["commit", "--amend", "--no-edit"], projectRoot);
+  }
+  run("npm", ["run", "sync:release-state"], projectRoot);
+  ensureCleanWorkingTree(projectRoot, "Prepared release has generated or unmanaged drift; refusing to push.");
+}
+
 function prepareRelease(projectRoot, version) {
   if (!version) {
     throw new Error("Usage: npm run release:prepare -- X.Y.Z");
@@ -307,6 +321,7 @@ function prepareRelease(projectRoot, version) {
   }
 
   runCommand("git", ["commit", "-m", `chore: release v${version}`], projectRoot);
+  convergePreparedRelease(projectRoot, contract);
   runCommand("git", ["push", "-u", "origin", releaseBranch], projectRoot);
   runCommand(
     "gh",
@@ -442,6 +457,7 @@ if (require.main === module) {
 }
 
 module.exports = {
+  convergePreparedRelease,
   localTagTarget,
   remoteTagTarget,
   isPrereleaseVersion,

@@ -1060,7 +1060,7 @@ function main() {
 
   const pluginsCanonical = routeToUrl('/plugins', siteBaseUrl);
   const pluginsMeta = buildPluginsMeta({
-    pluginCount: JSON.parse(fs.readFileSync(path.join(ROOT_DIR, '../../data/specialized-plugin-candidates.json'), 'utf8')).candidates.length,
+    pluginCount: JSON.parse(fs.readFileSync(path.join(ROOT_DIR, '../../data/editorial-bundles.json'), 'utf8')).bundles.length,
     imageUrl: socialImage,
     canonicalUrl: pluginsCanonical,
   });

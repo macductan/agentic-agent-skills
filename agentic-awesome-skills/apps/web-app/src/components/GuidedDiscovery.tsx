@@ -4,7 +4,7 @@ import { workflows } from '../data/workflows';
 import { specializedPlugins } from '../data/specializedPlugins';
 
 const paths = [
-  { id: 'web', name: 'Build a website or app', workflow: 'ship-saas-mvp', pack: 'aas-web-app-builder', category: 'web-development' },
+  { id: 'web', name: 'Build a website or app', workflow: 'ship-saas-mvp', pack: 'web-app', category: 'web-development' },
   { id: 'security', name: 'Review application security', workflow: 'security-audit-web-app', pack: 'aas-security-engineer', category: 'security' },
   { id: 'qa', name: 'Test a product', workflow: 'qa-browser-automation', pack: 'aas-qa-test-automation', category: 'testing' },
   { id: 'agents', name: 'Build an agent or MCP tool', workflow: 'build-ai-agent-system', pack: 'aas-agent-mcp-builder', category: 'ai-agents' },

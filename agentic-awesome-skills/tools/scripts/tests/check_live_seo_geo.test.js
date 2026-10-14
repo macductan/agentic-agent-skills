@@ -1,5 +1,5 @@
 const assert = require('node:assert');
-const { assertLiveSeoDocuments } = require('../check-live-seo-geo');
+const { assertLiveSeoDocuments, readExpectedState } = require('../check-live-seo-geo');
 
 const expected = { countLabel: '1,987+', releaseLabel: 'V15.3.0', pluginCount: 21 };
 const description = 'AAS Core records and validates your agent’s skill selection and previews a plan before project changes. Explore 1,987+ reusable skills';
@@ -35,3 +35,9 @@ console.log('live SEO/GEO contract tests passed');
 
 assert.throws(() => assertLiveSeoDocuments({ ...documents, plugins: documents.plugins.replace('21 AI', '15 AI') }, expected), /21 AI coding workflow packs/);
 assert.doesNotThrow(() => assertLiveSeoDocuments({ ...documents, plugins: documents.plugins.replace('21 AI', '22 AI') }, { ...expected, pluginCount: 22 }));
+
+// The public offer includes all active editorial packs, not only the candidate shortlist.
+const editorial = require('../../../data/editorial-bundles.json');
+const candidates = require('../../../data/specialized-plugin-candidates.json');
+assert.strictEqual(readExpectedState().pluginCount, editorial.bundles.length);
+assert.notStrictEqual(readExpectedState().pluginCount, candidates.candidates.length);

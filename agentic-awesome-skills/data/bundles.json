@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-12T19:15:49.000Z",
+  "generatedAt": "2026-10-13T18:55:57.000Z",
   "bundles": {
     "core-dev": {
       "description": "Core development skills across languages, frameworks, and backend/frontend fundamentals.",
@@ -25,6 +25,7 @@
         "anywrite",
         "api-analyzer",
         "api-and-interface-design",
+        "api-contract-testing",
         "api-design-principles",
         "api-designer",
         "api-documentation",
@@ -61,7 +62,6 @@
         "aws-serverless",
         "awt-e2e-testing",
         "axonx",
-        "azd-deployment",
         "azure-ai-agents-persistent-java",
         "azure-ai-anomalydetector-java",
         "azure-ai-contentsafety-java",
@@ -880,6 +880,7 @@
         "progressive-web-app",
         "pubmed-database",
         "remote-gpu-trainer",
+        "senior-fullstack",
         "service-mesh",
         "service-mesh-expert",
         "service-mesh-observability",
@@ -1181,6 +1182,7 @@
         "security-and-hardening",
         "segment-cdp",
         "sendgrid-automation",
+        "senior-fullstack",
         "seo-aeo-schema-generator",
         "seo-dataforseo",
         "seo-directory-backlinks",
@@ -2183,6 +2185,7 @@
         "announcement-board",
         "anti-deception",
         "antigravity-skill-orchestrator",
+        "api-contract-testing",
         "apify-actor-development",
         "apify-generate-output-schema",
         "apple-notes-search",

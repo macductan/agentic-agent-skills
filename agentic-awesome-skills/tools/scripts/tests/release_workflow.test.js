@@ -102,5 +102,50 @@ assert.strictEqual(release.remoteTagTarget(repo, "v1.2.3"), null);
 git(repo, "push", "origin", "v1.2.3");
 assert.strictEqual(release.remoteTagTarget(repo, "v1.2.3"), skipPagesCanonicalCommit);
 
+// Reproduce a sitemap lastmod that changes only after its source guide is committed.
+function convergenceFixture(label) {
+  const cwd = path.join(root, label);
+  fs.mkdirSync(cwd);
+  git(cwd, "init", "-b", "release/v1.2.3");
+  git(cwd, "config", "user.name", "Test");
+  git(cwd, "config", "user.email", "test@example.com");
+  fs.writeFileSync(path.join(cwd, "guide.md"), "version 1\n");
+  fs.writeFileSync(path.join(cwd, "sitemap.xml"), "2026-10-12\n");
+  git(cwd, "add", ".");
+  git(cwd, "commit", "--date=2026-10-12T12:00:00Z", "-m", "base");
+  fs.writeFileSync(path.join(cwd, "guide.md"), "version 2\n");
+  git(cwd, "add", "guide.md");
+  git(cwd, "commit", "--date=2026-10-13T12:00:00Z", "-m", "release");
+  return cwd;
+}
+const convergenceContract = { derivedFiles: ["sitemap.xml"], mixedFiles: ["guide.md"], releaseManagedFiles: [] };
+function fixtureRunner(generate) {
+  return (command, args, cwd) => {
+    if (command === "npm") { generate(cwd); return ""; }
+    return git(cwd, ...args);
+  };
+}
+const stable = convergenceFixture("stable");
+const initial = git(stable, "rev-parse", "HEAD");
+release.convergePreparedRelease(stable, convergenceContract, { runCommand: fixtureRunner(cwd => {
+  fs.writeFileSync(path.join(cwd, "sitemap.xml"), git(cwd, "log", "-1", "--format=%aI", "--", "guide.md").slice(0, 10) + "\n");
+}) });
+assert.notStrictEqual(git(stable, "rev-parse", "HEAD"), initial);
+assert.strictEqual(fs.readFileSync(path.join(stable, "sitemap.xml"), "utf8"), "2026-10-13\n");
+assert.strictEqual(git(stable, "status", "--porcelain"), "");
+const settled = git(stable, "rev-parse", "HEAD");
+release.convergePreparedRelease(stable, convergenceContract, { runCommand: fixtureRunner(() => {}) });
+assert.strictEqual(git(stable, "rev-parse", "HEAD"), settled, "no amendment when already stable");
+const missing = convergenceFixture("missing-guide");
+assert.throws(() => release.convergePreparedRelease(missing, { ...convergenceContract, mixedFiles: [] }, {
+  runCommand: fixtureRunner(cwd => fs.writeFileSync(path.join(cwd, "guide.md"), "generated version 3\n")),
+}), /drift/);
+const moving = convergenceFixture("moving-generator");
+let generation = 0;
+assert.throws(() => release.convergePreparedRelease(moving, convergenceContract, {
+  runCommand: fixtureRunner(cwd => fs.writeFileSync(path.join(cwd, "sitemap.xml"), `generation ${++generation}\n`)),
+}), /drift/);
+assert.strictEqual(generation, 2, "persistent drift is not retried or published");
+
 fs.rmSync(root, { recursive: true, force: true });
 console.log("Release workflow tests passed.");

@@ -847,3 +847,23 @@ this source PR and belong to protected canonical synchronization.
 ## Core homepage introduction and maintainer restoration (2026-10-11)
 
 Restore the existing locally hosted 40-second introduction video after Core setup, with native controls, its original poster, and no preloading or autoplay. Restore the bottom Maintained by @sickn33 strip, existing local avatar, original licensing notice and GitHub star link. Keep the Core-first hero and navigation intact; responsive styles stack the strip on mobile. No new external service or dependency is added.
+
+## Specialized plugin expansion — 2026-10-13
+
+Reviewed the 2,687-entry metadata inventory and all 21 specialized compositions. Added 48 focused memberships from 33 existing canonical skills and one new API contract testing skill, keeping plugin IDs stable, and repaired published examples before promotion. See [review evidence](docs/maintainers/specialized-plugin-expansion-review-2026-10-13.md) for exact trees, omissions and verification scope. Generated mirrors belong to protected canonical sync; no release or deployment is requested.
+
+## Maintenance and release 19.6.0
+
+Reviewed and repaired the three open contribution PRs, prepared tag-diff-based release notes, and retained protected merge, canonical sync and release flows. See [batch review](docs/maintainers/maintenance-19.6.0.md) for source scope, checks, attribution and full release-alignment requirements.
+
+## Release preparation alignment
+
+The real 19.6.0 candidate exposed an unstaged Codex guide and sitemap dates that changed after the candidate commit. Classify both setup guides as mixed, settle HEAD-dependent metadata before the first push, and reject missing-guide or persistent drift. Real Git fixtures cover convergence and fail-closed behavior.
+
+## Plugin offer consolidation
+
+Unify 28 overlapping packs into existing destinations: 30 focused packs plus the full-library plugin. Preserve every retired pack membership, keep activation lookup aliases, and show the entire active offer from one editorial source. See [migration and scope](docs/users/plugin-migration.md). Publication requires a new release; v19.6.0 stays immutable.
+
+### Azure plugin review follow-up
+
+Address the actual Tessl feedback from the consolidation: require every RBAC hook input, add post-deployment verification and remove unsupported custom-domain preservation guarantees. Validate examples without executing Azure operations.

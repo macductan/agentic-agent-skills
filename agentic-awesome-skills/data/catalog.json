@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-12T19:15:49.000Z",
-  "total": 2687,
+  "generatedAt": "2026-10-13T18:55:57.000Z",
+  "total": 2689,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -1032,7 +1032,7 @@
       "id": "advanced-evaluation",
       "canonical_id": "advanced-evaluation",
       "name": "advanced-evaluation",
-      "description": "This skill should be used when the user asks to \"implement LLM-as-judge\", \"compare model outputs\", \"create evaluation rubrics\", \"mitigate evaluation bias\", or mentions direct scoring, pairwise comparison, position bias, evaluation pipelines, or automated quality assessment.",
+      "description": "Design LLM-as-judge rubrics, direct scores and pairwise comparisons. Use for judge models, evals, position bias and calibration against human labels.",
       "category": "ai-ml",
       "risk": "safe",
       "source": "community",
@@ -1043,16 +1043,16 @@
       "triggers": [
         "advanced",
         "evaluation",
-        "skill",
-        "should",
-        "used",
-        "user",
-        "asks",
         "llm",
         "judge",
-        "compare",
-        "model",
-        "outputs"
+        "rubrics",
+        "direct",
+        "scores",
+        "pairwise",
+        "comparisons",
+        "models",
+        "evals",
+        "position"
       ],
       "path": "skills/advanced-evaluation/SKILL.md"
     },
@@ -4669,6 +4669,38 @@
       "path": "skills/api-and-interface-design/SKILL.md"
     },
     {
+      "id": "api-contract-testing",
+      "canonical_id": "api-contract-testing",
+      "name": "api-contract-testing",
+      "description": "Design and review API contract tests across providers and consumers. Use for schema changes, compatibility regressions and client integration failures.",
+      "category": "development",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "license": "MIT",
+      "tags": [
+        "api",
+        "contracts",
+        "testing",
+        "compatibility"
+      ],
+      "triggers": [
+        "api",
+        "contracts",
+        "testing",
+        "compatibility",
+        "contract",
+        "review",
+        "tests",
+        "providers",
+        "consumers",
+        "schema",
+        "changes",
+        "regressions"
+      ],
+      "path": "skills/api-contract-testing/SKILL.md"
+    },
+    {
       "id": "api-design-principles",
       "canonical_id": "api-design-principles",
       "name": "api-design-principles",
@@ -8138,7 +8170,7 @@
       "id": "azd-deployment",
       "canonical_id": "azd-deployment",
       "name": "azd-deployment",
-      "description": "Deploy containerized frontend + backend applications to Azure Container Apps with remote builds, managed identity, and idempotent infrastructure.",
+      "description": "Prepare and verify authorized Azure Container Apps deployments with azd. Use for azure.yaml, Bicep, remote builds, managed identity and post-deploy checks.",
       "category": "cloud",
       "risk": "critical",
       "source": "community",
@@ -8149,16 +8181,16 @@
       "triggers": [
         "azd",
         "deployment",
-        "deploy",
-        "containerized",
-        "frontend",
-        "backend",
-        "applications",
+        "prepare",
+        "verify",
+        "authorized",
         "azure",
         "container",
         "apps",
-        "remote",
-        "managed"
+        "deployments",
+        "yaml",
+        "bicep",
+        "remote"
       ],
       "path": "skills/azd-deployment/SKILL.md"
     },
@@ -35350,7 +35382,7 @@
       "id": "google-calendar-automation",
       "canonical_id": "google-calendar-automation",
       "name": "google-calendar-automation",
-      "description": "Lightweight Google Calendar integration with standalone OAuth authentication. No MCP server required.",
+      "description": "Plan and perform authorized Google Calendar workflows through an existing authenticated integration; inspect events, draft changes and verify results.",
       "category": "productivity",
       "risk": "critical",
       "source": "community",
@@ -35363,15 +35395,15 @@
         "google",
         "calendar",
         "automation",
-        "lightweight",
+        "plan",
+        "perform",
+        "authorized",
+        "through",
+        "existing",
+        "authenticated",
         "integration",
-        "standalone",
-        "oauth",
-        "authentication",
-        "no",
-        "mcp",
-        "server",
-        "required"
+        "inspect",
+        "events"
       ],
       "path": "skills/google-calendar-automation/SKILL.md"
     },
@@ -47744,6 +47776,44 @@
         "ai"
       ],
       "path": "skills/maxia/SKILL.md"
+    },
+    {
+      "id": "mcd-secret-menu-lab",
+      "canonical_id": "mcd-secret-menu-lab",
+      "name": "mcd-secret-menu-lab",
+      "description": "Plan McDonald's China recipe combinations using an authorized MCP connection for current store menus, prices and nutrition. Use for recreating food hacks or exploring combinations within a budget.",
+      "category": "productivity",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "Reak-Z/mcd-secret-menu-lab",
+      "license": "MIT",
+      "license_source": "https://github.com/Reak-Z/mcd-secret-menu-lab/blob/main/LICENSE",
+      "tags": [
+        "mcdonalds",
+        "hidden-menu",
+        "food",
+        "recipe",
+        "mcp",
+        "price-check",
+        "nutrition",
+        "lifehack"
+      ],
+      "triggers": [
+        "mcdonalds",
+        "hidden-menu",
+        "food",
+        "recipe",
+        "mcp",
+        "price-check",
+        "nutrition",
+        "lifehack",
+        "mcd",
+        "secret",
+        "menu",
+        "lab"
+      ],
+      "path": "skills/mcd-secret-menu-lab/SKILL.md"
     },
     {
       "id": "mcp-builder",
@@ -61701,7 +61771,7 @@
       "id": "riffkit",
       "canonical_id": "riffkit",
       "name": "riffkit",
-      "description": "Riff a winning TikTok into your own short video — study a proven video's emotion formula and regenerate it with your product, character, and language (9 supported). Also makes UGC ad creative.",
+      "description": "Create short videos with Riffkit: Adapt a source formula, Swap approved footage, or generate from an idea. Use for UGC ads and localized video; requires an account and render approval.",
       "category": "api-integration",
       "risk": "critical",
       "source": "community",
@@ -61729,9 +61799,9 @@
         "ecommerce",
         "api-integration",
         "riffkit",
-        "riff",
-        "winning",
-        "own"
+        "short",
+        "videos",
+        "adapt"
       ],
       "path": "skills/riffkit/SKILL.md"
     },
@@ -64259,7 +64329,7 @@
       "id": "senior-fullstack",
       "canonical_id": "senior-fullstack",
       "name": "senior-fullstack",
-      "description": "Complete toolkit for senior fullstack with modern tools and best practices.",
+      "description": "Coordinate full-stack implementation across interface, service, database and delivery boundaries using the existing project stack and verified checks.",
       "category": "development",
       "risk": "critical",
       "source": "community",
@@ -64270,8 +64340,16 @@
       "triggers": [
         "senior",
         "fullstack",
-        "complete",
-        "toolkit"
+        "coordinate",
+        "full",
+        "stack",
+        "interface",
+        "database",
+        "delivery",
+        "boundaries",
+        "existing",
+        "verified",
+        "checks"
       ],
       "path": "skills/senior-fullstack/SKILL.md"
     },

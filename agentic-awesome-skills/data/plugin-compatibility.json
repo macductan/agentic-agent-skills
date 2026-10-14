@@ -2962,6 +2962,25 @@
       "runtime_files": []
     },
     {
+      "id": "api-contract-testing",
+      "path": "skills/api-contract-testing",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "api-design-principles",
       "path": "skills/api-design-principles",
       "targets": {
@@ -30704,6 +30723,25 @@
       "runtime_files": []
     },
     {
+      "id": "mcd-secret-menu-lab",
+      "path": "skills/mcd-secret-menu-lab",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "manual",
+        "summary": "Connect an authorized McDonald's China MCP account separately; this skill does not install a server or provision credentials.",
+        "docs": "SKILL.md"
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "mcp-builder",
       "path": "skills/mcp-builder",
       "targets": {
@@ -39596,7 +39634,7 @@
       },
       "setup": {
         "type": "manual",
-        "summary": "Sign in to a Riffkit account and pass a vee_session token; the skill calls the hosted Riffkit backend (rendering is billed by the second).",
+        "summary": "Use an authorized Riffkit account session through its login flow; hosted rendering requires a reviewed price and explicit approval.",
         "docs": "SKILL.md"
       },
       "reasons": [],
@@ -51552,15 +51590,15 @@
     }
   ],
   "summary": {
-    "total_skills": 2687,
+    "total_skills": 2689,
     "supported": {
-      "codex": 2600,
-      "claude": 2625
+      "codex": 2602,
+      "claude": 2627
     },
     "blocked": {
       "codex": 87,
       "claude": 62
     },
-    "manual_setup": 20
+    "manual_setup": 21
   }
 }

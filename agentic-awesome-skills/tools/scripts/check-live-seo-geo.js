@@ -17,7 +17,7 @@ function readExpectedState() {
   return {
     countLabel: `${skills.length.toLocaleString('en-US')}+`,
     releaseLabel: `V${pkg.version}`,
-    pluginCount: JSON.parse(fs.readFileSync(path.join(repoRoot, 'data/specialized-plugin-candidates.json'), 'utf8')).candidates.length,
+    pluginCount: JSON.parse(fs.readFileSync(path.join(repoRoot, 'data/editorial-bundles.json'), 'utf8')).bundles.length,
   };
 }
 
