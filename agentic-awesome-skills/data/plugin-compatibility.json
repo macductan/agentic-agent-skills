@@ -576,7 +576,7 @@
       "id": "adhx",
       "path": "skills/adhx",
       "targets": {
-        "codex": "blocked",
+        "codex": "supported",
         "claude": "supported"
       },
       "setup": {
@@ -584,13 +584,9 @@
         "summary": "",
         "docs": null
       },
-      "reasons": [
-        "target_specific_home_path"
-      ],
+      "reasons": [],
       "blocked_reasons": {
-        "codex": [
-          "target_specific_home_path"
-        ],
+        "codex": [],
         "claude": []
       },
       "runtime_files": []
@@ -1698,7 +1694,7 @@
       "id": "ai-engineering-toolkit",
       "path": "skills/ai-engineering-toolkit",
       "targets": {
-        "codex": "blocked",
+        "codex": "supported",
         "claude": "supported"
       },
       "setup": {
@@ -1706,13 +1702,9 @@
         "summary": "",
         "docs": null
       },
-      "reasons": [
-        "target_specific_home_path"
-      ],
+      "reasons": [],
       "blocked_reasons": {
-        "codex": [
-          "target_specific_home_path"
-        ],
+        "codex": [],
         "claude": []
       },
       "runtime_files": []
@@ -8863,6 +8855,25 @@
       "runtime_files": []
     },
     {
+      "id": "browser-bridge",
+      "path": "skills/browser-bridge",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "browser-extension-builder",
       "path": "skills/browser-extension-builder",
       "targets": {
@@ -14601,20 +14612,28 @@
       "id": "deep-research",
       "path": "skills/deep-research",
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
         "type": "none",
         "summary": "",
         "docs": null
       },
-      "reasons": [],
+      "reasons": [
+        "undeclared_runtime_dependency"
+      ],
       "blocked_reasons": {
-        "codex": [],
-        "claude": []
+        "codex": [
+          "undeclared_runtime_dependency"
+        ],
+        "claude": [
+          "undeclared_runtime_dependency"
+        ]
       },
-      "runtime_files": []
+      "runtime_files": [
+        "requirements.txt"
+      ]
     },
     {
       "id": "deep-research-framework",
@@ -30266,7 +30285,7 @@
       "id": "manifest",
       "path": "skills/manifest",
       "targets": {
-        "codex": "blocked",
+        "codex": "supported",
         "claude": "supported"
       },
       "setup": {
@@ -30274,13 +30293,9 @@
         "summary": "",
         "docs": null
       },
-      "reasons": [
-        "target_specific_home_path"
-      ],
+      "reasons": [],
       "blocked_reasons": {
-        "codex": [
-          "target_specific_home_path"
-        ],
+        "codex": [],
         "claude": []
       },
       "runtime_files": []
@@ -51590,14 +51605,14 @@
     }
   ],
   "summary": {
-    "total_skills": 2689,
+    "total_skills": 2690,
     "supported": {
-      "codex": 2602,
+      "codex": 2605,
       "claude": 2627
     },
     "blocked": {
-      "codex": 87,
-      "claude": 62
+      "codex": 85,
+      "claude": 63
     },
     "manual_setup": 21
   }
