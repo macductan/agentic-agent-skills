@@ -1343,6 +1343,44 @@
       "runtime_files": []
     },
     {
+      "id": "agentic-test-audit",
+      "path": "skills/agentic-test-audit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "agentic-verify",
+      "path": "skills/agentic-verify",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "agentmail",
       "path": "skills/agentmail",
       "targets": {
@@ -2248,6 +2286,25 @@
     {
       "id": "alternatives-pages",
       "path": "skills/alternatives-pages",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "altorank",
+      "path": "skills/altorank",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -3511,6 +3568,25 @@
     {
       "id": "apify-market-research",
       "path": "skills/apify-market-research",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "apify-reddit-scraper",
+      "path": "skills/apify-reddit-scraper",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -10016,6 +10092,25 @@
     {
       "id": "check-identity-pack",
       "path": "skills/check-identity-pack",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "chord-onchain-trading",
+      "path": "skills/chord-onchain-trading",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -23335,6 +23430,25 @@
       "runtime_files": []
     },
     {
+      "id": "healthcare-job-search",
+      "path": "skills/healthcare-job-search",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "helium-mcp",
       "path": "skills/helium-mcp",
       "targets": {
@@ -29177,6 +29291,25 @@
       "runtime_files": []
     },
     {
+      "id": "logo-to-stickers",
+      "path": "skills/logo-to-stickers",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "loki-logging",
       "path": "skills/loki-logging",
       "targets": {
@@ -31662,6 +31795,25 @@
       "runtime_files": []
     },
     {
+      "id": "moltnode-chain-reader",
+      "path": "skills/moltnode-chain-reader",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "molykit",
       "path": "skills/molykit",
       "targets": {
@@ -32107,6 +32259,25 @@
     {
       "id": "moodle-external-api-development",
       "path": "skills/moodle-external-api-development",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "movie-coupon",
+      "path": "skills/movie-coupon",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -33601,6 +33772,25 @@
       "runtime_files": []
     },
     {
+      "id": "obsess",
+      "path": "skills/obsess",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "obsidian-bases",
       "path": "skills/obsidian-bases",
       "targets": {
@@ -33660,6 +33850,25 @@
     {
       "id": "obsidian-markdown",
       "path": "skills/obsidian-markdown",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "obtain-coupons-all-in-one",
+      "path": "skills/obtain-coupons-all-in-one",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -34696,6 +34905,25 @@
       "runtime_files": []
     },
     {
+      "id": "openhook",
+      "path": "skills/openhook",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "openshift",
       "path": "skills/openshift",
       "targets": {
@@ -35173,6 +35401,25 @@
     {
       "id": "parallel-search-mcp",
       "path": "skills/parallel-search-mcp",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "parcel-coupon",
+      "path": "skills/parcel-coupon",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -45372,6 +45619,25 @@
       "runtime_files": []
     },
     {
+      "id": "takeout-coupon",
+      "path": "skills/takeout-coupon",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "talivia-agent-kit",
       "path": "skills/talivia-agent-kit",
       "targets": {
@@ -47290,6 +47556,25 @@
     {
       "id": "trigger-dev",
       "path": "skills/trigger-dev",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "trip-coupon",
+      "path": "skills/trip-coupon",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -51605,10 +51890,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2690,
+    "total_skills": 2705,
     "supported": {
-      "codex": 2605,
-      "claude": 2627
+      "codex": 2620,
+      "claude": 2642
     },
     "blocked": {
       "codex": 85,
