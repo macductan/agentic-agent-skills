@@ -147,7 +147,7 @@ tools: [claude, cursor, gemini]
 - `source_type: official` means the repo must appear in `README.md` under `### Official Sources`.
 - `source_type: community` means the repo must appear in `README.md` under `### Community Contributors`.
 - `source: self` plus `source_type: self` is the correct shape for original repository content.
-- PR CI checks README credit coverage for changed skills, so missing or misbucketed repo credits will block the PR once `source_repo` is declared.
+- PR CI previews generated README attribution from changed head metadata and the editorial `data/source-credits.json` ledger. Declare accurate provenance; ordinary new imports do not require hand-editing README credit sections. Custom descriptions and legacy corrections belong in the ledger. Canonical sync owns the rendered README blocks.
 
 ---
 

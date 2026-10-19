@@ -13,7 +13,7 @@ from _project_paths import find_repo_root
 from audit_skills import build_skill_report
 from check_readme_credits import (
     SOURCE_REPO_PATTERN,
-    extract_credit_repos,
+    credit_sets_for_head,
     normalize_repo_slug,
     parse_frontmatter,
 )
@@ -470,7 +470,12 @@ def build_report(
     old_roots = canonical_skill_roots(root, base_oid)
     new_roots = canonical_skill_roots(root, head_oid)
     readme_bytes = read_path(root, head_oid, "README.md") or b""
-    readme_credits = extract_credit_repos(readme_bytes.decode("utf-8", "replace"))
+    changed_skill_paths = sorted({
+        f"skills/{new_id}/SKILL.md"
+        for _, new_id, _ in skill_pairs(records, old_roots, new_roots)
+        if new_id and new_id in new_roots
+    })
+    readme_credits, _ = credit_sets_for_head(root, head_oid, changed_skill_paths, readme_bytes.decode("utf-8", "replace"))
     changes: list[dict[str, object]] = []
     all_reasons: list[str] = []
     all_applied_exceptions: list[str] = []

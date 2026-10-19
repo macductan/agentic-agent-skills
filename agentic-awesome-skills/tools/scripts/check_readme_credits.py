@@ -121,6 +121,24 @@ def classify_source(metadata: dict[str, object]) -> str | None:
     return None
 
 
+def credit_sets_for_head(root, head_oid, skill_files, readme_text):
+    readme_credit_sets = extract_credit_repos(readme_text)
+    ledger_blob = read_path(root, head_oid, "data/source-credits.json")
+    generated_credits = ledger_blob is not None
+    if generated_credits:
+        from sync_source_credits import load_ledger, render_sections, TITLES
+        ledger = load_ledger(ledger_blob.decode("utf-8"))
+        changed_metadata = []
+        for skill_path in skill_files:
+            blob = read_path(root, head_oid, skill_path)
+            if blob is not None:
+                changed_metadata.append((skill_path[len("skills/"):-len("/SKILL.md")], parse_frontmatter(blob.decode("utf-8"))))
+        preview = render_sections(ledger, changed_metadata)
+        readme_credit_sets = extract_credit_repos("\n".join("### " + TITLES[k] + "\n" + v for k,v in preview.items()))
+
+    return readme_credit_sets, generated_credits
+
+
 def collect_reports(base_dir: str | Path, base_ref: str, head_ref: str) -> dict[str, object]:
     root = Path(base_dir)
     base_oid, head_oid, records = read_change_records(root, base_ref, head_ref, merge_base=True)
@@ -143,7 +161,7 @@ def collect_reports(base_dir: str | Path, base_ref: str, head_ref: str) -> dict[
     )
     readme_blob = read_path(root, head_oid, "README.md")
     readme_text = (readme_blob or b"").decode("utf-8", "replace")
-    readme_credit_sets = extract_credit_repos(readme_text)
+    readme_credit_sets, generated_credits = credit_sets_for_head(root, head_oid, skill_files, readme_text)
 
     warnings: list[str] = []
     errors: list[str] = []
@@ -204,6 +222,7 @@ def collect_reports(base_dir: str | Path, base_ref: str, head_ref: str) -> dict[
         # required attribution instead of reporting duplicate noise.
 
     return {
+        "generated_credits_preview": generated_credits,
         "base_oid": base_oid,
         "head_oid": head_oid,
         "change_records": [record.to_dict() for record in records],

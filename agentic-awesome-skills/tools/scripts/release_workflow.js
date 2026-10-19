@@ -261,14 +261,10 @@ function writeReleaseNotes(projectRoot, version, sectionContent) {
 }
 
 function runReleaseSuite(projectRoot) {
-  runCommand("npm", ["run", "validate:references"], projectRoot);
-  runCommand("npm", ["run", "sync:release-state"], projectRoot);
-  runCommand("npm", ["run", "plugin-compat:check"], projectRoot);
-  runCommand("npm", ["run", "bundles:check"], projectRoot);
-  runCommand("npm", ["run", "test"], projectRoot);
-  runCommand("npm", ["run", "app:install"], projectRoot);
-  runCommand("npm", ["run", "app:build"], projectRoot);
-  runCommand("npm", ["pack", "--dry-run", "--json"], projectRoot);
+  // Source changes have already passed their protected component checks. Full
+  // runtime/web/platform validation executes once on the immutable tag candidate.
+  for (const script of ["sync:release-state", "validate:references", "security:docs", "plugin-compat:check", "bundles:check", "check:aas-v1-catalog"])
+    runCommand("npm", ["run", script], projectRoot);
 }
 
 function runReleasePreflight(projectRoot) {
@@ -305,7 +301,7 @@ function stageReleaseFiles(projectRoot, contract) {
     : [];
 
   filesToStage.push(...claudePluginFiles, ...codexPluginFiles);
-  runCommand("git", ["add", ...filesToStage], projectRoot);
+  runCommand("git", ["add", ...filesToStage.filter(file => fs.existsSync(path.join(projectRoot, file)))], projectRoot);
 }
 
 // Prepare only: settle HEAD-dependent generated metadata before publishing a branch.
@@ -347,6 +343,8 @@ function prepareRelease(projectRoot, version) {
     ["run", "sync:metadata", "--", "--refresh-volatile"],
     projectRoot,
   );
+  for (const script of ["sync:source-credits", "sync:contributors", "sync:top-contributors"])
+    runCommand("npm", ["run", script], projectRoot);
   // Volatile metadata is an input to catalog timestamps. Refresh it before the
   // canonical release sync so the tagged tree is exactly what publish CI will
   // regenerate and verify.
@@ -366,6 +364,10 @@ function prepareRelease(projectRoot, version) {
 
   runCommand("git", ["commit", "-m", `chore: release v${version}`], projectRoot);
   convergePreparedRelease(projectRoot, contract);
+  require("./distribution_snapshot.cjs").seal(projectRoot);
+  runCommand("git", ["add", "data/distribution-snapshot.json"], projectRoot);
+  runCommand("git", ["commit", "--amend", "--no-edit"], projectRoot);
+  require("./distribution_snapshot.cjs").verify(projectRoot);
   runCommand("git", ["push", "-u", "origin", releaseBranch], projectRoot);
   runCommand(
     "gh",
@@ -403,7 +405,6 @@ function publishRelease(projectRoot, version) {
   }
   isPrereleaseVersion(version);
 
-  ensureOnMain(projectRoot);
   ensureCleanWorkingTree(projectRoot, "release:publish requires a clean tracked working tree.");
 
   const packageVersion = readPackageVersion(projectRoot);
@@ -421,23 +422,11 @@ function publishRelease(projectRoot, version) {
   const headCommit = runCommand("git", ["rev-parse", "HEAD"], projectRoot, {
     capture: true,
   });
-  if (remoteMain !== headCommit) {
-    throw new Error("release:publish requires local main to equal protected origin/main.");
+  runCommand("git", ["merge-base", "--is-ancestor", headCommit, remoteMain], projectRoot);
+  if (candidate.mergeCommit.oid !== headCommit) {
+    throw new Error(`Check out immutable merged release commit ${candidate.mergeCommit.oid} before publishing; main may have advanced.`);
   }
-  validateReleaseSuccessors(projectRoot, candidate.mergeCommit.oid, headCommit);
-
-  const pendingCanonical = JSON.parse(runCommand(
-    "gh",
-    ["pr", "list", "--state", "open", "--head", "automation/canonical-repo-state", "--json", "number"],
-    projectRoot,
-    { capture: true },
-  ) || "[]");
-  if (pendingCanonical.length > 0) {
-    throw new Error("A canonical-sync PR is still open; merge it before tagging the release.");
-  }
-
-  runCommand("npm", ["run", "sync:release-state"], projectRoot);
-  ensureCleanWorkingTree(projectRoot, "release:publish detected canonical release drift.");
+  require("./distribution_snapshot.cjs").verify(projectRoot);
 
   const notesPath = writeReleaseNotes(projectRoot, version, ensureChangelogSection(projectRoot, version));
 

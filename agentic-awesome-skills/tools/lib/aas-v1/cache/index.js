@@ -9,4 +9,5 @@ module.exports = {
   ...require("./scan"),
   ...require("./status"),
   ...require("./update"),
+  ...require("./catalog-release"),
 };

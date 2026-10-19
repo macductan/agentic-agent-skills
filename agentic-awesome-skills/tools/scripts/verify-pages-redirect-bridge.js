@@ -204,7 +204,7 @@ function parseArgs(argv) {
 
 async function main() {
   const options = parseArgs(process.argv.slice(2));
-  const local = verifyLocalDeployment(options);
+  const local = await require("./published_bridge_inputs.cjs").withPublishedInputs(options, verifyLocalDeployment);
   process.stdout.write(`Verified ${local.file_count} managed bridge files for ${local.manifest.route_count} routes\n`);
   if (options.liveRoot) {
     const live = await verifyLiveDeployment(options);

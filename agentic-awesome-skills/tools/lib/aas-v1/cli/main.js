@@ -54,8 +54,8 @@ function parseOptions(argv) {
 
 const COMMAND_OPTIONS = Object.freeze({
   "catalog status": new Set(["cache-root", "version", "digest", "integrity", "help"]),
-  "catalog update": new Set(["cache-root", "version", "help"]),
-  "mcp configure": new Set(["host", "scope", "config", "cache-root", "version", "runtime-integrity", "runtime-closure-digest", "backup-dir", "retention", "approve", "help"]),
+  "catalog update": new Set(["cache-root", "version", "revision", "integrity", "archive", "help"]),
+  "mcp configure": new Set(["host", "scope", "config", "cache-root", "catalog-digest", "version", "runtime-integrity", "runtime-closure-digest", "backup-dir", "retention", "approve", "help"]),
   "mcp backups cleanup": new Set(["config", "backup-dir", "keep", "approve", "help"]),
   "stack init": new Set(["goal", "catalog-digest", "cache-root", "host", "scope", "name", "out", "preview-windows-output", "help"]),
   "stack create": new Set(["selection", "evidence", "artifact-dir", "require-evidence", "catalog-digest", "cache-root", "out", "preview-windows-output", "help"]),
@@ -441,6 +441,21 @@ async function stackCreate(options) {
   };
 }
 
+function verifiedCatalogSource(catalog, runtime) {
+  if (runtime.identity.package !== catalog.package) throw cliError("AAS_PLAN_RUNTIME_CATALOG_MISMATCH", "integrity", {});
+  if (catalog.catalogRelease) {
+    if (!core.cache.compatible(catalog.catalogRelease, runtime.identity.version))
+      throw cliError("AAS_PLAN_RUNTIME_CATALOG_MISMATCH", "incompatibleVersion", {});
+    return catalog.sourceRoot;
+  }
+  let bundled;
+  try { bundled = core.loadBundledCatalog({ root: runtime.sourceRoot }); }
+  catch { throw cliError("AAS_PLAN_RUNTIME_CATALOG_MISMATCH", "integrity", {}); }
+  if (runtime.identity.version !== catalog.version || bundled.digest !== catalog.digest || bundled.version !== catalog.version)
+    throw cliError("AAS_PLAN_RUNTIME_CATALOG_MISMATCH", "integrity", {});
+  return runtime.sourceRoot;
+}
+
 async function stackPlan(options, dependencies = {}) {
   const manifest = readJsonFile(requireOption(options, "manifest"));
   const validation = core.stack.validateManifest(manifest);
@@ -450,21 +465,13 @@ async function stackPlan(options, dependencies = {}) {
     throw cliError("AAS_PLAN_CATALOG_MISMATCH", "integrity", {});
   }
   const targetBase = selectTarget(manifest, options.target);
-  if (options["runtime-version"] !== undefined && options["runtime-version"] !== manifest.catalog.version) {
+  const runtimeVersion = catalog.catalogRelease
+    ? requireOption(options, "runtime-version") : manifest.catalog.version;
+  if (options["runtime-version"] !== undefined && options["runtime-version"] !== runtimeVersion)
     throw cliError("AAS_PLAN_RUNTIME_CATALOG_MISMATCH", "integrity", {});
-  }
-  const runtime = await verifiedRuntimeFor({ ...options, "runtime-version": manifest.catalog.version }, null, dependencies);
-  if (runtime.identity.package !== manifest.catalog.package || runtime.identity.version !== manifest.catalog.version) {
-    throw cliError("AAS_PLAN_RUNTIME_CATALOG_MISMATCH", "integrity", {});
-  }
-  let runtimeCatalog;
-  try { runtimeCatalog = core.loadBundledCatalog({ root: runtime.sourceRoot }); }
-  catch { throw cliError("AAS_PLAN_RUNTIME_CATALOG_MISMATCH", "integrity", {}); }
-  if (runtimeCatalog.digest !== manifest.catalog.integrity
-    || runtimeCatalog.package !== manifest.catalog.package || runtimeCatalog.version !== manifest.catalog.version) {
-    throw cliError("AAS_PLAN_RUNTIME_CATALOG_MISMATCH", "integrity", {});
-  }
-  const adapter = adapterFor(options, targetBase, runtime.sourceRoot);
+  const runtime = await verifiedRuntimeFor({ ...options, "runtime-version": runtimeVersion }, null, dependencies);
+  const sourceRoot = verifiedCatalogSource(catalog, runtime);
+  const adapter = adapterFor(options, targetBase, sourceRoot);
   const layout = inspectLayout(adapter, targetBase);
   const target = { ...targetBase, adapterVersion: ADAPTER_VERSION, identityDigest: adapter.computeTargetIdentity(layout, targetBase) };
   const observed = buildOperations({ manifest, target, adapter, allowManagedDrift: options["override-managed-drift"] === true });
@@ -479,6 +486,7 @@ async function stackPlan(options, dependencies = {}) {
       catalogSchemaVersion: core.catalogSchemaVersion,
     },
     catalog: manifest.catalog,
+    ...(catalog.catalogRelease ? { catalogRelease: catalog.catalogRelease } : {}),
     runtime: runtime.identity,
     target,
     installedState: observed.installedState,
@@ -509,6 +517,9 @@ async function stackInstallPreview(options) {
   if (manifest.catalog.package !== catalog.package || manifest.catalog.version !== catalog.version
     || manifest.catalog.integrity !== catalog.digest) throw cliError("AAS_PLAN_CATALOG_MISMATCH", "integrity");
   for (const skill of manifest.skills) core.getSkill(catalog, skill.id);
+  if (catalog.catalogRelease) throw cliError("AAS_CATALOG_RELEASE_REQUIRES_STACK_PLAN", "invalidInput", {
+    message: "Use stack plan with an explicit compatible cached runtime; direct installers require an npm release version.",
+  });
   const preview = installationHandoff(manifest, requireOption(options, "destination"), options.shell);
   return {
     ok: true, status: "installationPreviewPrepared", selectionSource: "agent",
@@ -580,6 +591,7 @@ function help() {
     commands: [
       "catalog status [--cache-root <absolute> --version <semver> --digest <sha256> --integrity <npm-sri>]",
       "catalog update --cache-root <absolute> --version <semver>",
+      "catalog update --cache-root <absolute> --revision <catalog-semver> --integrity <release-sri> [--archive <absolute.tgz>]",
       "mcp configure --host codex|claude --scope user|project --config <absolute> --cache-root <absolute> [--version <semver>] [--runtime-integrity <npm-sri> --runtime-closure-digest <sha256>] [--backup-dir <absolute>] [--approve <digest>]",
       "mcp backups cleanup --config <absolute> --backup-dir <absolute> --keep <count> [--approve <digest>]",
       "stack init --goal <goal> [--catalog-digest <sha256> --cache-root <absolute>] [--preview-windows-output]",
@@ -596,9 +608,10 @@ function help() {
   };
 }
 
-function mcpServer({ host, cacheRoot, version, integrity }) {
+function mcpServer({ host, cacheRoot, version, integrity, catalogDigest }) {
   const command = process.execPath;
   const args = [core.cache.runtimeMcpPath({ cacheRoot, packageVersion: version, integrity }), "--cache-root", cacheRoot];
+  if (catalogDigest) args.push("--catalog-digest", catalogDigest);
   return host === "codex" ? { command, args, enabled: true } : { command, args, env: {} };
 }
 
@@ -666,7 +679,13 @@ async function mcpConfigure(options, dependencies = {}) {
   const release = cached
     ? cached.runtimeIdentity
     : await core.cache.inspectRuntimeRelease({ version, ...(fetcher ? { fetcher } : {}) });
-  const patch = await buildPatch({ host, scope, configPath, server: mcpServer({ host, cacheRoot, version: release.version, integrity: release.integrity }) });
+  const catalogDigest = options["catalog-digest"];
+  if (catalogDigest) {
+    const catalog = await catalogFor(options, catalogDigest);
+    if (!catalog.catalogRelease || !core.cache.compatible(catalog.catalogRelease, release.version))
+      throw cliError("AAS_CATALOG_RELEASE_INCOMPATIBLE", "incompatibleVersion", {});
+  }
+  const patch = await buildPatch({ host, scope, configPath, server: mcpServer({ host, cacheRoot, version: release.version, integrity: release.integrity, catalogDigest }) });
   const approvalDigest = configApprovalDigest({ host, scope, configPath, cacheRoot, release, patch });
   const preview = {
     ok: true,
@@ -743,6 +762,14 @@ async function execute(argv, dependencies = {}) {
     return result;
   }
   if (root === "catalog" && command === "update") {
+    if (options.revision) {
+      if (options.version) throw cliError("AAS_CLI_OPTION_CONFLICT", "invalidInput", {});
+      return core.cache.updateCatalogRelease({ cacheRoot: requireAbsoluteOption(options, "cache-root"),
+        revision: options.revision, integrity: requireOption(options, "integrity"),
+        archive: options.archive ? requireAbsoluteOption(options, "archive") : undefined,
+        runtimeVersion: require(path.join(PACKAGE_ROOT, "package.json")).version });
+    }
+    if (options.archive || options.integrity) throw cliError("AAS_CLI_OPTION_CONFLICT", "invalidInput", {});
     return core.cache.updateCatalogFromRegistry({
       cacheRoot: requireAbsoluteOption(options, "cache-root"),
       version: requireOption(options, "version"),
@@ -785,7 +812,10 @@ async function execute(argv, dependencies = {}) {
     if (core.canonicalJson(runtime.identity) !== core.canonicalJson(plan.payload.runtime)) {
       throw cliError("AAS_TRANSACTION_RUNTIME_IDENTITY_MISMATCH", "integrity", {});
     }
-    const adapter = adapterFor(options, target, runtime.sourceRoot);
+    const catalog = await catalogFor(options, plan.payload.catalog.integrity);
+    if (core.canonicalJson(plan.payload.catalogRelease || null) !== core.canonicalJson(catalog.catalogRelease || null))
+      throw cliError("AAS_PLAN_RUNTIME_CATALOG_MISMATCH", "integrity", {});
+    const adapter = adapterFor(options, target, verifiedCatalogSource(catalog, runtime));
     if (command === "apply") {
       const result = core.transaction.applyPlan({ plan, adapter, approvalDigest: requireOption(options, "approve") });
       return { ...result, releaseProfile: "preview", certificationStatus: "experimental" };

@@ -14,7 +14,7 @@ const CATALOG_ASSET = "data/catalog.json";
 const CATALOG_PACKAGE = "agentic-awesome-skills";
 
 function readVerifiedAsset(root, asset) {
-  if (!asset || typeof asset.path !== "string" || !/^[a-zA-Z0-9._/-]+$/.test(asset.path)
+  if (!asset || typeof asset.path !== "string" || /[\\\x00-\x1f]/.test(asset.path)
     || asset.path.startsWith("/") || asset.path.split("/").some((segment) => !segment || segment === "." || segment === "..")) {
     throw new Error("Offline catalog contains an unsafe asset path");
   }
@@ -111,13 +111,16 @@ function loadBundledCatalog(options = {}) {
       },
     };
   }).sort((left, right) => compareStrings(left.id, right.id));
-  return {
+  const result = {
     schemaVersion: 1,
     package: offline.manifest.package,
     version: offline.manifest.packageVersion,
     digest: offline.digest,
     skills,
+    ...(offline.manifest.catalogRelease ? { catalogRelease: offline.manifest.catalogRelease } : {}),
   };
+  Object.defineProperty(result, "sourceRoot", { value: root });
+  return result;
 }
 
 function syntheticCatalog(skills, identity = {}) {

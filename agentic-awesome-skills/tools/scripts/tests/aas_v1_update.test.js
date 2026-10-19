@@ -55,12 +55,12 @@ before(async () => {
   fixtureRoot = await fsp.mkdtemp(path.join(os.tmpdir(), "aas-v1-update-test-"));
   const packDirectory = path.join(fixtureRoot, "pack");
   await fsp.mkdir(packDirectory, { mode: 0o700 });
-  execFileSync("npm", ["pack", "--ignore-scripts", "--pack-destination", packDirectory, "--silent"], {
+  if (!process.env.AAS_TEST_CANDIDATE_TARBALL) execFileSync("npm", ["pack", "--ignore-scripts", "--pack-destination", packDirectory, "--silent"], {
     cwd: ROOT,
     env: { ...process.env, npm_config_cache: path.join(fixtureRoot, "npm-cache") },
     stdio: "ignore",
   });
-  const archivePath = path.join(packDirectory, `${packageMetadata.name}-${packageMetadata.version}.tgz`);
+  const archivePath = process.env.AAS_TEST_CANDIDATE_TARBALL || path.join(packDirectory, `${packageMetadata.name}-${packageMetadata.version}.tgz`);
   archiveBytes = await fsp.readFile(archivePath);
   archiveIntegrity = npmIntegrity(archiveBytes);
 });

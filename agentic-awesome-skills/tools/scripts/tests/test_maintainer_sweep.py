@@ -103,6 +103,18 @@ class MaintainerSweepTest(unittest.TestCase):
         actions = sweep.build_next_actions(prs, None, [], evidence)
         self.assertEqual(actions[0]["action"], "fix_evidence_blockers")
 
+    def test_next_actions_distinguishes_ci_and_manual_review(self):
+        ready={name:"success" for name in sweep.REQUIRED_CI_CHECKS}
+        for checks, extra, expected in [
+            ({**ready,"pr-policy":"failed"},{},"repair_ci"),
+            ({**ready,"pr-policy":"missing"},{},"investigate_missing_ci"),
+            ({**ready,"pr-policy":"pending"},{},"wait_ci"),
+            (ready,{"approval_runs":[{"id":1}]},"review_and_approve_workflows"),
+            (ready,{"manual":True},"review_exact_head"),
+        ]:
+            pr={"number":1,"headRefOid":"a"*40,"summary":{"checks":checks,"manual_review_required":extra.get("manual",False)},**extra}
+            self.assertEqual(sweep.build_next_actions([pr],None,[],{})[0]["action"],expected)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const fs = require("fs");
+const { resolveLicenseContents } = require("../lib/skill-license");
 const os = require("os");
 const path = require("path");
 const { spawnSync } = require("child_process");
@@ -15,6 +16,9 @@ const {
 
 const { resolveReviewedSkillRoots, resolveReviewedSupportPaths } = require("../lib/reviewed-fork-skills");
 
+const { openStore } = require("../lib/maintenance-state");
+const { fingerprint } = require("../lib/maintenance-review-receipt");
+const crypto = require("node:crypto");
 const DEFAULT_POLL_SECONDS = 20;
 const REQUIRED_CHECKS = [
   ["pr-policy", { label: "pr-policy", aliases: ["pr-policy"], appId: 15368 }],
@@ -63,6 +67,7 @@ function parseArgs(argv) {
     prs: null,
     pollSeconds: DEFAULT_POLL_SECONDS,
     dryRun: false,
+    prepareOnly: false,
     reviewedHeads: [],
   };
 
@@ -74,8 +79,14 @@ function parseArgs(argv) {
     } else if (arg === "--poll-seconds") {
       args.pollSeconds = Number(argv[index + 1]);
       index += 1;
+    } else if (arg === "--prepare-only") {
+      args.prepareOnly = true;
     } else if (arg === "--dry-run") {
       args.dryRun = true;
+    } else if (["--state-dir", "--reviewer", "--review-evidence"].includes(arg)) {
+      const key = { "--state-dir": "stateDir", "--reviewer": "reviewer", "--review-evidence": "reviewEvidence" }[arg];
+      if (!argv[index + 1] || argv[index + 1].startsWith("--")) throw new Error(`${arg} requires a value`);
+      args[key] = argv[++index];
     } else if (arg === "--reviewed-head") {
       const reviewedHead = String(argv[index + 1] || "");
       if (!FULL_SHA_PATTERN.test(reviewedHead)) {
@@ -192,7 +203,10 @@ function normalizeEvidenceRecord(record) {
 }
 
 function isSkillContentRecord(record) {
-  return [record?.old_path, record?.new_path]
+  // A copy leaves its origin unchanged. Only its destination belongs to the
+  // content diff; renames and deletions still bind the old canonical tree.
+  const changedPaths = record?.status === "C" ? [record?.new_path] : [record?.old_path, record?.new_path];
+  return changedPaths
     .filter((filePath) => typeof filePath === "string" && filePath)
     .some((filePath) => (
       filePath.startsWith("skills/")
@@ -571,6 +585,8 @@ function loadPullRequestDetails(projectRoot, repoSlug, prNumber) {
   const details = runGhJson(projectRoot, ["pr", "view", String(prNumber)], {
     jsonFields: [
       "body",
+      "state",
+      "mergeCommit",
       "autoMergeRequest",
       "author",
       "baseRefName",
@@ -1073,7 +1089,7 @@ function approveActionRequiredRuns(projectRoot, repoSlug, prDetails, options = {
     throw new Error(`PR #${prNumber} local base-to-head diff is not fork-approval-safe: ${reasons}.`);
   }
   const blobSizes = records.length === 0 ? new Map() : getSizes(projectRoot, records, dependencies);
-  const policy = records.length === 0 ? emptyChangePolicy() : classifyRecords(records, { blobSizes, ...policyOptions });
+  const policy = records.length === 0 ? emptyChangePolicy() : classifyRecords(records, { blobSizes, licenseContents: (dependencies.resolveLicenseContents || resolveLicenseContents)(projectRoot, records), ...policyOptions });
   if (!policy?.approvalSafe && !ownerAuthorizedSensitiveChange) {
     const reasons = Array.isArray(policy?.reasons) && policy.reasons.length
       ? policy.reasons.slice(0, 12).join(", ")
@@ -1085,17 +1101,21 @@ function approveActionRequiredRuns(projectRoot, repoSlug, prDetails, options = {
     options.evaluatorOid || dependencies.getEvaluatorOid?.(projectRoot),
     "Trusted evaluator SHA",
   );
-  const evidence = recomputeEvidence(
-    projectRoot,
-    { evaluatorOid, mergeBaseOid, headOid, rawRecords: records },
-    dependencies,
-  );
+  const evidenceInput = { evaluatorOid, mergeBaseOid, headOid, rawRecords: records };
+  const evidenceKey = crypto.createHash("sha256").update(JSON.stringify({ repoSlug, ...evidenceInput })).digest("hex");
+  let evidence = options.stateStore?.readEvidence(evidenceKey);
+  if (!evidence) {
+    evidence = recomputeEvidence(projectRoot, evidenceInput, dependencies);
+    options.stateStore?.writeEvidence(evidenceKey, evidence);
+  }
   if (evidence.blocking) {
     const reasons = evidence.reasons.slice(0, 12).join(", ") || "unspecified regression";
     throw new Error(`PR #${prNumber} trusted changed-skill evidence is blocking: ${reasons}.`);
   }
 
-  if (policy.requiresHumanReview && !reviewedHeads.has(headOid)) {
+  // Safe analysis may start before semantic review. Sensitive owner changes
+  // still require the explicit attestation above; this does not authorize merge.
+  if (policy.requiresHumanReview && !reviewedHeads.has(headOid) && !policy.approvalSafe) {
     throw new Error(
       `PR #${prNumber} changes canonical skill content. Re-run with --reviewed-head ${headOid} after reviewing that exact full SHA.`,
     );
@@ -1163,6 +1183,7 @@ async function waitForRequiredChecks(
   requiredAliases,
   pollSeconds,
   maxAttempts = 180,
+  onPending = null,
 ) {
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
     const checkRuns = listCheckRuns(projectRoot, repoSlug, headSha);
@@ -1182,6 +1203,7 @@ async function waitForRequiredChecks(
       return summaries;
     }
 
+    if (onPending) await onPending();
     await new Promise((resolve) => setTimeout(resolve, pollSeconds * 1000));
   }
 
@@ -1236,17 +1258,38 @@ async function mergePullRequest(projectRoot, repoSlug, prNumber, options) {
 
   const approval = approveActionRequiredRuns(projectRoot, repoSlug, prDetails, {
     dryRun: options.dryRun,
+    stateStore: options.stateStore,
     evaluatorOid: options.evaluatorOid,
     reviewedHeads: options.reviewedHeads,
     excludedRunIds: [],
     dependencies: options.approvalDependencies,
   });
   const headSha = prDetails.headRefOid;
+  const currentReviewedHeads = new Set(options.reviewedHeads || []);
+  if (options.stateStore && approval.records.length && approval.records.every(isSkillContentRecord)) {
+    const skillIds = [...new Set(approval.records.flatMap(record => [record.old_path, record.new_path])
+      .filter(Boolean).map(file => file.split("/")[1]))];
+    const content = fingerprint(projectRoot, headSha, options.evaluatorOid, skillIds);
+    if (currentReviewedHeads.has(headSha) && options.reviewer && options.reviewEvidence) {
+      options.stateStore.saveReview({ fingerprint: content, reviewedHead: headSha, outcome: "approved",
+        reviewer: options.reviewer, evidence: options.reviewEvidence });
+    } else {
+      const reused = options.stateStore.reuseReview(content, headSha);
+      if (reused) {
+        currentReviewedHeads.add(reused.reviewedHead);
+        console.log(`[merge-batch] PR #${prNumber}: authenticated bundle review reused from ${reused.reusedFrom}.`);
+      }
+    }
+  }
+  if (approval.policy.requiresHumanReview && !approval.records.every(isSkillContentRecord)
+      && !currentReviewedHeads.has(headSha)) {
+    throw new Error(`PR #${prNumber} requires --reviewed-head ${headSha} before merge.`);
+  }
   const approvedRuns = approval.approvedRuns;
   // The Skill Review workflow covers canonical skill files and their tracked
   // support trees. Exact-head attestation remains the fallback when Tessl is
   // unavailable or does not produce a passing review.
-  prDetails.hasSkillChanges = approval.policy.canonicalSkillChanges.length > 0;
+  prDetails.hasSkillChanges = approval.records.some(isSkillContentRecord);
   if (approvedRuns.length) {
     console.log(
       `[merge-batch] PR #${prNumber}: approved ${approvedRuns.length} fork run(s) waiting on action_required.`,
@@ -1255,10 +1298,17 @@ async function mergePullRequest(projectRoot, repoSlug, prNumber, options) {
 
   const requiredCheckAliases = getRequiredCheckAliases(prDetails, {
     allowManualReview: approval.policy.requiresHumanReview &&
-      new Set(options.reviewedHeads || []).has(headSha),
+      currentReviewedHeads.has(headSha),
   });
   if (!options.dryRun) {
-    await waitForRequiredChecks(projectRoot, repoSlug, headSha, requiredCheckAliases, options.pollSeconds);
+    await waitForRequiredChecks(projectRoot, repoSlug, headSha, requiredCheckAliases, options.pollSeconds, 180, () => {
+      if (!listActionRequiredRuns(projectRoot, repoSlug, headSha).length) return;
+      assertUnchangedTuple(loadPullRequestDetails(projectRoot, repoSlug, prNumber), approval.tuple, "before delayed run approval", prNumber);
+      approveActionRequiredRuns(projectRoot, repoSlug, loadPullRequestDetails(projectRoot, repoSlug, prNumber), {
+        evaluatorOid: options.evaluatorOid, reviewedHeads: options.reviewedHeads, stateStore: options.stateStore,
+        dependencies: options.approvalDependencies,
+      });
+    });
   }
 
   if (options.dryRun) {
@@ -1271,6 +1321,7 @@ async function mergePullRequest(projectRoot, repoSlug, prNumber, options) {
     };
   }
 
+  if (options.beforeMerge) options.beforeMerge();
   assertUnchangedTuple(
     loadPullRequestDetails(projectRoot, repoSlug, prNumber),
     approval.tuple,
@@ -1289,8 +1340,8 @@ async function mergePullRequest(projectRoot, repoSlug, prNumber, options) {
 
   gitCheckoutMain(projectRoot);
   gitPullMain(projectRoot);
-  const followUp = { changed: false, delegatedToCanonicalSync: true };
-  console.log(`[merge-batch] PR #${prNumber}: canonical artifacts and contributor credits delegated to the protected bot PR lane.`);
+  const followUp = { changed: false, distributionSnapshotDeferred: true };
+  console.log(`[merge-batch] PR #${prNumber}: distribution snapshots will be refreshed by the next protected release PR.`);
 
   return {
     prNumber,
@@ -1300,24 +1351,98 @@ async function mergePullRequest(projectRoot, repoSlug, prNumber, options) {
   };
 }
 
+function prepareBatch(projectRoot, repoSlug, prNumbers, options, dependencies = {}) {
+  const load = dependencies.load || loadPullRequestDetails;
+  const approve = dependencies.approve || approveActionRequiredRuns;
+  return prNumbers.map((prNumber) => {
+    const details = load(projectRoot, repoSlug, prNumber);
+    if (mergeableIsConflict(details)) throw new Error(`PR #${prNumber} has conflicts`);
+    const approval = approve(projectRoot, repoSlug, details, {
+      dryRun: options.dryRun, evaluatorOid: options.evaluatorOid,
+      reviewedHeads: options.reviewedHeads, dependencies: options.approvalDependencies,
+    });
+    return { prNumber, merged: false, approvedRuns: approval.approvedRuns.map((run) => run.id),
+      headSha: details.headRefOid, prepared: true };
+  });
+}
+function assertEvaluatorCompatible(projectRoot, loadedOid, currentOid, execute = runCommand) {
+  if (loadedOid === currentOid) return;
+  const paths = execute("git", ["diff", "--name-only", loadedOid, currentOid, "--"], projectRoot, {capture:true}).trim().split("\n");
+  if (paths.some(file => /^(?:tools\/|\.github\/|AGENTS\.md$|package(?:-lock)?\.json$|skills\/antigravity-maintainer-batch-release\/)/.test(file)))
+    throw new Error("Trusted evaluator contract changed during the batch; restart from refreshed protected main");
+}
 async function runBatch(projectRoot, prNumbers, options = {}) {
-  const repoSlug = readRepositorySlug(projectRoot);
+  const dependencies = options.batchDependencies || {};
+  const readRepo = dependencies.readRepositorySlug || readRepositorySlug;
+  const trustedMain = dependencies.ensureTrustedMain || ensureTrustedMain;
+  const protection = dependencies.assertEffectiveMainProtection || assertEffectiveMainProtection;
+  const compatibleEvaluator = dependencies.assertEvaluatorCompatible || assertEvaluatorCompatible;
+  const loadPr = dependencies.loadPullRequestDetails || loadPullRequestDetails;
+  const mergePr = dependencies.mergePullRequest || mergePullRequest;
+  const execute = dependencies.runCommand || runCommand;
+  const repoSlug = readRepo(projectRoot);
   const results = [];
 
-  const evaluatorOid = ensureTrustedMain(projectRoot, options.mainDependencies);
+  const evaluatorOid = trustedMain(projectRoot, options.mainDependencies);
   if (!options.dryRun) {
-    assertEffectiveMainProtection(projectRoot, repoSlug, options.protectionDependencies);
+    protection(projectRoot, repoSlug, options.protectionDependencies);
   }
 
-  for (const prNumber of prNumbers) {
-    const result = await mergePullRequest(projectRoot, repoSlug, prNumber, {
-      ...options,
-      evaluatorOid,
-    });
-    results.push(result);
+  if (options.prepareOnly || options.dryRun) {
+    return prepareBatch(projectRoot, repoSlug, prNumbers, { ...options, evaluatorOid });
   }
-
-  return results;
+  const stateStore = options.stateDir ? openStore(options.stateDir, projectRoot) : null;
+  const batchId = crypto.createHash("sha256").update(JSON.stringify({ repoSlug, prs: [...prNumbers].sort((a,b) => a-b) })).digest("hex");
+  const prior = stateStore?.readBatch(batchId);
+  const state = { schemaVersion: 1, repoSlug, prs: prNumbers,
+    startedAt: prior?.startedAt || new Date().toISOString(), attempts: [...(prior?.attempts || []).slice(-99)], results: [] };
+  const attempt = { startedAt: new Date().toISOString(), evaluatorOid, results: [] };
+  state.attempts.push(attempt);
+  const save = () => stateStore?.writeBatch(batchId, state);
+  save();
+  const coordination = options.coordination;
+  const lease = coordination && prNumbers.length > 1 ? coordination.beginBatch(repoSlug, evaluatorOid, prNumbers) : null;
+  let success = false;
+  try {
+    for (const prNumber of prNumbers) {
+      // Re-fetch even when the journal says merged: persisted state never grants
+      // authority. A crash after GitHub accepted a merge is safe to resume.
+      if (lease) coordination.assertBatch(repoSlug, lease);
+      const currentEvaluator = trustedMain(projectRoot, options.mainDependencies);
+      compatibleEvaluator(projectRoot, evaluatorOid, currentEvaluator);
+      let result;
+      try {
+        const details = loadPr(projectRoot, repoSlug, prNumber);
+        if (details.baseRefName !== "main") throw new Error(`PR #${prNumber} must target main`);
+        if (details.state === "MERGED") {
+          const mergeSha = assertFullSha(details.mergeCommit?.oid, "Merged PR commit");
+          execute("git", ["merge-base", "--is-ancestor", mergeSha, currentEvaluator], projectRoot);
+          result = { prNumber, merged: true, status: "already-merged", mergeSha };
+        } else {
+          if (details.state !== "OPEN") throw new Error(`PR #${prNumber} is not open`);
+          result = await mergePr(projectRoot, repoSlug, prNumber, {
+            ...options, stateStore, evaluatorOid: currentEvaluator,
+            beforeMerge: lease ? () => coordination.assertBatch(repoSlug, lease) : undefined,
+          });
+          result.status = "merged";
+        }
+      } catch (error) {
+        result = { prNumber, merged: false, status: "blocked", reason: error.message };
+        console.error(`[merge-batch] PR #${prNumber}: ${error.message}; continuing independent PRs.`);
+      }
+      results.push(result);
+      attempt.results.push({ ...result, completedAt: new Date().toISOString() });
+      state.results = results;
+      save();
+    }
+    success = results.every(result => result.merged);
+    return results;
+  } finally {
+    attempt.completedAt = new Date().toISOString();
+    attempt.success = success;
+    save();
+    if (lease) coordination.finishBatch(repoSlug, lease, success);
+  }
 }
 
 async function main() {
@@ -1331,12 +1456,15 @@ async function main() {
 
   const results = await runBatch(projectRoot, prNumbers, {
     dryRun: args.dryRun,
+    prepareOnly: args.prepareOnly,
     pollSeconds: args.pollSeconds,
     reviewedHeads: args.reviewedHeads,
+    stateDir: args.stateDir, reviewer: args.reviewer, reviewEvidence: args.reviewEvidence,
   });
 
+  if (results.some(result => result.status === "blocked")) process.exitCode = 1;
   console.log(
-    `[merge-batch] Completed ${results.length} PR(s): ${results.map((result) => `#${result.prNumber}`).join(", ")}`,
+    `[merge-batch] Processed ${results.length} PR(s): ${results.map((result) => `#${result.prNumber}`).join(", ")}`,
   );
 }
 
@@ -1364,6 +1492,7 @@ module.exports = {
   formatCheckSummary,
   fetchPullRequestObjects,
   getRequiredCheckAliases,
+  isSkillContentRecord,
   gitCheckoutMain,
   gitPullMain,
   listActionRequiredRuns,
@@ -1385,6 +1514,8 @@ module.exports = {
   rulesetAppliesToMain,
   runCommand,
   runCommandBuffer,
+  assertEvaluatorCompatible,
+  prepareBatch,
   runBatch,
   selectLatestCheckRuns,
   stripDisallowedCoauthorTrailers,

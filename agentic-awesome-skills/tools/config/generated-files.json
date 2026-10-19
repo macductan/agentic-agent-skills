@@ -13,7 +13,8 @@
     ".agents/plugins/",
     ".claude-plugin/plugin.json",
     ".claude-plugin/marketplace.json",
-    "plugins/"
+    "plugins/",
+    "data/distribution-snapshot.json"
   ],
   "mixedFiles": [
     "README.md",

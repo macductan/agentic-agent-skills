@@ -903,3 +903,11 @@ Review all EAS workflow entrypoint/support files. Correct schema/permission/laun
 ## 2026-10-14 — Consolidated 175-tree individual report review
 
 Consolidate pending source repairs into one large batch:85new complete-tree reviews plus90unchanged prior reviews individually reconciled with the full report. Correct remaining trigger gaps and substantive orchestration/EAS/AI/Docker/Git/documentation/wrapper defects. Evidence and exactfile receipts in docs/maintainers/full-catalog-large-batch-01-2026-10-14.md/.json. All2,689 remains the objective; no release or deployment.
+
+## 2026-10-18 — Maintenance redesign in progress
+
+Verified the proposed redesign against protected main `71b1c1a9e2e85e492bc647aeae0b86c21642c249` and archived eight historical workflow runs. Implemented conservative component validation for source PRs and local preflight, an editorial-only main path, and separate public-release/personal-environment verification states. Added tested primitives for distribution integrity and authenticated review-receipt invalidation; these primitives are not yet publisher or merge authority.
+
+Local measurement on macOS with Node 26.7.0: the unchanged base's 152-file suite passed in 151.199 seconds. The proposed editorial checks passed three times in 1.251, 1.244 and 1.246 seconds against that same base. This compares local check workloads only, with one baseline execution; it does not measure the complete maintenance or distribution cycle.
+
+The full requested migration remains incomplete: build-once publishers, release-only snapshots, persistent coordinator/receipt storage and independent catalog distribution must still be integrated and exercised. No runtime release, catalog publication or installed maintainer-skill update is claimed. See [component validation](docs/maintainers/component-validation.md) for the implemented boundary.

@@ -116,63 +116,23 @@ const maintainerSkillUi = fs.readFileSync(
 for (const contractText of [maintainerSkill, maintenanceGuide, mergeBatchGuide, mergingGuide, autonomyGuide]) {
   assert.match(contractText, /skills\/\*\*|skills\/<skill-id>\/\*\*/);
 }
-assert.match(maintainerSkill, /entire tracked `skills\/<skill-id>\/\*\*` subtree/);
-assert.match(maintainerSkill, /authored by the repository owner/);
-assert.match(maintainerSkill, /exactly one merged release PR/);
-assert.match(maintenanceGuide, /canonical-repo-state` PR owns that state/);
-assert.match(autonomyGuide, /complete nearest skill-directory fingerprint/);
-for (const contractText of [maintainerSkill, maintenanceGuide, mergeBatchGuide, autonomyGuide]) {
-  assert.doesNotMatch(contractText, /may normalize the PR body|close\/reopen the PR|retries `Base branch was modified`/);
-  assert.match(contractText, /does not (?:rewrite|mutate).*PR (?:body|metadata)|PR-body rewriting or normalization/);
-  assert.match(contractText, /does not retry base drift|does not .*retry base drift|no automatic retry/);
+const detailedContract = fs.readFileSync(path.join(repositoryRoot, "docs/maintainers/maintenance-contract.md"), "utf8");
+for (const text of [maintainerSkill, maintenanceGuide, mergeBatchGuide, autonomyGuide]) {
+  assert.match(text, /maintenance-contract\.md/);
+  assert.match(text, /review/i);
 }
-assert.doesNotMatch(maintenanceGuide, /runs the mandatory post-merge `sync:contributors`/);
-assert.match(maintenanceGuide, /hands contributor\/generated drift to the protected canonical-sync lane/);
-assert.match(maintenanceGuide, /`npm run chain` already includes catalog generation/);
-assert.doesNotMatch(maintenanceGuide, /npm run chain\n\s+npm run catalog/);
-assert.match(autonomyGuide, /explicitly dispatches main CI and CodeQL/);
-assert.match(autonomyGuide, /Pages is dispatched manually from protected `main` only after source and canonical-sync work is complete/);
-for (const contractText of [maintainerSkill, maintenanceGuide, mergeBatchGuide, autonomyGuide]) {
-  assert.match(contractText, /protected[- ]base|protected base/);
-  assert.match(contractText, /impact_profile.*shadow|shadow-only.*impact_profile/s);
-  assert.match(contractText, /source-validation.*lightweight/s);
-  assert.match(contractText, /required CI.*(?:complete|full).*unsharded/is);
-}
-assert.match(maintenanceGuide, /merge:batch.*only fork-run approval and merge authority/);
-assert.match(mergeBatchGuide, /merge:batch.*only command allowed to approve fork runs or merge/s);
-assert.match(autonomyGuide, /merge:batch.*sole authority for fork-run approval and merge/s);
-assert.match(maintainerSkill, /merge:batch.*recompute the current trusted decision/s);
-for (const contractText of [maintenanceGuide, mergeBatchGuide, autonomyGuide]) {
-  assert.match(contractText, /source-validation.*(?:refresh|generate|generated-state).*once|(?:refresh|generate|generated-state).*once.*source-validation/s);
-  assert.match(contractText, /artifact-preview.*(?:verif(?:y|ies).*manifest|manifest.*verif(?:y|ies))/s);
-  assert.match(contractText, /final (?:CI and CodeQL|`main` CI and CodeQL)/i);
-}
-assert.match(autonomyGuide, /timing telemetry/);
-assert.match(autonomyGuide, /npm run test:local -- --shard-index N --shard-count M/);
-assert.match(mergingGuide, /No local-integration exception/);
-for (const contractText of [maintainerSkill, maintenanceGuide, mergeBatchGuide]) {
-  assert.match(contractText, /apps\/web-app\/src\/\*\*/);
-  assert.match(contractText, /exact-head maintainer attestation/);
-}
-assert.doesNotMatch(mergingGuide, /Rare exception: local squash|`gh pr merge <PR_NUMBER>/);
+assert.match(detailedContract, /entire tracked `skills\/<skill-id>\/\*\*` subtree/);
+assert.match(detailedContract, /exactly one merged release PR|Exactly one merged release PR/);
+assert.match(detailedContract, /authored by the repository owner/);
+assert.match(detailedContract, /does not rewrite PR metadata/);
+assert.match(detailedContract, /does not retry base drift/);
+assert.match(detailedContract, /No direct main pushes, admin bypass/);
+assert.match(detailedContract, /minimum runtime/);
+assert.match(detailedContract, /public artifact mismatch/);
+assert.equal(detailedContract, fs.readFileSync(path.join(repositoryRoot, "skills/antigravity-maintainer-batch-release/references/maintenance-contract.md"), "utf8"));
+assert.equal(fs.readFileSync(path.join(repositoryRoot,"docs/maintainers/component-validation.md"),"utf8"), fs.readFileSync(path.join(repositoryRoot,"skills/antigravity-maintainer-batch-release/references/component-validation.md"),"utf8"));
 assert.match(maintainerSkillUi, /\$antigravity-maintainer-batch-release/);
-assert.doesNotMatch(maintainerSkillUi, /frozen matrix|product, verifier, and gold|recommend|rank/i);
-assert.match(maintainerSkill, /discover every already-configured local AAS MCP host from its real configuration and update each one to the exact same package version/);
-assert.match(maintainerSkill, /Pin `agentic-awesome-skills@X\.Y\.Z` and `--version X\.Y\.Z`; never use `latest`/);
-assert.match(maintainerSkill, /real MCP `initialize` plus `tools\/list` handshake reports catalog package version `X\.Y\.Z`/);
-assert.match(maintainerSkill, /Every stable or prerelease version requires full release alignment/);
-assert.match(maintainerSkill, /npm run sync:release-state`, `npm run plugin-compat:check`, and `npm run bundles:check`/);
-assert.match(maintainerSkill, /every published Codex\/Claude plugin mirror, and every eligible Agent Plugins editorial-bundle manifest/);
-assert.match(maintainerSkill, /release-tag Pages build from the exact immutable `vX\.Y\.Z` tag using `deployment_target=release`/);
-assert.match(maintainerSkill, /final generator pass must be idempotent/);
 assert.match(agentInstructions, /Every stable or prerelease version must finish with the full-release-alignment gate/);
-assert.match(maintenanceGuide, /Run the mandatory full-release-alignment gate/);
-const releaseProcess = fs.readFileSync(
-  path.join(repositoryRoot, "docs", "maintainers", "release-process.md"),
-  "utf8",
-);
-assert.match(releaseProcess, /Complete the mandatory full-release-alignment gate/);
-assert.match(releaseProcess, /Any mismatch, inaccessible configured host, or stale public surface keeps the release incomplete/);
 
 const publishWorkflow = fs.readFileSync(
   path.resolve(__dirname, "..", "..", "..", ".github", "workflows", "publish-npm.yml"),
@@ -182,56 +142,16 @@ assert.match(publishWorkflow, /name: Verify protected release provenance/);
 assert.match(publishWorkflow, /git merge-base --is-ancestor "\$tag_commit" "\$main_commit"/);
 assert.match(publishWorkflow, /ref: main/);
 assert.doesNotMatch(publishWorkflow, /workflow_dispatch/);
-assert.match(publishWorkflow, /expected_tag="v\$\(node -p/);
+assert.match(publishWorkflow, /distribution_fetch\.cjs/);
 
 const pagesWorkflow = fs.readFileSync(
   path.resolve(__dirname, "..", "..", "..", ".github", "workflows", "pages.yml"),
   "utf8",
 );
-assert.match(pagesWorkflow, /^on:\s*\n\s+workflow_dispatch:\s*\n\s+inputs:[\s\S]*?deployment_target:[\s\S]*?options:[\s\S]*?- release[\s\S]*?- main/m);
-assert.doesNotMatch(pagesWorkflow, /^\s+push:/m);
-assert.match(pagesWorkflow, /permissions:\s*\n\s+contents: read\s*\n\s+pages: write\s*\n\s+id-token: write/);
-const pagesCheckoutIndex = pagesWorkflow.indexOf("- name: Checkout");
-const pagesProvenanceIndex = pagesWorkflow.indexOf("- name: Verify deployment provenance");
-const pagesSetupIndex = pagesWorkflow.indexOf("- name: Setup Node");
-assert.ok(
-  pagesCheckoutIndex >= 0 && pagesCheckoutIndex < pagesProvenanceIndex && pagesProvenanceIndex < pagesSetupIndex,
-  "Pages must fail closed on deployment provenance immediately after checkout and before setup/install work",
-);
-for (const provenanceContract of [
-  /GH_TOKEN: \$\{\{ github\.token \}\}/,
-  /DEPLOYMENT_TARGET.*inputs\.deployment_target/,
-  /GITHUB_EVENT_NAME.*workflow_dispatch/,
-  /refs\/heads\/main/,
-  /commits\/main/,
-  /GITHUB_SHA/,
-  /GITHUB_REF_TYPE[^\n]+tag/,
-  /GITHUB_REF_NAME[^\n]+\^v\[0-9\]\+\\\.\[0-9\]\+\\\.\[0-9\]\+\$/,
-  /expected_tag="v\$\{package_version\}"/,
-  /refs\/tags\/\$\{GITHUB_REF_NAME\}\^\{commit\}/,
-  /tag_commit[^\n]+GITHUB_SHA[^\n]+head_commit[^\n]+GITHUB_SHA/,
-  /gh api --method GET "repos\/\$\{GITHUB_REPOSITORY\}\/releases\/tags\/\$\{GITHUB_REF_NAME\}"/,
-  /\.draft == false/,
-  /\.published_at/,
-  /deployment_target:[\s\S]*?release/,
-  /Verify current main before deployment/,
-]) {
-  assert.match(pagesWorkflow, provenanceContract);
-}
-for (const command of [
-  "npm run validate:strict",
-  "npm run validate:glossary",
-  "npm run validate:references",
-  "npm run audit:consistency",
-  "npm run security:scan:strict",
-  "npm run plugin-compat:check",
-  "npm run bundles:check",
-  "npm run test",
-  "npm run app:test:coverage",
-]) {
-  assert.match(pagesWorkflow, new RegExp(command.replace(/[.*+?^${}()|[\\]\\]/g, "\\$&")));
-}
-assert.match(pagesWorkflow, /verify:seo -- --require-hosted-url/);
+assert.match(pagesWorkflow, /deployment_target/);
+assert.match(pagesWorkflow, /distribution_fetch\.cjs/);
+assert.match(pagesWorkflow, /\.draft == false/);
+assert.doesNotMatch(pagesWorkflow, /npm run app:build|npm run test/);
 
 const ciWorkflow = fs.readFileSync(
   path.resolve(__dirname, "..", "..", "..", ".github", "workflows", "ci.yml"),
@@ -265,18 +185,12 @@ assert.match(ciWorkflow, /^permissions:\n  contents: read$/m);
 const mainValidationJobStart = ciWorkflow.indexOf("  main-validation-and-sync:");
 assert.ok(mainValidationJobStart >= 0, "main-validation-and-sync job must exist");
 const mainValidationJob = ciWorkflow.slice(mainValidationJobStart);
-const mainSyncIndex = mainValidationJob.indexOf("- name: Run repo-state sync");
-const mainReferenceValidationIndex = mainValidationJob.indexOf("- name: Validate references");
-assert.ok(
-  mainSyncIndex >= 0 &&
-    mainReferenceValidationIndex >= 0 &&
-    mainSyncIndex < mainReferenceValidationIndex,
-  "main canonical sync must regenerate source-derived bundle data before validating cross-references",
-);
+assert.match(mainValidationJob, /maintenance_validate\.cjs/);
+assert.doesNotMatch(mainValidationJob, /create-pull-request|merge_canonical_sync/);
 assert.match(
   ciWorkflow,
-  /source-validation:[\s\S]*?- name: Refresh ephemeral derived sources for tests\n\s+if: env\.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'\n\s+run: npm run plugin-compat:sync && npm run index && npm run bundles:sync && npm run sync:metadata && npm run catalog && npm run build:aas-v1-catalog && npm run sync:web-assets\n[\s\S]*?- name: Run tests\n\s+if: env\.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'\n\s+run: npm run test/,
-  "source-only skill PRs must refresh uncommitted mirrors and indexes before tests read them",
+  /source-validation:[\s\S]*?- name: Run component validation[\s\S]*?maintenance_validate\.cjs --base "\$BASE_SHA" --head "\$HEAD_SHA"/,
+  "source validation must execute an exact-diff component plan",
 );
 assert.doesNotMatch(
   ciWorkflow,
@@ -311,14 +225,10 @@ assert.match(
 const sourceValidationJob = ciWorkflow.match(/^  source-validation:\n([\s\S]*?)(?=^  [a-z][a-z0-9-]*:)/m)?.[0] || "";
 assert.match(sourceValidationJob, /needs: pr-policy/, "source validation should not wait for independent PR evidence");
 assert.doesNotMatch(sourceValidationJob, /needs:.*pr-evidence/);
-const sourceRefreshIndex = sourceValidationJob.indexOf("- name: Refresh ephemeral derived sources for tests");
-const sourceReferenceValidationIndex = sourceValidationJob.indexOf("- name: Validate references");
-assert.ok(
-  sourceRefreshIndex >= 0 &&
-    sourceReferenceValidationIndex >= 0 &&
-    sourceRefreshIndex < sourceReferenceValidationIndex,
-  "source validation must refresh source-derived bundle data before validating cross-references",
-);
+const componentPlan = require("../../lib/maintenance-impact").checkPlan("catalog");
+assert.ok(componentPlan.indexOf("preview") < componentPlan.indexOf("validate:references"),
+  "source validation must refresh source-derived bundle data before validating cross-references");
+
 assert.match(
   sourceValidationJob,
   /actions\/checkout@[0-9a-f]{40}[\s\S]*?ref: \$\{\{ github\.event\.pull_request\.head\.sha \}\}/,

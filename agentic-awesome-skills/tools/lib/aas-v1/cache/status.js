@@ -12,7 +12,7 @@ const {
 } = require("./identity");
 const { scanDataDirectory } = require("./scan");
 
-const MAX_IDENTITY_BYTES = 128 * 1024;
+const MAX_IDENTITY_BYTES = 4 * 1024 * 1024;
 
 function validateStoredIdentity(value, expected) {
   if (!value || typeof value !== "object" || Array.isArray(value)) throw cacheError("AAS_CACHE_IDENTITY_INVALID", "stored catalog identity must be an object");
@@ -70,6 +70,7 @@ async function catalogStatus({ cacheRoot, packageVersion, catalogDigest, integri
     });
     const scan = await scanDataDirectory({
       sourceDir: targetPath,
+      limits: { maxFiles: 20000, maxEntries: 40000, maxTotalBytes: 256 * 1024 * 1024, maxDepth: 32 },
       allowlist: identity.assets.map((asset) => asset.path),
       ignoredPaths: [CATALOG_IDENTITY_FILE, ...identity.controls.map((asset) => asset.path)],
     });

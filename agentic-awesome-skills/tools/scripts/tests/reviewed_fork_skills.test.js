@@ -26,7 +26,7 @@ assert.throws(() => resolve(identity, entry.tree_oid, {schema_version:1,entries:
 
 const record = { status:'A', old_path:null, new_path:root+'/scripts/check.py', old_mode:'000000',
   new_mode:'100644', old_oid:'0'.repeat(40), new_oid:'5'.repeat(40), new_size:100 };
-const classify = (r=record, opts={}) => classifyChangeRecords([r], {reviewedSkillRoots:[root],...opts});
+const classify = (r=record, opts={}) => classifyChangeRecords([r], {reviewedSkillRoots:[root],licenseContents:new Map([['5'.repeat(40),Buffer.from('MIT License\n')]]),...opts});
 const { resolveReviewedSupportPaths } = require('../../lib/reviewed-fork-skills');
 const supportEntry = {...entry, reviewed_support_paths:[root+'/README.md', root+'/.gitignore', root+'/scripts/report.py']};
 const supportLedger = {schema_version:1, entries:[supportEntry]};

@@ -171,8 +171,9 @@ test("the packed runtime launches MCP from an isolated verified dependency closu
   const root = await temp(t);
   const repoRoot = path.resolve(__dirname, "../../..");
   const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
-  const packed = spawnSync(npmCommand, [
+  const packed = process.env.AAS_TEST_CANDIDATE_TARBALL ? { status: 0, stdout: process.env.AAS_TEST_CANDIDATE_TARBALL } : spawnSync(npmCommand, [
     "pack",
+    "--ignore-scripts",
     "--silent",
     "--pack-destination",
     root,
@@ -186,7 +187,7 @@ test("the packed runtime launches MCP from an isolated verified dependency closu
   });
   assert.equal(packed.status, 0, packed.stderr);
   const archiveName = packed.stdout.trim().split(/\r?\n/).at(-1);
-  const archive = await fsp.readFile(path.join(root, archiveName));
+  const archive = await fsp.readFile(process.env.AAS_TEST_CANDIDATE_TARBALL || path.join(root, archiveName));
   const integrity = `sha512-${crypto.createHash("sha512").update(archive).digest("base64")}`;
   const packageVersion = require(path.join(repoRoot, "package.json")).version;
   const tarballUrl = `https://registry.npmjs.org/agentic-awesome-skills/-/agentic-awesome-skills-${packageVersion}.tgz`;

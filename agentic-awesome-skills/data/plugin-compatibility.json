@@ -2132,6 +2132,25 @@
       "runtime_files": []
     },
     {
+      "id": "aident-loadout",
+      "path": "skills/aident-loadout",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "aider-delegate",
       "path": "skills/aider-delegate",
       "targets": {
@@ -13636,6 +13655,25 @@
     {
       "id": "culture-retention",
       "path": "skills/culture-retention",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "curlshot",
+      "path": "skills/curlshot",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -27569,6 +27607,25 @@
       "runtime_files": []
     },
     {
+      "id": "krexa",
+      "path": "skills/krexa",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "kubernetes-architect",
       "path": "skills/kubernetes-architect",
       "targets": {
@@ -35266,6 +35323,25 @@
       "runtime_files": []
     },
     {
+      "id": "outreachgenie-list-audit",
+      "path": "skills/outreachgenie-list-audit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "page-cro",
       "path": "skills/page-cro",
       "targets": {
@@ -35344,6 +35420,25 @@
     {
       "id": "pakistan-payments-stack",
       "path": "skills/pakistan-payments-stack",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "pangolinfo-amazon-data-research",
+      "path": "skills/pangolinfo-amazon-data-research",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -37564,6 +37659,25 @@
     {
       "id": "project-development",
       "path": "skills/project-development",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "project-memory-log",
+      "path": "skills/project-memory-log",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -43705,6 +43819,25 @@
     {
       "id": "solidity-security",
       "path": "skills/solidity-security",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "solidping",
+      "path": "skills/solidping",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -51890,10 +52023,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2705,
+    "total_skills": 2712,
     "supported": {
-      "codex": 2620,
-      "claude": 2642
+      "codex": 2627,
+      "claude": 2649
     },
     "blocked": {
       "codex": 85,

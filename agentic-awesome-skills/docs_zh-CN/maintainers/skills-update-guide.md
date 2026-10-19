@@ -11,4 +11,4 @@ npm run app:dev
 
 `npm run update:skills` 只刷新索引和公共副本，不替代完整构建。`START_APP.bat` 准备 Web 依赖、调用 `app:setup` 并启动 Vite；它不会自动拉取 Git、通过 PowerShell 下载技能或安装 Python。
 
-普通 PR 只提交源文件，生成物由受保护的 `automation/canonical-repo-state` PR 管理。本地更新不等于 npm 发布或 Pages 部署。
+普通 PR 只提交源文件，生成分发快照只在受保护的发布 PR 中更新，开发验证使用临时生成数据。本地更新不等于 npm 发布或 Pages 部署。

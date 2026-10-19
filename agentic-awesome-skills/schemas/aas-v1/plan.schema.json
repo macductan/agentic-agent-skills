@@ -19,6 +19,7 @@
         "versions": { "$ref": "#/$defs/versions" },
         "manifestDigest": { "$ref": "#/$defs/digest" },
         "catalog": { "$ref": "#/$defs/catalog" },
+        "catalogRelease": {"type": "object", "additionalProperties": false, "required": ["schemaVersion", "sourceCommit", "runtimeMajor", "minimumRuntime"], "properties": {"schemaVersion": {"const": 1}, "sourceCommit": {"type": "string", "pattern": "^[a-f0-9]{40}$"}, "runtimeMajor": {"type": "integer", "minimum": 1}, "minimumRuntime": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"}}},
         "runtime": { "$ref": "#/$defs/runtime" },
         "target": { "$ref": "#/$defs/target" },
         "installedState": { "$ref": "#/$defs/installedState" },

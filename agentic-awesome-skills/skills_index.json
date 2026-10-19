@@ -2857,6 +2857,40 @@
     }
   },
   {
+    "id": "aident-loadout",
+    "path": "skills/aident-loadout",
+    "category": "api-integration",
+    "name": "aident-loadout",
+    "description": "Run multi-step work across apps the user connected in Aident Loadout: live action schemas, connection checks, cost preflight, and approval before side effects.",
+    "risk": "critical",
+    "source": "https://github.com/Aident-AI/aident-skill/tree/main/aident-loadout/skills/aident-loadout",
+    "date_added": "2026-10-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "Aident-AI/aident-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/Aident-AI/aident-skill/blob/main/LICENSE",
+    "tags": [
+      "mcp",
+      "integrations",
+      "oauth",
+      "vault",
+      "audit",
+      "agent-tools"
+    ]
+  },
+  {
     "id": "aider-delegate",
     "path": "skills/aider-delegate",
     "category": "agent-orchestration",
@@ -3888,7 +3922,7 @@
     "path": "skills/antigravity-maintainer-batch-release",
     "category": "devops",
     "name": "antigravity-maintainer-batch-release",
-    "description": "Run protected AAS maintainer sweeps, PR merge batches, canonical sync, Core preview checks, and scripted releases. Use for repository maintenance, main alignment, CLI/MCP/Workbench changes, or release work; not ordinary contribution tasks.",
+    "description": "Run protected AAS maintainer sweeps, PR merge batches, resumable review, immutable distribution, Core checks, and scripted releases. Use for repository maintenance, main alignment, CLI/MCP/Workbench changes, or release work; not ordinary contribution tasks.",
     "risk": "critical",
     "source": "self",
     "date_added": "2026-07-18",
@@ -18395,6 +18429,40 @@
       "notion",
       "sql",
       "engage"
+    ]
+  },
+  {
+    "id": "curlshot",
+    "path": "skills/curlshot",
+    "category": "api-integration",
+    "name": "curlshot",
+    "description": "Capture web page screenshots, PDFs and scrolling videos, or render HTML/Markdown to images, with the hosted CurlShot API.",
+    "risk": "safe",
+    "source": "https://github.com/SergiuPogor/curlshot-mcp/tree/main/skills/curlshot",
+    "date_added": "2026-10-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "SergiuPogor/curlshot-mcp",
+    "license": "MIT",
+    "license_source": "https://github.com/SergiuPogor/curlshot-mcp/blob/main/LICENSE",
+    "tags": [
+      "screenshot",
+      "pdf",
+      "html-to-image",
+      "headless-browser",
+      "api",
+      "mcp"
     ]
   },
   {
@@ -36408,6 +36476,43 @@
     ]
   },
   {
+    "id": "krexa",
+    "path": "skills/krexa",
+    "category": "finance",
+    "name": "krexa",
+    "description": "Turn a trading idea, post or video into fixed rules, backtest and paper-trade them, and request a user-approved live agent through Krexa's MCP server. Cannot move funds.",
+    "risk": "critical",
+    "source": "https://github.com/Krexa-xyz/skills/tree/1d1b688a0adf6049ae921c992f9eab8f3618e521/skills/krexa",
+    "date_added": "2026-10-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "Krexa-xyz/skills",
+    "license": "MIT-0",
+    "license_source": "https://github.com/Krexa-xyz/skills/blob/1d1b688a0adf6049ae921c992f9eab8f3618e521/LICENSE",
+    "tags": [
+      "krexa",
+      "crypto",
+      "trading",
+      "backtesting",
+      "paper-trading",
+      "mcp",
+      "solana",
+      "hyperliquid",
+      "polymarket"
+    ]
+  },
+  {
     "id": "kubernetes-architect",
     "path": "skills/kubernetes-architect",
     "category": "devops",
@@ -46933,6 +47038,39 @@
     ]
   },
   {
+    "id": "outreachgenie-list-audit",
+    "path": "skills/outreachgenie-list-audit",
+    "category": "business",
+    "name": "outreachgenie-list-audit",
+    "description": "Audit saved OutreachGenie prospect lists against an outreach flow for missing template values, text limits and incomplete collection, using read-only MCP snapshots and local reports.",
+    "risk": "safe",
+    "source": "https://github.com/Outreachgenie/outreachgenie-linkedin-mcp/tree/0d0447f599fd161eed4385b72c475f0f887c1bd9/skills/outreachgenie-list-audit",
+    "date_added": "2026-10-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "Outreachgenie/outreachgenie-linkedin-mcp",
+    "license": "MIT",
+    "license_source": "https://github.com/Outreachgenie/outreachgenie-linkedin-mcp/blob/0d0447f599fd161eed4385b72c475f0f887c1bd9/skills/outreachgenie-list-audit/LICENSE",
+    "tags": [
+      "crm",
+      "prospecting",
+      "personalization",
+      "mcp",
+      "data-quality"
+    ]
+  },
+  {
     "id": "page-cro",
     "path": "skills/page-cro",
     "category": "marketing",
@@ -47049,6 +47187,40 @@
       "b2b",
       "pkr",
       "reconciliation"
+    ]
+  },
+  {
+    "id": "pangolinfo-amazon-data-research",
+    "path": "skills/pangolinfo-amazon-data-research",
+    "category": "data",
+    "name": "pangolinfo-amazon-data-research",
+    "description": "Plan and run read-only Amazon product, review, category, seller, and market research through Pangolinfo's documented MCP bridge.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-10-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "Pangolin-spg/openclaw-skills",
+    "license": "MIT",
+    "tags": [
+      "amazon",
+      "ecommerce",
+      "product-research",
+      "reviews",
+      "market-research",
+      "mcp",
+      "data"
     ]
   },
   {
@@ -50190,6 +50362,36 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "project-memory-log",
+    "path": "skills/project-memory-log",
+    "category": "productivity",
+    "name": "project-memory-log",
+    "description": "Maintain one operation log and one deduplicated document catalog for long-running projects. Use when resuming project work or tracing durable document changes across sessions.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-10-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "license": "MIT",
+    "tags": [
+      "project-memory",
+      "document-catalog",
+      "traceability",
+      "local-workflow"
+    ]
   },
   {
     "id": "project-skill-audit",
@@ -58514,6 +58716,40 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "solidping",
+    "path": "skills/solidping",
+    "category": "devops",
+    "name": "solidping",
+    "description": "Run SolidPing uptime monitoring through its hosted MCP server: list and diagnose checks, read results and incidents, create checks across 40+ types, and manage status pages.",
+    "risk": "critical",
+    "source": "https://github.com/fclairamb/solidping-plugin/tree/main/skills/solidping-monitoring",
+    "date_added": "2026-10-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "fclairamb/solidping-plugin",
+    "license": "MIT",
+    "license_source": "https://github.com/fclairamb/solidping-plugin/blob/main/LICENSE",
+    "tags": [
+      "monitoring",
+      "uptime",
+      "mcp",
+      "incidents",
+      "status-page",
+      "devops"
+    ]
   },
   {
     "id": "sop-company-wiki",

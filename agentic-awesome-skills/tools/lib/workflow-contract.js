@@ -1,4 +1,5 @@
 const fs = require("fs");
+const { LICENSE_PATH, validLicenseText, MAX_LICENSE_BYTES } = require("./skill-license");
 const path = require("path");
 
 const { isReviewedSupportPath } = require("./reviewed-fork-skills");
@@ -126,7 +127,7 @@ function classifyPathPolicy(filePath) {
   let kind = "unknown";
   if (CANONICAL_SKILL_PATH.test(filePath)) {
     kind = "canonical_skill";
-  } else if (SKILL_SUPPORT_PATH.test(filePath)) {
+  } else if (SKILL_SUPPORT_PATH.test(filePath) || LICENSE_PATH.test(filePath)) {
     kind = "skill_support";
   } else if (NARROW_DOC_PATH.test(filePath)) {
     kind = "documentation";
@@ -135,7 +136,7 @@ function classifyPathPolicy(filePath) {
   }
 
   const extension = path.posix.extname(filePath).toLowerCase();
-  const recognizedExtension = LOW_RISK_EXTENSIONS.has(extension)
+  const recognizedExtension = LICENSE_PATH.test(filePath) || LOW_RISK_EXTENSIONS.has(extension)
     || (kind === "web_app_source" && WEB_APP_SOURCE_EXTENSIONS.has(extension));
   const reasons = [];
   if (kind === "unknown") {
@@ -303,6 +304,14 @@ function classifyChangeRecords(records, options = {}) {
         reasons.push(`${prefix}:${side}_invalid_object_id`);
       } else {
         const blobSize = readBlobSize(record, side, options.blobSizes);
+        if (LICENSE_PATH.test(filePath) && !copyOrigin) {
+          if (Number.isSafeInteger(blobSize) && blobSize > MAX_LICENSE_BYTES) {
+            sensitive = true; reasons.push(`${prefix}:${side}_oversized_license`);
+          }
+          if (requireBlobSizes && !validLicenseText(options.licenseContents?.get(oid))) {
+            sensitive = true; reasons.push(`${prefix}:${side}_invalid_license_text`);
+          }
+        }
         if ((!Number.isSafeInteger(blobSize) || blobSize < 0) && requireBlobSizes) {
           sensitive = true;
           reasons.push(`${prefix}:${side}_missing_blob_size`);

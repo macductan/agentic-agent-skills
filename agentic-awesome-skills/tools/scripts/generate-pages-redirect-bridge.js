@@ -366,23 +366,21 @@ function parseArgs(argv) {
   return options;
 }
 
-function main() {
+async function main() {
   const options = parseArgs(process.argv.slice(2));
   if (options.help) {
     process.stdout.write('Usage: node tools/scripts/generate-pages-redirect-bridge.js --output NEW_DIR [--sitemap FILE] [--skills-index FILE] [--google-verification FILE] [--expected-routes N] [--expected-skills N]\n');
     return;
   }
-  const manifest = generateBridge(options);
+  const manifest = await require("./published_bridge_inputs.cjs").withPublishedInputs(options, generateBridge);
   process.stdout.write(`Generated ${manifest.route_count} redirect pages in ${path.resolve(options.outputDirectory)}\n`);
 }
 
 if (require.main === module) {
-  try {
-    main();
-  } catch (error) {
+  main().catch((error) => {
     process.stderr.write(`redirect bridge generation failed: ${error.message}\n`);
     process.exitCode = 1;
-  }
+  });
 }
 
 module.exports = {

@@ -302,3 +302,15 @@ test("the generated offline catalog manifest validates against its public schema
   const instance = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
   assert.equal(validateInstance("catalog-manifest.schema.json", instance), instance);
 });
+
+test("independent catalog plans bind compatibility while preserving legacy exact-version rejection", () => {
+  const input = planInput();
+  input.runtime.version = "19.10.0";
+  assert.throws(() => buildPlanEnvelope(input), /RUNTIME_CATALOG_MISMATCH/);
+  input.catalogRelease = { schemaVersion: 1, sourceCommit: "a".repeat(40), runtimeMajor: 19, minimumRuntime: "19.10.0" };
+  const plan = buildPlanEnvelope(input);
+  assert.equal(plan.payload.catalogRelease.sourceCommit, "a".repeat(40));
+  assert.doesNotThrow(() => validatePlanEnvelope(plan));
+  input.catalogRelease.minimumRuntime = "19.11.0";
+  assert.throws(() => buildPlanEnvelope(input), /RUNTIME_CATALOG_MISMATCH/);
+});

@@ -98,7 +98,7 @@ class DocumentationConsistency(unittest.TestCase):
         self.assertEqual(failures, [])
 
     def test_maintainer_ci_sequence_matches_workflows(self):
-        skill = (ROOT / 'skills/antigravity-maintainer-batch-release/SKILL.md').read_text()
+        skill = (ROOT / 'skills/antigravity-maintainer-batch-release/references/maintenance-contract.md').read_text() + (ROOT / 'skills/antigravity-maintainer-batch-release/references/skillspector.md').read_text()
         ci = yaml.load((ROOT / '.github/workflows/ci.yml').read_text(), Loader=yaml.BaseLoader)
         advisory = yaml.load((ROOT / '.github/workflows/skillspector-advisory.yml').read_text(), Loader=yaml.BaseLoader)
         expected = {

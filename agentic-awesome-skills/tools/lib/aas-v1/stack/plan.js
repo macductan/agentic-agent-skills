@@ -242,7 +242,7 @@ function buildPlanEnvelope(input) {
   assertPlainObject(input, "input");
   assertExactKeys(
     input,
-    new Set(["manifest", "handshake", "catalog", "runtime", "target", "installedState", "operations", "overrides", "stateCommit"]),
+    new Set(["manifest", "handshake", "catalog", "catalogRelease", "runtime", "target", "installedState", "operations", "overrides", "stateCommit"]),
     "input",
   );
   const validation = validateManifest(input.manifest);
@@ -257,7 +257,14 @@ function buildPlanEnvelope(input) {
   const operationIds = new Set(operations.map((operation) => operation.skillId));
   const overrides = normalizeOverrides(input.overrides ?? [], operationIds);
   const stateCommit = normalizeStateCommit(input.stateCommit, installedState.digest);
-  if (runtime.package !== catalog.package || runtime.version !== catalog.version) {
+  if (input.catalogRelease !== undefined) {
+    assertExactKeys(input.catalogRelease, new Set(["schemaVersion", "sourceCommit", "runtimeMajor", "minimumRuntime"]), "catalogRelease");
+    if (input.catalogRelease.schemaVersion !== 1 || !/^[a-f0-9]{40}$/.test(input.catalogRelease.sourceCommit)
+        || !Number.isSafeInteger(input.catalogRelease.runtimeMajor)
+        || !require("../cache/catalog-release").compatible(input.catalogRelease, runtime.version))
+      throw planError("AAS_PLAN_RUNTIME_CATALOG_MISMATCH", "integrity", {});
+  }
+  if (runtime.package !== catalog.package || (!input.catalogRelease && runtime.version !== catalog.version)) {
     throw planError("AAS_PLAN_RUNTIME_CATALOG_MISMATCH", "integrity", {});
   }
   if (stateCommit.nextDigest !== expectedNextStateDigest(installedState, operations, catalog.integrity)) {
@@ -270,6 +277,7 @@ function buildPlanEnvelope(input) {
     versions: boundVersions,
     manifestDigest: validation.manifestDigest,
     catalog,
+    ...(input.catalogRelease ? { catalogRelease: input.catalogRelease } : {}),
     runtime,
     target,
     installedState,
@@ -298,7 +306,7 @@ function validatePlanEnvelope(plan) {
   assertDigest(plan.digest, "plan.digest");
   assertPlainObject(plan.payload, "plan.payload");
   assertExactKeys(plan.payload, new Set([
-    "schemaVersion", "kind", "versions", "manifestDigest", "catalog", "runtime", "target",
+    "schemaVersion", "kind", "versions", "manifestDigest", "catalog", "catalogRelease", "runtime", "target",
     "installedState", "desiredSkills", "profile", "operations", "overrides", "stateCommit",
   ]), "plan.payload");
   if (plan.payload.schemaVersion !== 2 || plan.payload.kind !== "aas.stack-plan.payload"
@@ -322,6 +330,7 @@ function validatePlanEnvelope(plan) {
     manifest: syntheticManifest,
     handshake: plan.payload.versions,
     catalog: plan.payload.catalog,
+    ...(plan.payload.catalogRelease ? { catalogRelease: plan.payload.catalogRelease } : {}),
     runtime: plan.payload.runtime,
     target: plan.payload.target,
     installedState: plan.payload.installedState,

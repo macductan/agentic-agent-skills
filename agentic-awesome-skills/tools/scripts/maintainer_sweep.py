@@ -87,11 +87,24 @@ def list_open_prs_with_checks(repo: Path, limit: int) -> list[dict[str, Any]]:
         "--limit",
         str(limit),
         "--json",
-        "number,title,headRefOid,isDraft,mergeable,statusCheckRollup",
+        "number,title,headRefOid,headRefName,headRepository,isDraft,mergeable,statusCheckRollup",
     )
     parsed = json.loads(output)
     if not isinstance(parsed, list):
         raise ValueError("Unexpected gh pr list output")
+    pages = json.loads(run_gh(repo, "api", "--paginate", "--slurp", "repos/{owner}/{repo}/actions/runs?status=action_required&per_page=100"))
+    runs = {"workflow_runs": [run for page in pages for run in page.get("workflow_runs", [])]}
+    for pr in parsed:
+        pr["approval_runs"] = [
+            {"id": run["id"], "url": run.get("html_url")}
+            for run in runs.get("workflow_runs", [])
+            if run.get("head_sha") == pr.get("headRefOid")
+            and (any(item.get("number") == pr.get("number") for item in run.get("pull_requests", []))
+                 or (run.get("head_branch") == pr.get("headRefName")
+                     and str((run.get("head_repository") or {}).get("full_name", "")).lower()
+                     == str((pr.get("headRepository") or {}).get("nameWithOwner", "")).lower()
+                     and bool((pr.get("headRepository") or {}).get("nameWithOwner"))))
+        ]
     return parsed
 
 
@@ -149,6 +162,11 @@ def summarize_pr_checks(pr: dict[str, Any]) -> dict[str, Any]:
     return {
         "checks": checks,
         "skill_review": skill_status,
+        "manual_review_required": any(
+            "manual-review-required" in str(entry.get("name", ""))
+            and str(entry.get("conclusion", "")).upper() == "SUCCESS"
+            for entry in rollup
+        ),
         "ci_ready": ci_ready,
         "merge_ready_hint": merge_ready_hint,
     }
@@ -226,10 +244,20 @@ def build_next_actions(
             reasons = changed.get("reasons") or []
             if reasons:
                 detail_parts.append(reasons[0])
-        elif any(checks.get(name) in ("pending", "failed", "missing") for name in REQUIRED_CI_CHECKS):
+        elif any(checks.get(name) == "failed" for name in REQUIRED_CI_CHECKS):
+            action = "repair_ci"
+            detail_parts.append(",".join(k for k in REQUIRED_CI_CHECKS if checks.get(k) == "failed"))
+        elif pr.get("approval_runs"):
+            action = "review_and_approve_workflows"
+            detail_parts.append(",".join(str(run["id"]) for run in pr["approval_runs"]))
+        elif any(checks.get(name) == "missing" for name in REQUIRED_CI_CHECKS):
+            action = "investigate_missing_ci"
+            detail_parts.append(",".join(k for k in REQUIRED_CI_CHECKS if checks.get(k) == "missing"))
+        elif any(checks.get(name) == "pending" for name in REQUIRED_CI_CHECKS):
             action = "wait_ci"
-            failing = [k for k in REQUIRED_CI_CHECKS if checks.get(k) != "success"]
-            detail_parts.append(",".join(failing))
+        elif summary.get("manual_review_required"):
+            action = "review_exact_head"
+            detail_parts.append(head)
         elif skill_review == "pending":
             action = "wait_skill_review"
         elif skill_review == "failed":
@@ -266,7 +294,11 @@ def build_next_actions(
         "resolve_conflicts": 0,
         "fix_evidence_blockers": 1,
         "merge_dry_run_blocked": 2,
-        "wait_ci": 3,
+        "repair_ci": 2,
+        "review_and_approve_workflows": 3,
+        "investigate_missing_ci": 3,
+        "review_exact_head": 4,
+        "wait_ci": 5,
         "wait_skill_review": 4,
         "repair_skill_review": 5,
         "inspect_first": 6,
@@ -443,6 +475,7 @@ def build_sweep_payload(repo: Path, args: argparse.Namespace) -> dict[str, Any]:
                 "isDraft": pr.get("isDraft"),
                 "mergeable": pr.get("mergeable"),
                 "summary": summary,
+                "approval_runs": pr.get("approval_runs", []),
             },
         )
     payload["pull_requests"] = enriched

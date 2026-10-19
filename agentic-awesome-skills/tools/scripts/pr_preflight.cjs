@@ -1,9 +1,13 @@
 #!/usr/bin/env node
 
 const fs = require("fs");
+const { classifyImpact } = require("../lib/maintenance-impact");
+const { resolveLicenseContents } = require("../lib/skill-license");
 const path = require("path");
+const os = require("os");
 const { spawnSync } = require("child_process");
 const sanitizeFilename = require("sanitize-filename");
+const { resolveCommandInvocation } = require("./release_workflow.js");
 
 const { resolveBlobSizes } = require("../lib/git-blob-sizes");
 const { findProjectRoot } = require("../lib/project-root");
@@ -72,13 +76,16 @@ function safeUserPath(pathValue, baseDir = process.cwd()) {
   }
 
   const root = path.resolve(baseDir);
-  const segments = String(pathValue || "").split(/[\\/]+/).filter(Boolean).map((segment) => {
-    const sanitized = sanitizeFilename(segment);
-    if (sanitized !== segment || !sanitized) {
-      throw new Error(`Unsafe path segment: ${segment}`);
-    }
-    return sanitized;
-  });
+  const segments = String(pathValue || "")
+    .split(/[\\/]+/)
+    .filter(Boolean)
+    .map((segment) => {
+      const sanitized = sanitizeFilename(segment);
+      if (sanitized !== segment || !sanitized) {
+        throw new Error(`Unsafe path segment: ${segment}`);
+      }
+      return sanitized;
+    });
   const target = path.resolve(root, ...segments);
   const rel = path.relative(root, target);
   if (rel.startsWith("..") || path.isAbsolute(rel)) {
@@ -100,27 +107,12 @@ function runGit(args, options = {}) {
 
   if (typeof result.status !== "number" || result.status !== 0) {
     const stderr = options.capture ? result.stderr.trim() : "";
-    throw new Error(stderr || `git ${args.join(" ")} failed with status ${result.status}`);
+    throw new Error(
+      stderr || `git ${args.join(" ")} failed with status ${result.status}`,
+    );
   }
 
   return options.capture ? result.stdout.trim() : "";
-}
-
-function runCommand(command, args, cwd) {
-  console.log(`[pr:preflight] ${command} ${args.join(" ")}`);
-  const result = spawnSync(command, args, {
-    cwd,
-    stdio: "inherit",
-    shell: process.platform === "win32",
-  });
-
-  if (result.error) {
-    throw result.error;
-  }
-
-  if (typeof result.status !== "number" || result.status !== 0) {
-    process.exit(result.status || 1);
-  }
 }
 
 function resolveBaseRef(projectRoot) {
@@ -144,7 +136,16 @@ function getChangeRecords(projectRoot, baseRef, headRef) {
 
   const result = spawnSync(
     "git",
-    ["diff", "--raw", "--no-abbrev", "-z", "-M", "--find-copies-harder", `${baseRef}...${headRef}`, "--"],
+    [
+      "diff",
+      "--raw",
+      "--no-abbrev",
+      "-z",
+      "-M",
+      "--find-copies-harder",
+      `${baseRef}...${headRef}`,
+      "--",
+    ],
     {
       cwd: projectRoot,
       encoding: null,
@@ -154,23 +155,35 @@ function getChangeRecords(projectRoot, baseRef, headRef) {
   );
   if (result.error) throw result.error;
   if (typeof result.status !== "number" || result.status !== 0) {
-    const stderr = Buffer.isBuffer(result.stderr) ? result.stderr.toString("utf8").trim() : "";
+    const stderr = Buffer.isBuffer(result.stderr)
+      ? result.stderr.toString("utf8").trim()
+      : "";
     throw new Error(stderr || `git diff failed with status ${result.status}`);
   }
   return parseRawDiff(result.stdout, { allowEmpty: true });
 }
 
 function getChangedFiles(projectRoot, baseRef, headRef) {
-  return changedFilesFromRecords(getChangeRecords(projectRoot, baseRef, headRef));
+  return changedFilesFromRecords(
+    getChangeRecords(projectRoot, baseRef, headRef),
+  );
 }
 
 function changedFilesFromRecords(records) {
   // A copy reads its origin without changing it. Renames still modify both
   // paths, and the independent fork-safety classifier retains the raw records.
-  return [...new Set(records.flatMap((record) => record.status === "C"
-    ? [record.new_path] : [record.old_path, record.new_path])
-    .filter(Boolean)
-    .map(normalizeRepoPath))];
+  return [
+    ...new Set(
+      records
+        .flatMap((record) =>
+          record.status === "C"
+            ? [record.new_path]
+            : [record.old_path, record.new_path],
+        )
+        .filter(Boolean)
+        .map(normalizeRepoPath),
+    ),
+  ];
 }
 
 function loadPullRequestEvent(eventPath) {
@@ -182,14 +195,26 @@ function loadPullRequestEvent(eventPath) {
   return JSON.parse(rawEvent).pull_request || null;
 }
 
-const { resolveReviewedSkillRoots, resolveReviewedSupportPaths } = require("../lib/reviewed-fork-skills");
+const {
+  resolveReviewedSkillRoots,
+  resolveReviewedSupportPaths,
+} = require("../lib/reviewed-fork-skills");
 
 function evaluateForkSafety(projectRoot, changeRecords, pullRequest) {
   if (!pullRequest) {
-    return { applicable: false, approvalSafe: true, reasons: [], requiresHumanReview: false };
+    return {
+      applicable: false,
+      approvalSafe: true,
+      reasons: [],
+      requiresHumanReview: false,
+    };
   }
-  const headRepository = String(pullRequest?.head?.repo?.full_name || "").toLowerCase();
-  const baseRepository = String(pullRequest?.base?.repo?.full_name || "").toLowerCase();
+  const headRepository = String(
+    pullRequest?.head?.repo?.full_name || "",
+  ).toLowerCase();
+  const baseRepository = String(
+    pullRequest?.base?.repo?.full_name || "",
+  ).toLowerCase();
   if (!headRepository || !baseRepository) {
     return {
       applicable: true,
@@ -199,7 +224,12 @@ function evaluateForkSafety(projectRoot, changeRecords, pullRequest) {
     };
   }
   if (headRepository === baseRepository) {
-    return { applicable: false, approvalSafe: true, reasons: [], requiresHumanReview: false };
+    return {
+      applicable: false,
+      approvalSafe: true,
+      reasons: [],
+      requiresHumanReview: false,
+    };
   }
   if (Array.isArray(changeRecords) && changeRecords.length === 0) {
     return {
@@ -216,18 +246,36 @@ function evaluateForkSafety(projectRoot, changeRecords, pullRequest) {
   }
 
   const reviewedIdentity = {
-    pr: pullRequest.number, baseRepository: pullRequest.base.repo.full_name,
-    headRepository: pullRequest.head.repo.full_name, head: pullRequest.head.sha,
+    pr: pullRequest.number,
+    baseRepository: pullRequest.base.repo.full_name,
+    headRepository: pullRequest.head.repo.full_name,
+    head: pullRequest.head.sha,
   };
-  const reviewedSkillRoots = resolveReviewedSkillRoots(projectRoot, reviewedIdentity);
-  const reviewedSupportPaths = resolveReviewedSupportPaths(projectRoot, reviewedIdentity);
+  const reviewedSkillRoots = resolveReviewedSkillRoots(
+    projectRoot,
+    reviewedIdentity,
+  );
+  const reviewedSupportPaths = resolveReviewedSupportPaths(
+    projectRoot,
+    reviewedIdentity,
+  );
   const policyOptions = { reviewedSkillRoots, reviewedSupportPaths };
-  const preliminary = classifyChangeRecords(changeRecords, { requireBlobSizes: false, ...policyOptions });
+  const preliminary = classifyChangeRecords(changeRecords, {
+    requireBlobSizes: false,
+    ...policyOptions,
+  });
   if (!preliminary.approvalSafe) {
     return { applicable: true, ...preliminary };
   }
   const blobSizes = resolveBlobSizes(projectRoot, changeRecords);
-  return { applicable: true, ...classifyChangeRecords(changeRecords, { blobSizes, ...policyOptions }) };
+  return {
+    applicable: true,
+    ...classifyChangeRecords(changeRecords, {
+      blobSizes,
+      licenseContents: resolveLicenseContents(projectRoot, changeRecords),
+      ...policyOptions,
+    }),
+  };
 }
 
 function appendGithubOutput(result) {
@@ -249,6 +297,7 @@ function appendGithubOutput(result) {
     `fork_approval_safe=${String(result.forkSafety.approvalSafe)}`,
     `fork_safety_reasons=${JSON.stringify(result.forkSafety.reasons)}`,
     `impact_profile=${result.shadowImpact.profile}`,
+    `validation_profile=${result.validationImpact?.profile || "full"}`,
     `impact_reasons=${JSON.stringify(result.shadowImpact.reasons)}`,
   ];
 
@@ -264,7 +313,9 @@ function appendStepSummary(result) {
   const derivedSummary =
     result.directDerivedChanges.length === 0
       ? "none"
-      : result.directDerivedChanges.map((filePath) => `\`${filePath}\``).join(", ");
+      : result.directDerivedChanges
+          .map((filePath) => `\`${filePath}\``)
+          .join(", ");
 
   const lines = [
     "## PR Workflow Intake",
@@ -285,31 +336,212 @@ function appendStepSummary(result) {
   fs.appendFileSync(summaryPath, `${lines.join("\n")}\n`, "utf8");
 }
 
+function localCheckCommands(result, base, head) {
+  if (result.validationImpact) return [["maintenance:validate", ["--base", base, "--head", head]]];
+  return [
+    ["validate", []],
+    ...(result.requiresReferencesValidation
+      ? [["validate:references", []]]
+      : []),
+    ["security:docs", []],
+    ["check:readme-credits", ["--base", base, "--head", head]],
+    ["test", []],
+  ];
+}
+function prepareTestPreview(root, head, execute = spawnSync, generate = true) {
+  if (!/^[0-9a-f]{40}$/.test(head))
+    throw new Error("Preview requires an immutable head SHA");
+  const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "aas-preflight-"));
+  const cleanup = () => fs.rmSync(temporary, { recursive: true, force: true });
+  const output = [];
+  const started = Date.now();
+  try {
+    for (const [command, args, cwd] of [
+      ["git", ["clone", "--shared", "--no-checkout", root, temporary], root],
+      ["git", ["checkout", "--detach", head], temporary],
+      [
+        "npm",
+        [
+          "ci",
+          "--ignore-scripts",
+          "--audit=false",
+          "--cache",
+          path.join(temporary, ".tmp", "npm-cache"),
+        ],
+        temporary,
+      ],
+      ...(generate ? [["npm", ["run", "chain"], temporary],
+      ["npm", ["run", "sync:web-assets"], temporary]] : []),
+    ]) {
+      const invocation = resolveCommandInvocation(command, args);
+      const result = execute(invocation.command, invocation.args, {
+        cwd,
+        encoding: "utf8",
+        maxBuffer: 32 * 1024 * 1024,
+        timeout: 300000,
+        shell: false,
+      });
+      output.push(`${result.stdout || ""}${result.stderr || ""}`);
+      if (result.error || result.status !== 0)
+        throw new Error(
+          result.error?.message || `${command} preparation failed`,
+        );
+    }
+    return {
+      root: temporary,
+      cleanup,
+      preparation: {
+        script: "prepare-test-preview",
+        exitCode: 0,
+        elapsedMs: Date.now() - started,
+        output: output.join("\n"),
+      },
+    };
+  } catch (error) {
+    return {
+      root: null,
+      cleanup,
+      preparation: {
+        script: "prepare-test-preview",
+        exitCode: 1,
+        elapsedMs: Date.now() - started,
+        output: output.join("\n") + "\n" + error.message,
+      },
+    };
+  }
+}
+function runLocalChecks(
+  root,
+  result,
+  base,
+  head,
+  execute = spawnSync,
+  prepare = prepareTestPreview,
+) {
+  const checks = [];
+  for (const [script, extra] of localCheckCommands(result, base, head)) {
+    let preview = null;
+    try {
+      if (script === "test" || script === "maintenance:validate") {
+        preview = prepare(root, head, execute, script === "test");
+        checks.push(preview.preparation);
+        if (preview.preparation.exitCode !== 0) {
+          checks.push({
+            script: "test",
+            exitCode: 1,
+            skipped: true,
+            output: "Test preview preparation failed; tests were not run.",
+          });
+          continue;
+        }
+      }
+      const started = Date.now();
+      const invocation = resolveCommandInvocation("npm", [
+        "run",
+        script,
+        ...(extra.length ? ["--", ...extra] : []),
+      ]);
+      const run = execute(invocation.command, invocation.args, {
+        cwd: preview?.root || root,
+        encoding: "utf8",
+        maxBuffer: 32 * 1024 * 1024,
+        shell: false,
+      });
+      const check = {
+        script,
+        exitCode: run.error ? 1 : (run.status ?? 1),
+        elapsedMs: Date.now() - started,
+        output: `${run.stdout || ""}${run.stderr || ""}${run.error?.message || ""}`,
+      };
+      checks.push(check);
+      process.stderr.write(
+        `[pr:preflight] ${script}: ${check.exitCode === 0 ? "passed" : "failed"}\n`,
+      );
+    } finally {
+      preview?.cleanup();
+    }
+  }
+  return checks;
+}
+function assertCleanSnapshot(root, headOid, execute = spawnSync) {
+  const head = execute("git", ["rev-parse", "HEAD"], {
+    cwd: root,
+    encoding: "utf8",
+  });
+  const status = execute("git", ["status", "--porcelain"], {
+    cwd: root,
+    encoding: "utf8",
+  });
+  if (
+    head.status !== 0 ||
+    status.status !== 0 ||
+    head.stdout.trim() !== headOid ||
+    status.stdout.trim()
+  )
+    throw new Error(
+      "Full preflight requires a clean committed checkout of the selected head. Commit or stash source changes, or use --repo with a clean checkout; --no-run performs classification only.",
+    );
+}
 function main() {
   const args = parseArgs(process.argv.slice(2));
-  const projectRoot = args.repo ? path.resolve(args.repo) : findProjectRoot(__dirname);
+  const projectRoot = args.repo
+    ? path.resolve(args.repo)
+    : findProjectRoot(__dirname);
   const contract = loadWorkflowContract(__dirname);
   const baseRef = args.base || resolveBaseRef(projectRoot);
-  const changeRecords = getChangeRecords(projectRoot, baseRef, args.head);
+  const baseOid = runGit(
+    ["rev-parse", "--verify", "--end-of-options", `${baseRef}^{commit}`],
+    { cwd: projectRoot, capture: true },
+  );
+  const headOid = runGit(
+    ["rev-parse", "--verify", "--end-of-options", `${args.head}^{commit}`],
+    { cwd: projectRoot, capture: true },
+  );
+  if (!/^[0-9a-f]{40}$/.test(baseOid) || !/^[0-9a-f]{40}$/.test(headOid))
+    throw new Error("Invalid immutable preflight snapshot");
+  if (!args.noRun) {
+    try {
+      assertCleanSnapshot(projectRoot, headOid);
+    } catch (error) {
+      if (args.json)
+        process.stdout.write(
+          `${JSON.stringify({ error: "snapshot_not_clean", headOid, detail: error.message })}\n`,
+        );
+      else console.error(error.message);
+      process.exitCode = 1;
+      return;
+    }
+  }
+  const changeRecords = getChangeRecords(projectRoot, baseOid, headOid);
   const changedFiles = changedFilesFromRecords(changeRecords);
   const classification = classifyChangedFiles(changedFiles, contract);
   const directDerivedChanges = getDirectDerivedChanges(changedFiles, contract);
   const pullRequest = loadPullRequestEvent(args.eventPath);
   const pullRequestBody = pullRequest?.body ?? null;
-  const forkSafety = evaluateForkSafety(projectRoot, changeRecords, pullRequest);
+  const forkSafety = evaluateForkSafety(
+    projectRoot,
+    changeRecords,
+    pullRequest,
+  );
   const shadowImpact = classifyShadowImpact(changeRecords, contract);
 
   const result = {
     baseRef,
+    baseOid,
+    headOid,
     headRef: args.head,
     changeRecords,
     changedFiles,
     categories: classification.categories,
     primaryCategory: classification.primaryCategory,
     directDerivedChanges,
-    requiresReferencesValidation: requiresReferencesValidation(changedFiles, contract),
+    requiresReferencesValidation: requiresReferencesValidation(
+      changedFiles,
+      contract,
+    ),
     forkSafety,
     shadowImpact,
+    validationImpact: classifyImpact(changeRecords),
     prBody: {
       available: pullRequestBody !== null,
       hasQualityChecklist: hasQualityChecklist(pullRequestBody),
@@ -325,9 +557,9 @@ function main() {
     appendStepSummary(result);
   }
 
-  if (args.json) {
+  if (args.json && args.noRun) {
     process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
-  } else {
+  } else if (!args.json) {
     console.log(`[pr:preflight] Base ref: ${baseRef}`);
     console.log(`[pr:preflight] Changed files: ${changedFiles.length}`);
     console.log(
@@ -348,24 +580,31 @@ function main() {
     }
 
     if (pullRequestBody !== null && !result.prBody.hasQualityChecklist) {
-      console.error("PR body must include the Quality Bar Checklist section from the template.");
+      console.error(
+        "PR body must include the Quality Bar Checklist section from the template.",
+      );
       process.exit(1);
     }
   }
 
-  if (args.checkForkSafety && forkSafety.applicable && !forkSafety.approvalSafe) {
-    console.error(`Fork PR is not approval-safe: ${forkSafety.reasons.slice(0, 12).join(", ") || "unclassified diff"}.`);
+  if (
+    args.checkForkSafety &&
+    forkSafety.applicable &&
+    !forkSafety.approvalSafe
+  ) {
+    console.error(
+      `Fork PR is not approval-safe: ${forkSafety.reasons.slice(0, 12).join(", ") || "unclassified diff"}.`,
+    );
     process.exit(1);
   }
 
   if (!args.noRun) {
-    runCommand("npm", ["run", "validate"], projectRoot);
-
-    if (result.requiresReferencesValidation) {
-      runCommand("npm", ["run", "validate:references"], projectRoot);
-    }
-
-    runCommand("npm", ["run", "test"], projectRoot);
+    const checks = runLocalChecks(projectRoot, result, baseOid, headOid);
+    if (args.json)
+      process.stdout.write(
+        `${JSON.stringify({ ...result, localChecks: checks }, null, 2)}\n`,
+      );
+    if (checks.some((check) => check.exitCode !== 0)) process.exitCode = 1;
   }
 }
 
@@ -374,6 +613,10 @@ if (require.main === module) {
 }
 
 module.exports = {
+  assertCleanSnapshot,
+  prepareTestPreview,
+  localCheckCommands,
+  runLocalChecks,
   changedFilesFromRecords,
   evaluateForkSafety,
   getChangeRecords,

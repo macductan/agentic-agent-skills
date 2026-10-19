@@ -21,4 +21,4 @@ npm run app:dev
 
 ## Maintainer changes
 
-Review generated differences as evidence; do not include them in an ordinary source PR. Use the protected [canonical-sync workflow](ci-drift-fix.md) after source merge. Updating the local catalog does not update installed skill copies, publish npm, or deploy Pages.
+Review generated differences as evidence; do not include them in an ordinary source PR. Tracked distribution snapshots refresh in the protected release PR; use [ephemeral validation](ci-drift-fix.md) during source development. Updating the local catalog does not update installed skill copies, publish npm, or deploy Pages.

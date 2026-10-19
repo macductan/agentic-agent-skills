@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-16T11:41:20.000Z",
-  "total": 2705,
+  "generatedAt": "2026-10-18T21:53:06.000Z",
+  "total": 2712,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -3411,6 +3411,42 @@
       "path": "skills/ai-wrapper-product/SKILL.md"
     },
     {
+      "id": "aident-loadout",
+      "canonical_id": "aident-loadout",
+      "name": "aident-loadout",
+      "description": "Run multi-step work across apps the user connected in Aident Loadout: live action schemas, connection checks, cost preflight, and approval before side effects.",
+      "category": "api-integration",
+      "risk": "critical",
+      "source": "https://github.com/Aident-AI/aident-skill/tree/main/aident-loadout/skills/aident-loadout",
+      "source_type": "official",
+      "source_repo": "Aident-AI/aident-skill",
+      "license": "MIT",
+      "license_source": "https://github.com/Aident-AI/aident-skill/blob/main/LICENSE",
+      "tags": [
+        "mcp",
+        "integrations",
+        "oauth",
+        "vault",
+        "audit",
+        "agent-tools"
+      ],
+      "triggers": [
+        "mcp",
+        "integrations",
+        "oauth",
+        "vault",
+        "audit",
+        "agent-tools",
+        "aident",
+        "loadout",
+        "run",
+        "multi",
+        "step",
+        "work"
+      ],
+      "path": "skills/aident-loadout/SKILL.md"
+    },
+    {
       "id": "aider-delegate",
       "canonical_id": "aider-delegate",
       "name": "aider-delegate",
@@ -4556,7 +4592,7 @@
       "id": "antigravity-maintainer-batch-release",
       "canonical_id": "antigravity-maintainer-batch-release",
       "name": "antigravity-maintainer-batch-release",
-      "description": "Run protected AAS maintainer sweeps, PR merge batches, canonical sync, Core preview checks, and scripted releases. Use for repository maintenance, main alignment, CLI/MCP/Workbench changes, or release work; not ordinary contribution tasks.",
+      "description": "Run protected AAS maintainer sweeps, PR merge batches, resumable review, immutable distribution, Core checks, and scripted releases. Use for repository maintenance, main alignment, CLI/MCP/Workbench changes, or release work; not ordinary contribution tasks.",
       "category": "devops",
       "risk": "critical",
       "source": "self",
@@ -4578,7 +4614,7 @@
         "pr",
         "merge",
         "batches",
-        "canonical"
+        "resumable"
       ],
       "path": "skills/antigravity-maintainer-batch-release/SKILL.md"
     },
@@ -21429,6 +21465,42 @@
         "survey"
       ],
       "path": "skills/culture-retention/SKILL.md"
+    },
+    {
+      "id": "curlshot",
+      "canonical_id": "curlshot",
+      "name": "curlshot",
+      "description": "Capture web page screenshots, PDFs and scrolling videos, or render HTML/Markdown to images, with the hosted CurlShot API.",
+      "category": "api-integration",
+      "risk": "safe",
+      "source": "https://github.com/SergiuPogor/curlshot-mcp/tree/main/skills/curlshot",
+      "source_type": "official",
+      "source_repo": "SergiuPogor/curlshot-mcp",
+      "license": "MIT",
+      "license_source": "https://github.com/SergiuPogor/curlshot-mcp/blob/main/LICENSE",
+      "tags": [
+        "screenshot",
+        "pdf",
+        "html-to-image",
+        "headless-browser",
+        "api",
+        "mcp"
+      ],
+      "triggers": [
+        "screenshot",
+        "pdf",
+        "html-to-image",
+        "headless-browser",
+        "api",
+        "mcp",
+        "curlshot",
+        "capture",
+        "web",
+        "page",
+        "screenshots",
+        "pdfs"
+      ],
+      "path": "skills/curlshot/SKILL.md"
     },
     {
       "id": "cursor-delegate",
@@ -42909,6 +42981,45 @@
       "path": "skills/kpi-tracker/SKILL.md"
     },
     {
+      "id": "krexa",
+      "canonical_id": "krexa",
+      "name": "krexa",
+      "description": "Turn a trading idea, post or video into fixed rules, backtest and paper-trade them, and request a user-approved live agent through Krexa's MCP server. Cannot move funds.",
+      "category": "finance",
+      "risk": "critical",
+      "source": "https://github.com/Krexa-xyz/skills/tree/1d1b688a0adf6049ae921c992f9eab8f3618e521/skills/krexa",
+      "source_type": "official",
+      "source_repo": "Krexa-xyz/skills",
+      "license": "MIT-0",
+      "license_source": "https://github.com/Krexa-xyz/skills/blob/1d1b688a0adf6049ae921c992f9eab8f3618e521/LICENSE",
+      "tags": [
+        "krexa",
+        "crypto",
+        "trading",
+        "backtesting",
+        "paper-trading",
+        "mcp",
+        "solana",
+        "hyperliquid",
+        "polymarket"
+      ],
+      "triggers": [
+        "krexa",
+        "crypto",
+        "trading",
+        "backtesting",
+        "paper-trading",
+        "mcp",
+        "solana",
+        "hyperliquid",
+        "polymarket",
+        "turn",
+        "idea",
+        "post"
+      ],
+      "path": "skills/krexa/SKILL.md"
+    },
+    {
       "id": "kubernetes-architect",
       "canonical_id": "kubernetes-architect",
       "name": "kubernetes-architect",
@@ -55078,6 +55189,41 @@
       "path": "skills/outreachagent/SKILL.md"
     },
     {
+      "id": "outreachgenie-list-audit",
+      "canonical_id": "outreachgenie-list-audit",
+      "name": "outreachgenie-list-audit",
+      "description": "Audit saved OutreachGenie prospect lists against an outreach flow for missing template values, text limits and incomplete collection, using read-only MCP snapshots and local reports.",
+      "category": "business",
+      "risk": "safe",
+      "source": "https://github.com/Outreachgenie/outreachgenie-linkedin-mcp/tree/0d0447f599fd161eed4385b72c475f0f887c1bd9/skills/outreachgenie-list-audit",
+      "source_type": "official",
+      "source_repo": "Outreachgenie/outreachgenie-linkedin-mcp",
+      "license": "MIT",
+      "license_source": "https://github.com/Outreachgenie/outreachgenie-linkedin-mcp/blob/0d0447f599fd161eed4385b72c475f0f887c1bd9/skills/outreachgenie-list-audit/LICENSE",
+      "tags": [
+        "crm",
+        "prospecting",
+        "personalization",
+        "mcp",
+        "data-quality"
+      ],
+      "triggers": [
+        "crm",
+        "prospecting",
+        "personalization",
+        "mcp",
+        "data-quality",
+        "outreachgenie",
+        "list",
+        "audit",
+        "saved",
+        "prospect",
+        "lists",
+        "against"
+      ],
+      "path": "skills/outreachgenie-list-audit/SKILL.md"
+    },
+    {
       "id": "page-cro",
       "canonical_id": "page-cro",
       "name": "page-cro",
@@ -55216,6 +55362,42 @@
         "integrations"
       ],
       "path": "skills/pakistan-payments-stack/SKILL.md"
+    },
+    {
+      "id": "pangolinfo-amazon-data-research",
+      "canonical_id": "pangolinfo-amazon-data-research",
+      "name": "pangolinfo-amazon-data-research",
+      "description": "Plan and run read-only Amazon product, review, category, seller, and market research through Pangolinfo's documented MCP bridge.",
+      "category": "data",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "official",
+      "source_repo": "Pangolin-spg/openclaw-skills",
+      "license": "MIT",
+      "tags": [
+        "amazon",
+        "ecommerce",
+        "product-research",
+        "reviews",
+        "market-research",
+        "mcp",
+        "data"
+      ],
+      "triggers": [
+        "amazon",
+        "ecommerce",
+        "product-research",
+        "reviews",
+        "market-research",
+        "mcp",
+        "data",
+        "pangolinfo",
+        "research",
+        "plan",
+        "run",
+        "read"
+      ],
+      "path": "skills/pangolinfo-amazon-data-research/SKILL.md"
     },
     {
       "id": "papers-skill",
@@ -58780,6 +58962,38 @@
         "architectures"
       ],
       "path": "skills/project-development/SKILL.md"
+    },
+    {
+      "id": "project-memory-log",
+      "canonical_id": "project-memory-log",
+      "name": "project-memory-log",
+      "description": "Maintain one operation log and one deduplicated document catalog for long-running projects. Use when resuming project work or tracing durable document changes across sessions.",
+      "category": "productivity",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "license": "MIT",
+      "tags": [
+        "project-memory",
+        "document-catalog",
+        "traceability",
+        "local-workflow"
+      ],
+      "triggers": [
+        "project-memory",
+        "document-catalog",
+        "traceability",
+        "local-workflow",
+        "memory",
+        "log",
+        "maintain",
+        "one",
+        "operation",
+        "deduplicated",
+        "document",
+        "catalog"
+      ],
+      "path": "skills/project-memory-log/SKILL.md"
     },
     {
       "id": "project-skill-audit",
@@ -68308,6 +68522,42 @@
         "development"
       ],
       "path": "skills/solidity-security/SKILL.md"
+    },
+    {
+      "id": "solidping",
+      "canonical_id": "solidping",
+      "name": "solidping",
+      "description": "Run SolidPing uptime monitoring through its hosted MCP server: list and diagnose checks, read results and incidents, create checks across 40+ types, and manage status pages.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/fclairamb/solidping-plugin/tree/main/skills/solidping-monitoring",
+      "source_type": "official",
+      "source_repo": "fclairamb/solidping-plugin",
+      "license": "MIT",
+      "license_source": "https://github.com/fclairamb/solidping-plugin/blob/main/LICENSE",
+      "tags": [
+        "monitoring",
+        "uptime",
+        "mcp",
+        "incidents",
+        "status-page",
+        "devops"
+      ],
+      "triggers": [
+        "monitoring",
+        "uptime",
+        "mcp",
+        "incidents",
+        "status-page",
+        "devops",
+        "solidping",
+        "run",
+        "through",
+        "hosted",
+        "server",
+        "list"
+      ],
+      "path": "skills/solidping/SKILL.md"
     },
     {
       "id": "sop-company-wiki",

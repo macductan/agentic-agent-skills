@@ -4,7 +4,7 @@ A new branch preserves committed history; it does not back up uncommitted edits.
 
 ## Committed changes
 
-Use a topic branch based on current `origin/main`, select the exact source commit to reverse, and inspect `git revert <commit>` before committing. Run the checks appropriate to the reversal and merge the repair through `npm run merge:batch`. Generated state belongs to the protected canonical-sync PR; never revert or patch it independently on `main`.
+Use a topic branch based on current `origin/main`, select the exact source commit to reverse, and inspect `git revert <commit>` before committing. Run the checks appropriate to the reversal and merge the repair through `npm run merge:batch`. Distribution snapshots belong to the protected release PR; never revert or patch them independently on `main`. Independent catalogs roll back by explicitly selecting a previously verified revision/digest.
 
 ## Uncommitted changes
 

@@ -108,6 +108,22 @@
       "skill_root": "skills/openhook",
       "reviewed_head": "97655e3dbc61258dde9d50d0823b574ecb970fb8",
       "tree_oid": "6528a68f95d521292a48b49911ba362b93ab50e1"
+    },
+    {
+      "pr": 1965,
+      "base_repository": "sickn33/agentic-awesome-skills",
+      "head_repository": "moez552/agentic-awesome-skills",
+      "skill_root": "skills/outreachgenie-list-audit",
+      "reviewed_head": "f60dc4014843482de29c771809d3d266ad928012",
+      "tree_oid": "f6b368e01714bea44d7599643e41ef3011f7b9fd"
+    },
+    {
+      "pr": 1968,
+      "base_repository": "sickn33/agentic-awesome-skills",
+      "head_repository": "JaclynFitzpatrick/agentic-awesome-skills",
+      "skill_root": "skills/project-memory-log",
+      "reviewed_head": "ca54fb20815f57e5e96a5b3acbb2c5d214facdda",
+      "tree_oid": "2d64633b10968daa12ecda8a86506e1be1964dce"
     }
   ]
 }
