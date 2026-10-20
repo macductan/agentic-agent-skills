@@ -2,6 +2,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const crypto = require("node:crypto");
+const {failure} = require("./maintenance-failures");
 const { privateStore, signReceipt, verifyReceipt } = require("./maintenance-review-receipt");
 
 // State is advisory for scheduling. Only authenticated review receipts can
@@ -43,6 +44,24 @@ function openStore(directory, repository) {
   }
   if (key.length !== 32) throw new Error("Invalid private review key");
   return {
+    acquireLock(name) {
+      const file=filename(`${name}.lock`);
+      let fd;
+      try { fd=fs.openSync(file, fs.constants.O_WRONLY | fs.constants.O_CREAT | fs.constants.O_EXCL | fs.constants.O_NOFOLLOW, 0o600); }
+      catch(error) {
+        if(error.code==='EEXIST') throw failure('STATE_LOCKED', `Maintenance state is locked: ${file}. Do not start another writer or steal the lock.`);
+        throw error;
+      }
+      const stat=fs.fstatSync(fd);
+      try {fs.writeFileSync(fd, JSON.stringify({pid:process.pid,startedAt:new Date().toISOString()}));}
+      catch(error) {fs.closeSync(fd);fs.unlinkSync(file);throw error;}
+      fs.closeSync(fd);
+      return () => {
+        const current=fs.lstatSync(file);
+        if(current.ino!==stat.ino || current.dev!==stat.dev) throw failure('STATE_LOCKED','Lock identity changed; refusing to remove another writer lock');
+        fs.unlinkSync(file);
+      };
+    },
     saveReview(review) {
       write(`review.${review.fingerprint.digest}.json`, JSON.stringify(signReceipt(review, key)));
     },

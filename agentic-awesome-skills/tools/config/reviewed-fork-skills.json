@@ -124,6 +124,18 @@
       "skill_root": "skills/project-memory-log",
       "reviewed_head": "ca54fb20815f57e5e96a5b3acbb2c5d214facdda",
       "tree_oid": "2d64633b10968daa12ecda8a86506e1be1964dce"
+    },
+    {
+      "pr": 1979,
+      "base_repository": "sickn33/agentic-awesome-skills",
+      "head_repository": "wu736139669/agentic-awesome-skills",
+      "skill_root": "skills/goal-instruction-writer",
+      "reviewed_head": "0c3870bf3b0c5cdf7da2487a5c02899283a06ce1",
+      "tree_oid": "bf1a90f3e01ff06c17236d04212e1ac44ef170c8",
+      "reviewed_support_paths": [
+        "skills/goal-instruction-writer/agents/openai.yaml",
+        "skills/goal-instruction-writer/walkthrough.md"
+      ]
     }
   ]
 }

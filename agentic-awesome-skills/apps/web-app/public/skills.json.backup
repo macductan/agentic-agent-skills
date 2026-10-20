@@ -36210,6 +36210,35 @@
     }
   },
   {
+    "id": "keenable-search-mcp",
+    "path": "skills/keenable-search-mcp",
+    "category": "mcp",
+    "name": "keenable-search-mcp",
+    "description": "Search the public web with site and date filters, and read pages with an extraction prompt, through Keenable's keyless MCP server. Use when the user chooses Keenable or its connected tools.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-10-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "mcp",
+      "web-search",
+      "research",
+      "citations"
+    ]
+  },
+  {
     "id": "kernel-prompt",
     "path": "skills/kernel-prompt",
     "category": "productivity",
@@ -49399,6 +49428,35 @@
     }
   },
   {
+    "id": "ppl-personal-crm",
+    "path": "skills/ppl-personal-crm",
+    "category": "productivity",
+    "name": "ppl-personal-crm",
+    "description": "Uses the ppl personal CRM over MCP to prepare for conversations, recall facts about people, log interactions and manage relationship follow-ups.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-10-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "crm",
+      "contacts",
+      "relationship-memory",
+      "mcp"
+    ]
+  },
+  {
     "id": "pptx-deck-creation",
     "path": "skills/pptx-deck-creation",
     "category": "office-productivity",
@@ -60152,6 +60210,39 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "story-bible-continuity",
+    "path": "skills/story-bible-continuity",
+    "category": "content",
+    "name": "story-bible-continuity",
+    "description": "Deterministic continuity check for long manuscripts against a story bible: name drift, age arithmetic, era anachronisms, unpaid foreshadowing, POV leaks. Use for continuity checks on novels or serials.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-10-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "license": "Apache-2.0",
+    "tags": [
+      "writing",
+      "novel",
+      "continuity",
+      "fiction",
+      "consistency",
+      "manuscript",
+      "story-bible"
+    ]
   },
   {
     "id": "stride-analysis-patterns",

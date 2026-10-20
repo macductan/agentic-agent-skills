@@ -1,7 +1,7 @@
 # Maintainer sweep
 
 `maintainer:sweep` is a single local command that replaces the usual first pass of a
-merge batch: align with `origin/main`, skim repo health, list open PRs with required
+merge batch: fetch `origin/main` (it does not fast-forward the checkout), skim repo health, list open PRs with required
 check status, download advisory **CI `pr-evidence-<PR>`** artifacts when available,
 optionally run Jev batch triage, dry-run `merge:batch` on CI-ready PRs, and print
 **Next actions** hints (`inspect_first`, `wait_ci`, `merge_dry_run_ok`, etc.).
@@ -51,13 +51,13 @@ npm run maintainer:sweep -- --benchmark
 
 ## Suggested batch flow
 
-1. `npm run maintainer:sweep`
-2. Deep-read / Tessl / attestation only on Jev **Inspect first** and non-ready checks
-3. `npm run merge:batch -- --prs … --reviewed-head <sha>` for accepted PRs
-4. Verify the source-component main receipt; defer tracked distribution snapshots to the next release PR
+1. Follow [the complete source cycle](maintenance-cycle.md) from clean current main; record its start before content review.
+2. Use `maintainer:sweep` only when its broader health/advisory inventory is useful; skip its merge dry-runs when guided intake already covers the same heads.
+3. Review **every** changed skill tree, including support files, deletions and provenance. Jev may order the work, never waive review. Use real Tessl results or exact-head maintainer attestation as required.
+4. Merge accepted PRs through the guided cycle and verify exact-main CI/CodeQL; defer tracked distribution snapshots to the next release PR.
 
 See also [`jev-hints.md`](jev-hints.md) and [`merge-batch.md`](merge-batch.md).
 
 ## Operational reports and bounded batch coordination
 
-See [maintainer flow](maintainer-flow.md) for exact-head batch preparation, one-hour convergence leases and recovery, text LICENSE policy, source-credit generation, complete local preflight, review dossiers and release observations. These reports never replace protected checks or semantic review.
+See [maintainer flow](maintainer-flow.md) for current batch preparation, resumable review and release boundaries. Do not assume a convergence lease exists: the ordinary CLI does not configure the optional coordination adapter. These reports never replace protected checks or semantic review.

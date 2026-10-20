@@ -19,6 +19,51 @@ function execute(command, args) {
   if (r.error || r.status !== 0) throw new Error(r.stderr || String(r.error));
   return r.stdout;
 }
+function collectSkillTrees(ref, records, run, readBlob = oid => {
+  const result = spawnSync("git", ["cat-file", "blob", oid], {cwd: ROOT, maxBuffer: 1024 * 1024});
+  if (result.error || result.status !== 0) throw new Error("Cannot read immutable dossier blob");
+  return result.stdout;
+}) {
+  const files = run("git", ["ls-tree", "-r", "-l", ref, "--", "skills"])
+    .trim()
+    .split("\n")
+    .filter(Boolean)
+    .map((line) => {
+      const match = line.match(
+        /^(\d+) (\w+) ([a-f0-9]+)\s+(\d+|-)\t(.+)$/u,
+      );
+      if (!match) throw new Error("Malformed Git tree");
+      return {
+        mode: match[1],
+        type: match[2],
+        oid: match[3],
+        size: match[4] === "-" ? null : Number(match[4]),
+        path: match[5],
+      };
+    });
+  const roots = [...new Set(records.flatMap(record => record.status === "C" ? [record.new_path] : [record.old_path, record.new_path])
+    .filter(file => /^skills\/[^/]+\//.test(file || ""))
+    .map(file => file.split("/").slice(0,2).join("/")))];
+  return roots.filter(root => files.some(file => file.path === root + "/SKILL.md")).map((root) => ({
+    root,
+    tree: run("git", ["rev-parse", `${ref}:${root}`]).trim(),
+    files: files
+      .filter((f) => f.path.startsWith(root + "/"))
+      .map((file) => {
+        if (
+          file.type !== "blob" ||
+          file.mode !== "100644" ||
+          file.size > 1024 * 1024
+        )
+          return { ...file, readable: false };
+        const bytes = readBlob(file.oid);
+        return {
+          ...file,
+          sha256: crypto.createHash("sha256").update(bytes).digest("hex"),
+        };
+      }),
+  }));
+}
 function buildDossier(
   prs,
   repo = "sickn33/agentic-awesome-skills",
@@ -73,60 +118,8 @@ function buildDossier(
         blobSizes: resolveBlobSizes(ROOT, records),
         licenseContents: resolveLicenseContents(ROOT, records),
       });
-      const files = run("git", ["ls-tree", "-r", "-l", head, "--", "skills"])
-        .trim()
-        .split("\n")
-        .filter(Boolean)
-        .map((line) => {
-          const match = line.match(
-            /^(\d+) (\w+) ([a-f0-9]+)\s+(\d+|-)\t(.+)$/u,
-          );
-          if (!match) throw new Error("Malformed Git tree");
-          return {
-            mode: match[1],
-            type: match[2],
-            oid: match[3],
-            size: match[4] === "-" ? null : Number(match[4]),
-            path: match[5],
-          };
-        });
-      const roots = [
-        ...new Set(
-          files
-            .filter(
-              (f) =>
-                f.path.endsWith("/SKILL.md") &&
-                records.some((record) =>
-                  [record.new_path, record.old_path].some((p) =>
-                    p?.startsWith(f.path.slice(0, -8)),
-                  ),
-                ),
-            )
-            .map((f) => f.path.slice(0, -9)),
-        ),
-      ];
-      const skills = roots.map((root) => ({
-        root,
-        tree: run("git", ["rev-parse", `${head}:${root}`]).trim(),
-        files: files
-          .filter((f) => f.path.startsWith(root + "/"))
-          .map((file) => {
-            if (
-              file.type !== "blob" ||
-              file.mode !== "100644" ||
-              file.size > 1024 * 1024
-            )
-              return { ...file, readable: false };
-            const bytes = spawnSync("git", ["cat-file", "blob", file.oid], {
-              cwd: ROOT,
-              maxBuffer: 1024 * 1024,
-            }).stdout;
-            return {
-              ...file,
-              sha256: crypto.createHash("sha256").update(bytes).digest("hex"),
-            };
-          }),
-      }));
+      const skills = collectSkillTrees(head, records, run);
+      const previousSkills = collectSkillTrees(mergeBase, records, run);
       const current = JSON.parse(
         run("gh", ["api", `repos/${repo}/pulls/${number}`]),
       );
@@ -138,6 +131,8 @@ function buildDossier(
         base,
         headRepository: pr.head.repo.full_name,
         skills,
+        previousSkills,
+        mergeBase,
         policy,
         reviewed: false,
       };
@@ -160,4 +155,4 @@ if (require.main === module) {
     process.exitCode = 1;
   }
 }
-module.exports = { buildDossier };
+module.exports = { buildDossier, collectSkillTrees };

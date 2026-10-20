@@ -267,17 +267,22 @@ function runReleaseSuite(projectRoot) {
     runCommand("npm", ["run", script], projectRoot);
 }
 
-function runReleasePreflight(projectRoot) {
+function runReleasePreflight(projectRoot, dependencies = {}) {
   ensureOnMain(projectRoot);
   ensureCleanWorkingTree(projectRoot, "release:preflight requires a clean tracked working tree.");
   const version = readPackageVersion(projectRoot);
-  ensureChangelogSection(projectRoot, version);
-  runReleaseSuite(projectRoot);
-  ensureCleanWorkingTree(
-    projectRoot,
-    "release:preflight left tracked changes. Sync and commit them before releasing.",
-  );
-  console.log(`[release] Preflight passed for version ${version}.`);
+  // Development main intentionally carries the last distribution snapshot.
+  // Validate regeneration in an isolated clone; never tell the maintainer to
+  // commit generated drift to source main or run the same suite before prepare.
+  const prepare = dependencies.prepare || require("./pr_preflight.cjs").prepareTestPreview;
+  const head = runCommand("git", ["rev-parse", "HEAD"], projectRoot, { capture: true }).trim();
+  const preview = prepare(projectRoot, head, undefined, false);
+  try {
+    if (preview.preparation.exitCode || !preview.root) throw new Error(preview.preparation.output);
+    (dependencies.suite || runReleaseSuite)(preview.root);
+  } finally { preview.cleanup(); }
+  ensureCleanWorkingTree(projectRoot, "Preflight unexpectedly changed the source checkout.");
+  console.log(`[release] Isolated preflight passed for ${version}; generated preview discarded. No publication authorized.`);
 }
 
 function stageReleaseFiles(projectRoot, contract) {
@@ -481,16 +486,9 @@ function main() {
   );
 }
 
-if (require.main === module) {
-  try {
-    main();
-  } catch (error) {
-    console.error(`[release] ${error.message}`);
-    process.exit(1);
-  }
-}
 
 module.exports = {
+  runReleasePreflight,
   convergePreparedRelease,
   localTagTarget,
   remoteTagTarget,
@@ -500,3 +498,12 @@ module.exports = {
   selectMergedReleaseCandidate,
   validateReleaseSuccessors,
 };
+
+if (require.main === module) {
+  try {
+    main();
+  } catch (error) {
+    console.error(`[release] ${error.message}`);
+    process.exit(1);
+  }
+}

@@ -1,6 +1,6 @@
 # PR automation boundaries
 
-Follow the [maintenance contract](maintenance-contract.md). `merge:batch` is the sole authority for fork-run approval and merge; reports and timing telemetry remain advisory.
+Follow the [maintenance contract](maintenance-contract.md). `merge:batch`, invoked directly or through `maintenance:cycle merge`, is the sole authority for fork-run approval and merge; reports and timing telemetry remain advisory.
 
 The protected-base classifier controls fork safety. `validation_profile` selects the component plan; `impact_profile` remains shadow-only. `source-validation` generates the required preview once and `artifact-preview` verifies its exact-head manifest. Main CI validates ephemeral source state, with no ordinary canonical PR.
 

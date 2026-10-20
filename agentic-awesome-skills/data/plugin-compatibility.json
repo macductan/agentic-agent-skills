@@ -27436,6 +27436,25 @@
       "runtime_files": []
     },
     {
+      "id": "keenable-search-mcp",
+      "path": "skills/keenable-search-mcp",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "kernel-prompt",
       "path": "skills/kernel-prompt",
       "targets": {
@@ -37011,6 +37030,25 @@
       "runtime_files": []
     },
     {
+      "id": "ppl-personal-crm",
+      "path": "skills/ppl-personal-crm",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "pptx-deck-creation",
       "path": "skills/pptx-deck-creation",
       "targets": {
@@ -44802,6 +44840,25 @@
       "runtime_files": []
     },
     {
+      "id": "story-bible-continuity",
+      "path": "skills/story-bible-continuity",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "stride-analysis-patterns",
       "path": "skills/stride-analysis-patterns",
       "targets": {
@@ -52023,10 +52080,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2712,
+    "total_skills": 2715,
     "supported": {
-      "codex": 2627,
-      "claude": 2649
+      "codex": 2630,
+      "claude": 2652
     },
     "blocked": {
       "codex": 85,

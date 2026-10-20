@@ -1,6 +1,6 @@
 # Protected merge batches
 
-`npm run merge:batch` is the only command allowed to approve fork runs or merge. Read the [maintenance contract](maintenance-contract.md) before execution.
+`merge:batch` is the sole implementation allowed to approve fork runs or merge; the guided `maintenance:cycle merge` delegates to it. Read the [maintenance contract](maintenance-contract.md) before execution.
 
 Review entire `skills/<skill-id>/**` trees, including support files and provenance. A passing Tessl review or exact-head maintainer attestation is required. Safe unprivileged analysis can start before review; owner-sensitive code retains the owner/exact-head gate. The helper does not rewrite PR metadata and does not retry base drift automatically.
 

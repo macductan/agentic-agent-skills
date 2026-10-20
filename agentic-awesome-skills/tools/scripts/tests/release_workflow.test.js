@@ -215,3 +215,18 @@ assert.strictEqual(generation, 2, "persistent drift is not retried or published"
 
 fs.rmSync(root, { recursive: true, force: true });
 console.log("Release workflow tests passed.");
+
+// Source main may have stale generated snapshots; preflight must isolate them.
+{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'release-preflight-source-'));
+ git(root,'init','-b','main');git(root,'config','user.name','Tests');git(root,'config','user.email','tests@example.com');
+ fs.writeFileSync(path.join(root,'package.json'),JSON.stringify({version:'1.0.0'}));
+ fs.writeFileSync(path.join(root,'snapshot.txt'),'old');git(root,'add','.');git(root,'commit','-m','fixture');
+ let cleaned=false;
+ const scratch=fs.mkdtempSync(path.join(os.tmpdir(),'release-preflight-preview-'));
+ const deps={prepare:()=>({root:scratch,preparation:{exitCode:0},cleanup:()=>{cleaned=true;fs.rmSync(scratch,{recursive:true,force:true});}}),suite:dir=>fs.writeFileSync(path.join(dir,'snapshot.txt'),'new')};
+ release.runReleasePreflight(root,deps);
+ assert.equal(cleaned,true);assert.equal(fs.readFileSync(path.join(root,'snapshot.txt'),'utf8'),'old');assert.equal(git(root,'status','--porcelain'),'');
+ assert.throws(()=>release.runReleasePreflight(root,{...deps,suite:()=>{throw Error('validation failed');}}),/validation failed/);
+ fs.rmSync(root,{recursive:true,force:true});
+}

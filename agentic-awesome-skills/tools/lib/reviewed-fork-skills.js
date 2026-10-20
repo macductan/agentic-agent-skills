@@ -5,19 +5,19 @@ const { spawnSync } = require('node:child_process');
 const LEDGER_PATH = path.join(__dirname, '../config/reviewed-fork-skills.json');
 const SHA = /^[0-9a-f]{40}$/;
 const ROOT = /^skills\/[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const SUPPORT_FILE_NAME = /^(?:README\.md|\.gitignore|LICENSE)$/;
+const SUPPORT_FILE_NAME = /^(?:README\.md|walkthrough\.md|\.gitignore|LICENSE)$/;
 const SUPPORT_SCRIPT_NAME = /^scripts\/[A-Za-z0-9._-]+\.py$/;
 const MAX_REVIEWED_SUPPORT_PATHS = 16;
 
 // A reviewed entry may opt in to a short, closed list of extra exact paths
-// inside its own skill root. Only root manifest files and Python scripts are
+// inside its own skill root. Only named root files, agents/openai.yaml and Python scripts are
 // representable, so this can never become a general extension allowlist.
 function isValidReviewedSupportPath(skillRoot, filePath) {
   if (typeof filePath !== 'string' || !filePath.startsWith(`${skillRoot}/`)) return false;
   const relative = filePath.slice(skillRoot.length + 1);
   if (!relative || relative.split('/').some((segment) => !segment || segment === '.' || segment === '..')) return false;
   if (path.posix.normalize(relative) !== relative) return false;
-  return SUPPORT_FILE_NAME.test(relative) || SUPPORT_SCRIPT_NAME.test(relative);
+  return SUPPORT_FILE_NAME.test(relative) || SUPPORT_SCRIPT_NAME.test(relative) || relative === "agents/openai.yaml";
 }
 
 function readSupportPaths(entry) {

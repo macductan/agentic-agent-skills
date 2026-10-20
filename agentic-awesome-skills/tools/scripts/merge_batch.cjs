@@ -17,6 +17,7 @@ const {
 const { resolveReviewedSkillRoots, resolveReviewedSupportPaths } = require("../lib/reviewed-fork-skills");
 
 const { openStore } = require("../lib/maintenance-state");
+const {failure, describeFailure, readWithRetry} = require("../lib/maintenance-failures");
 const { fingerprint } = require("../lib/maintenance-review-receipt");
 const crypto = require("node:crypto");
 const DEFAULT_POLL_SECONDS = 20;
@@ -141,6 +142,7 @@ function runCommand(command, args, cwd, options = {}) {
   const result = spawnSync(command, args, {
     cwd,
     encoding: "utf8",
+    timeout: options.timeoutMs ?? 120000,
     input: options.input,
     stdio: options.capture
       ? ["pipe", "pipe", "pipe"]
@@ -165,6 +167,7 @@ function runCommandBuffer(command, args, cwd, options = {}) {
   const result = spawnSync(command, args, {
     cwd,
     encoding: null,
+    timeout: options.timeoutMs ?? 120000,
     input: options.input,
     maxBuffer: options.maxBuffer || 64 * 1024 * 1024,
     stdio: ["pipe", "pipe", "pipe"],
@@ -451,12 +454,13 @@ function emptyChangePolicy() {
 }
 
 function runGhJson(projectRoot, args, options = {}) {
-  const stdout = runCommand(
+  if(args[0]!=="pr" || args[1]!=="view" || options.input!==undefined) throw new Error("Read-only PR helper cannot perform writes");
+  const stdout = readWithRetry(() => runCommand(
     "gh",
     [...args, "--json", options.jsonFields || ""].filter(Boolean),
     projectRoot,
     { capture: true, input: options.input },
-  );
+  ));
   return JSON.parse(stdout || "null");
 }
 
@@ -468,7 +472,9 @@ function runGhApiJson(projectRoot, args, options = {}) {
   if (options.slurp) {
     ghArgs.push("--slurp");
   }
-  const stdout = runCommand("gh", ghArgs, projectRoot, { capture: true, input: options.input });
+  // This helper is read-only; mutation endpoints use the explicit one-shot path.
+  if (args.some(arg => ["-X", "--method", "-f", "-F", "--field", "--raw-field", "--input"].includes(arg)) || options.input !== undefined) throw new Error("Read-only API helper cannot perform writes");
+  const stdout = readWithRetry(() => runCommand("gh", ghArgs, projectRoot, { capture: true }));
   return JSON.parse(stdout || "null");
 }
 
@@ -530,14 +536,11 @@ function parsePrList(prs) {
     throw new Error("Usage: merge_batch.cjs --prs 450,449,446,451");
   }
 
-  const parsed = prs
-    .split(/[\s,]+/)
-    .map((value) => Number.parseInt(value, 10))
-    .filter((value) => Number.isInteger(value) && value > 0);
-
-  if (!parsed.length) {
-    throw new Error("No valid PR numbers were provided.");
+  const tokens = String(prs).trim().split(/[\s,]+/);
+  if (!tokens.length || tokens.some(value => !/^[1-9][0-9]*$/.test(value) || !Number.isSafeInteger(Number(value)))) {
+    throw new Error("PR numbers must be complete positive safe integers; no partial or invalid IDs.");
   }
+  const parsed = tokens.map(Number);
 
   return [...new Set(parsed)];
 }
@@ -661,7 +664,7 @@ function rulesetAppliesToMain(ruleset) {
 function assertUnchangedTuple(prDetails, expected, phase, prNumber) {
   const actual = pullRequestTuple(prDetails);
   if (actual.baseOid !== expected.baseOid || actual.headOid !== expected.headOid) {
-    throw new Error(
+    throw failure("PR_CHANGED",
       `PR #${prNumber} base/head changed ${phase}: expected ${expected.baseOid}/${expected.headOid}, ` +
       `received ${actual.baseOid}/${actual.headOid}. Rerun merge:batch.`,
     );
@@ -829,51 +832,24 @@ function summarizeCheckCandidate(latestRuns, aliases, acceptedConclusions, appId
     return { state: "missing", conclusion: null, run: null };
   }
 
-  const successful = candidates.find((run) => (
-    String(run?.status || "").toLowerCase() === "completed" &&
-    acceptedConclusions.includes(String(run?.conclusion || "").toLowerCase())
-  ));
-  if (successful) {
-    return {
-      state: "success",
-      conclusion: String(successful.conclusion || "").toLowerCase(),
-      run: successful,
-    };
-  }
-
-  const pending = candidates.find((run) => String(run?.status || "").toLowerCase() !== "completed");
-  if (pending) {
-    return {
-      state: "pending",
-      conclusion: String(pending.conclusion || "").toLowerCase(),
-      run: pending,
-    };
-  }
-
-  const failed = candidates.find((run) => {
-    const conclusion = String(run?.conclusion || "").toLowerCase();
-    return conclusion && conclusion !== "skipped";
+  // Aliases identify one logical check. An older success never overrides a
+  // newer failure/pending run, even when the workflow renamed the job.
+  const run = candidates.reduce((previous, current) => {
+    const key = item => item.created_at || item.started_at || item.completed_at || "";
+    return key(current) > key(previous) || (key(current) === key(previous) && Number(current.id || 0) > Number(previous.id || 0)) ? current : previous;
   });
-  if (failed) {
-    return {
-      state: "failed",
-      conclusion: String(failed.conclusion || "").toLowerCase(),
-      run: failed,
-    };
-  }
-
-  return {
-    state: "missing",
-    conclusion: "skipped",
-    run: candidates[0],
-  };
+  const conclusion = String(run.conclusion || "").toLowerCase();
+  if (String(run.status || "").toLowerCase() !== "completed") return {state:"pending", conclusion, run};
+  if (acceptedConclusions.includes(conclusion)) return {state:"success", conclusion, run};
+  if (conclusion === "skipped") return {state:"missing", conclusion, run};
+  return {state:"failed", conclusion:conclusion || "unknown", run};
 }
 
 function summarizeRequiredCheckRuns(checkRuns, requiredAliases) {
-  const latestByName = selectLatestCheckRuns(checkRuns);
   const summaries = [];
-
-  const latestRuns = [...latestByName.values()];
+  // Filter by app before selecting the newest alias, so another app cannot
+  // shadow the genuine check with a same-name run.
+  const latestRuns = checkRuns;
   for (const requiredCheck of requiredAliases) {
     const spec = normalizeRequiredCheckSpec(requiredCheck);
     const blocker = summarizeCheckCandidate(latestRuns, spec.blockingAliases, [], spec.appId);
@@ -1069,9 +1045,8 @@ function approveActionRequiredRuns(projectRoot, repoSlug, prDetails, options = {
   const sameRepository = isSameRepositoryPullRequest(repoSlug, prDetails);
   const reviewedHeads = new Set(options.reviewedHeads || []);
   const repositoryOwner = String(repoSlug || "").split("/")[0].toLowerCase();
-  const ownerAuthorizedSensitiveChange = sameRepository
-    && String(prDetails?.author?.login || "").toLowerCase() === repositoryOwner
-    && reviewedHeads.has(headOid);
+  const ownerIdentity = sameRepository && String(prDetails?.author?.login || "").toLowerCase() === repositoryOwner;
+  const ownerAuthorizedSensitiveChange = ownerIdentity && reviewedHeads.has(headOid);
   const reviewedIdentity = {
     pr: prNumber, baseRepository: repoSlug,
     headRepository: prDetails?.headRepository?.nameWithOwner, head: headOid,
@@ -1086,7 +1061,8 @@ function approveActionRequiredRuns(projectRoot, repoSlug, prDetails, options = {
     const reasons = Array.isArray(preliminaryPolicy?.reasons) && preliminaryPolicy.reasons.length
       ? preliminaryPolicy.reasons.slice(0, 12).join(", ")
       : "unclassified local diff";
-    throw new Error(`PR #${prNumber} local base-to-head diff is not fork-approval-safe: ${reasons}.`);
+    throw failure(ownerIdentity ? "REVIEW_REQUIRED" : "POLICY_BLOCKED", `PR #${prNumber} local base-to-head diff is not fork-approval-safe: ${reasons}.` +
+      (ownerIdentity ? ` Owner review of --reviewed-head ${headOid} is required before this sensitive change can proceed.` : ""));
   }
   const blobSizes = records.length === 0 ? new Map() : getSizes(projectRoot, records, dependencies);
   const policy = records.length === 0 ? emptyChangePolicy() : classifyRecords(records, { blobSizes, licenseContents: (dependencies.resolveLicenseContents || resolveLicenseContents)(projectRoot, records), ...policyOptions });
@@ -1094,7 +1070,8 @@ function approveActionRequiredRuns(projectRoot, repoSlug, prDetails, options = {
     const reasons = Array.isArray(policy?.reasons) && policy.reasons.length
       ? policy.reasons.slice(0, 12).join(", ")
       : "unclassified local diff";
-    throw new Error(`PR #${prNumber} local base-to-head diff is not fork-approval-safe: ${reasons}.`);
+    throw failure(ownerIdentity ? "REVIEW_REQUIRED" : "POLICY_BLOCKED", `PR #${prNumber} local base-to-head diff is not fork-approval-safe: ${reasons}.` +
+      (ownerIdentity ? ` Owner review of --reviewed-head ${headOid} is required before this sensitive change can proceed.` : ""));
   }
 
   const evaluatorOid = assertFullSha(
@@ -1169,11 +1146,14 @@ function approveActionRequiredRuns(projectRoot, repoSlug, prDetails, options = {
   };
 }
 
-function listCheckRuns(projectRoot, repoSlug, headSha) {
-  const payload = runGhApiJson(projectRoot, [
+function listCheckRuns(projectRoot, repoSlug, headSha, dependencies = {}) {
+  const pages = (dependencies.runGhApiJson || runGhApiJson)(projectRoot, [
     `repos/${repoSlug}/commits/${headSha}/check-runs?per_page=100`,
-  ]);
-  return Array.isArray(payload?.check_runs) ? payload.check_runs : [];
+  ], {paginate:true, slurp:true});
+  if (!Array.isArray(pages) || !pages.length || pages.some(page => !Array.isArray(page?.check_runs))) {
+    throw failure("INVALID_RESPONSE", "Invalid check-runs response; stop and fetch fresh evidence, never assume an empty CI queue.");
+  }
+  return pages.flatMap(page => page.check_runs);
 }
 
 async function waitForRequiredChecks(
@@ -1184,9 +1164,10 @@ async function waitForRequiredChecks(
   pollSeconds,
   maxAttempts = 180,
   onPending = null,
+  dependencies = {},
 ) {
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
-    const checkRuns = listCheckRuns(projectRoot, repoSlug, headSha);
+    const checkRuns = (dependencies.listCheckRuns || listCheckRuns)(projectRoot, repoSlug, headSha);
     const summaries = summarizeRequiredCheckRuns(checkRuns, requiredAliases);
     const pending = summaries.filter((summary) => summary.state === "pending" || summary.state === "missing");
     const failed = summaries.filter((summary) => summary.state === "failed");
@@ -1194,7 +1175,7 @@ async function waitForRequiredChecks(
     console.log(`[merge-batch] Checks for ${headSha}: ${formatCheckSummary(summaries)}`);
 
     if (failed.length) {
-      throw new Error(
+      throw failure("CI_FAILED",
         `Required checks failed for ${headSha}: ${failed.map((item) => `${item.label} (${item.conclusion || "failed"})`).join(", ")}`,
       );
     }
@@ -1204,10 +1185,18 @@ async function waitForRequiredChecks(
     }
 
     if (onPending) await onPending();
-    await new Promise((resolve) => setTimeout(resolve, pollSeconds * 1000));
+    if (attempt < maxAttempts) await (dependencies.sleep || (ms => new Promise(resolve => setTimeout(resolve, ms))))(pollSeconds * 1000);
   }
 
-  throw new Error(`Timed out waiting for required checks on ${headSha}.`);
+  throw failure("CI_WAIT_TIMEOUT", `Timed out waiting for required checks on ${headSha}.`);
+}
+
+function assertPendingPullRequest(current, expected, prNumber) {
+  assertUnchangedTuple(current, expected, "while waiting for checks", prNumber);
+  if (current.state !== "OPEN") throw new Error(`PR #${prNumber} is no longer open; refresh its state before resuming.`);
+  if (mergeableIsConflict(current)) throw new Error(`PR #${prNumber} has conflicts while waiting; repair before resuming.`);
+  if (String(current.mergeStateStatus).toUpperCase() === "BEHIND")
+    throw new Error(`PR #${prNumber} is BEHIND main while waiting; align the observed head before resuming.`);
 }
 
 function mergePullRequestImmediately(projectRoot, repoSlug, prDetails, dependencies = {}) {
@@ -1219,19 +1208,25 @@ function mergePullRequestImmediately(projectRoot, repoSlug, prDetails, dependenc
     commit_title: buildSquashMergeSubject(prDetails),
     commit_message: buildSquashMergeBody(prDetails),
   });
-  const stdout = execute(
-    "gh",
-    ["api", `repos/${repoSlug}/pulls/${prDetails.number}/merge`, "-X", "PUT", "--input", "-"],
-    projectRoot,
-    { capture: true, input: payload },
-  );
+  let stdout;
+  try {
+    stdout = execute(
+      "gh",
+      ["api", `repos/${repoSlug}/pulls/${prDetails.number}/merge`, "-X", "PUT", "--input", "-"],
+      projectRoot,
+      { capture: true, input: payload },
+    );
+  } catch (error) {
+    throw failure("WRITE_UNCERTAIN", `PR #${prDetails.number} merge response unavailable: ${error.message}. Read back the PR before resuming; the request is never retried automatically.`);
+  }
   let response;
   try {
     response = JSON.parse(stdout || "null");
   } catch (error) {
-    throw new Error(`PR #${prDetails.number} merge endpoint returned invalid JSON: ${error.message}`);
+    throw failure("WRITE_UNCERTAIN", `PR #${prDetails.number} merge endpoint returned invalid JSON: ${error.message}`);
   }
   if (response?.merged !== true || !FULL_SHA_PATTERN.test(String(response?.sha || ""))) {
+    if(response?.merged !== false) throw failure("WRITE_UNCERTAIN", `PR #${prDetails.number} merge endpoint returned incomplete evidence; read current PR state before resuming.`);
     throw new Error(
       `PR #${prDetails.number} was not merged immediately: ${response?.message || "merge endpoint returned merged=false"}.`,
     );
@@ -1255,6 +1250,9 @@ async function mergePullRequest(projectRoot, repoSlug, prNumber, options) {
   if (mergeableIsConflict(prDetails)) {
     throw new Error(`PR #${prNumber} is in conflict state; resolve conflicts on the PR branch before merging.`);
   }
+
+  if (String(prDetails.mergeStateStatus).toUpperCase() === "BEHIND")
+    throw new Error(`PR #${prNumber} is BEHIND main; explicitly align its observed head before waiting for checks.`);
 
   const approval = approveActionRequiredRuns(projectRoot, repoSlug, prDetails, {
     dryRun: options.dryRun,
@@ -1302,8 +1300,9 @@ async function mergePullRequest(projectRoot, repoSlug, prNumber, options) {
   });
   if (!options.dryRun) {
     await waitForRequiredChecks(projectRoot, repoSlug, headSha, requiredCheckAliases, options.pollSeconds, 180, () => {
+      const current = loadPullRequestDetails(projectRoot, repoSlug, prNumber);
+      assertPendingPullRequest(current, approval.tuple, prNumber);
       if (!listActionRequiredRuns(projectRoot, repoSlug, headSha).length) return;
-      assertUnchangedTuple(loadPullRequestDetails(projectRoot, repoSlug, prNumber), approval.tuple, "before delayed run approval", prNumber);
       approveActionRequiredRuns(projectRoot, repoSlug, loadPullRequestDetails(projectRoot, repoSlug, prNumber), {
         evaluatorOid: options.evaluatorOid, reviewedHeads: options.reviewedHeads, stateStore: options.stateStore,
         dependencies: options.approvalDependencies,
@@ -1355,14 +1354,19 @@ function prepareBatch(projectRoot, repoSlug, prNumbers, options, dependencies = 
   const load = dependencies.load || loadPullRequestDetails;
   const approve = dependencies.approve || approveActionRequiredRuns;
   return prNumbers.map((prNumber) => {
+    try {
     const details = load(projectRoot, repoSlug, prNumber);
     if (mergeableIsConflict(details)) throw new Error(`PR #${prNumber} has conflicts`);
+    if (String(details.mergeStateStatus).toUpperCase() === "BEHIND") throw new Error(`PR #${prNumber} is BEHIND main; align the observed head once before checks`);
     const approval = approve(projectRoot, repoSlug, details, {
       dryRun: options.dryRun, evaluatorOid: options.evaluatorOid,
       reviewedHeads: options.reviewedHeads, dependencies: options.approvalDependencies,
     });
     return { prNumber, merged: false, approvedRuns: approval.approvedRuns.map((run) => run.id),
-      headSha: details.headRefOid, prepared: true };
+      headSha: details.headRefOid, prepared: true, reviewAttested: (options.reviewedHeads || []).includes(details.headRefOid) };
+    } catch (error) {
+      return { prNumber, merged: false, status: "blocked", reason: error.message, ...describeFailure(error) };
+    }
   });
 }
 function assertEvaluatorCompatible(projectRoot, loadedOid, currentOid, execute = runCommand) {
@@ -1372,6 +1376,15 @@ function assertEvaluatorCompatible(projectRoot, loadedOid, currentOid, execute =
     throw new Error("Trusted evaluator contract changed during the batch; restart from refreshed protected main");
 }
 async function runBatch(projectRoot, prNumbers, options = {}) {
+  const release = options.stateDir ? openStore(options.stateDir, projectRoot).acquireLock('merge') : () => {};
+  try { return await runBatchUnlocked(projectRoot, prNumbers, options); }
+  finally { release(); }
+}
+
+async function runBatchUnlocked(projectRoot, prNumbers, options = {}) {
+  // Programmatic callers bypass parseArgs; retain the same bounded polling cadence.
+  options = { ...options, pollSeconds: Number.isFinite(options.pollSeconds) && options.pollSeconds > 0
+    ? options.pollSeconds : DEFAULT_POLL_SECONDS };
   const dependencies = options.batchDependencies || {};
   const readRepo = dependencies.readRepositorySlug || readRepositorySlug;
   const trustedMain = dependencies.ensureTrustedMain || ensureTrustedMain;
@@ -1427,7 +1440,7 @@ async function runBatch(projectRoot, prNumbers, options = {}) {
           result.status = "merged";
         }
       } catch (error) {
-        result = { prNumber, merged: false, status: "blocked", reason: error.message };
+        result = { prNumber, merged: false, status: "blocked", reason: error.message, ...describeFailure(error) };
         console.error(`[merge-batch] PR #${prNumber}: ${error.message}; continuing independent PRs.`);
       }
       results.push(result);
@@ -1483,6 +1496,7 @@ module.exports = {
   assertEffectiveMainProtection,
   assertFullSha,
   assertUnchangedTuple,
+  assertPendingPullRequest,
   buildSquashMergeBody,
   buildSquashMergeSubject,
   checkRunMatchesAliases,

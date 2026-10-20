@@ -93,3 +93,11 @@ for (const e of realLedger.entries) {
   assert.equal(tree,e.tree_oid,'ledger must bind the actual reviewed complete skill tree');
 }
 console.log('Reviewed fork skill boundary checks passed.');
+
+for (const extra of ['agents/openai.yaml','walkthrough.md']) {
+ const allowed={...entry,reviewed_support_paths:[`${root}/${extra}`]};
+ assert.deepEqual(resolveSupport({schema_version:1,entries:[allowed]}),[`${root}/${extra}`]);
+ assert.deepEqual(resolveSupport({schema_version:1,entries:[allowed]},'9'.repeat(40)),[]);
+ assert.equal(classify({...record,new_path:`${root}/${extra}`},{reviewedSkillRoots:[]}).approvalSafe,false);
+}
+assert.throws(()=>resolveSupport({schema_version:1,entries:[{...entry,reviewed_support_paths:[`${root}/agents/arbitrary.yaml`]}]}),/Invalid/);

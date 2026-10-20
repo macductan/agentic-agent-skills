@@ -591,6 +591,11 @@ function approvalDependencies(overrides = {}) {
     listActionRequiredRuns() { return []; },
     loadPullRequestDetails() { return prDetails; },
   });
+  assert.throws(() => mergeBatch.approveActionRequiredRuns("/repo", "owner/repo", prDetails, {dependencies}),
+    error => error.failureCode === "REVIEW_REQUIRED" && error.message.includes(HEAD_SHA));
+  assert.throws(() => mergeBatch.approveActionRequiredRuns("/repo", "owner/repo", {...prDetails, author:{login:"contributor"}}, {dependencies,reviewedHeads:[HEAD_SHA]}),
+    error => error.failureCode === "POLICY_BLOCKED");
+  classifications = 0;
   const result = mergeBatch.approveActionRequiredRuns("/repo", "owner/repo", prDetails, {
     dependencies,
     reviewedHeads: [HEAD_SHA],

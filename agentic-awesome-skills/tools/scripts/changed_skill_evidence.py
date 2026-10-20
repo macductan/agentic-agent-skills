@@ -27,6 +27,7 @@ from git_change_records import (
     resolve_commit,
 )
 from security_scanner import scan_skill_file
+import reviewed_source_exceptions
 
 
 SCHEMA_VERSION = 1
@@ -467,6 +468,7 @@ def build_report(
     policy_oid, provenance_exceptions = load_provenance_exceptions(
         root, policy_ref or base_ref
     )
+    reviewed_sources = reviewed_source_exceptions.load(root, policy_oid)
     old_roots = canonical_skill_roots(root, base_oid)
     new_roots = canonical_skill_roots(root, head_oid)
     readme_bytes = read_path(root, head_oid, "README.md") or b""
@@ -541,6 +543,11 @@ def build_report(
                 readme_credits,
                 provenance_exceptions,
             )
+            provenance_blockers, source_exceptions = reviewed_source_exceptions.apply(
+                root, head_oid, effective_id, change_type, comparison_before, after,
+                provenance_blockers, reviewed_sources, readme_bytes.decode("utf-8", "replace"),
+            )
+            applied_exceptions.extend(source_exceptions)
             reasons.extend(provenance_blockers)
             reasons = sorted(set(reasons))
             all_reasons.extend(reasons)

@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "entries": [
+    {
+      "skill_id": "taasky",
+      "kind": "hosted-source",
+      "tree_oid": "9ef4d4aa35af781c17e17952a94de287fbde26fb",
+      "before_source": null,
+      "after_source": "https://docs.taasky.ai/.well-known/agent-skills/default/skill.md",
+      "source_type": "official",
+      "source_repo": null,
+      "evidence_url": "https://docs.taasky.ai/agents/skill",
+      "verified_at": "2026-10-19"
+    },
+    {
+      "skill_id": "krexa",
+      "kind": "source-repin",
+      "tree_oid": "1c847f3ae419a14db576da2725fd065aef378a13",
+      "before_source": "https://github.com/Krexa-xyz/skills/tree/1d1b688a0adf6049ae921c992f9eab8f3618e521/skills/krexa",
+      "after_source": "https://github.com/Krexa-xyz/skills/tree/4a757951918c1a393d7840f2401f2d2f0b5afb3c/skills/krexa",
+      "source_type": "official",
+      "source_repo": "Krexa-xyz/skills",
+      "evidence_url": "https://github.com/Krexa-xyz/skills/commit/4a757951918c1a393d7840f2401f2d2f0b5afb3c",
+      "verified_at": "2026-10-19"
+    }
+  ]
+}
