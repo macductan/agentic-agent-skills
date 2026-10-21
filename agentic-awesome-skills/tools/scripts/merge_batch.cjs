@@ -1356,6 +1356,7 @@ function prepareBatch(projectRoot, repoSlug, prNumbers, options, dependencies = 
   return prNumbers.map((prNumber) => {
     try {
     const details = load(projectRoot, repoSlug, prNumber);
+    if(details.state!=="OPEN") throw failure("PR_NOT_OPEN", `PR #${prNumber} is ${details.state || "unknown"}; intake requires an OPEN PR before analysis or review.`);
     if (mergeableIsConflict(details)) throw new Error(`PR #${prNumber} has conflicts`);
     if (String(details.mergeStateStatus).toUpperCase() === "BEHIND") throw new Error(`PR #${prNumber} is BEHIND main; align the observed head once before checks`);
     const approval = approve(projectRoot, repoSlug, details, {

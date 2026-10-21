@@ -14,14 +14,21 @@ for(const mutation of [{head_sha:'b'.repeat(40)},{event:'pull_request'},{head_br
 assert.throws(()=>cycle.proofForRuns([...runs,{...runs[0],id:10,conclusion:'failure'}],sha),/failed/);
 const batch=require('../merge_batch.cjs');
 const results=batch.prepareBatch('/unused','owner/repo',[1,2],{dryRun:true}, {
- load:(_,__,n)=>({number:n,headRefOid:sha}),
+ load:(_,__,n)=>({number:n,state:"OPEN",headRefOid:sha}),
  approve:(_,__,pr)=>{if(pr.number===1)throw Error('blocked path'); return {approvedRuns:[]};}
 });
 assert.equal(results[0].status,'blocked');assert.equal(results[1].prepared,true);
 console.log('maintenance cycle fail-closed completion and independent intake passed');
 
 const behind=batch.prepareBatch('/unused','owner/repo',[1,2],{dryRun:true},{
- load:(_,__,n)=>({number:n,headRefOid:sha,mergeStateStatus:n===1?'BEHIND':'CLEAN'}),
+ load:(_,__,n)=>({number:n,state:"OPEN",headRefOid:sha,mergeStateStatus:n===1?'BEHIND':'CLEAN'}),
  approve:(_,__,pr)=>{assert.equal(pr.number,2,'do not approve/wait on stale head');return {approvedRuns:[]};}
 });
 assert.equal(behind[0].status,'blocked');assert.match(behind[0].reason,/BEHIND/);assert.equal(behind[1].prepared,true);
+
+let analyses=0;
+for(const state of ['CLOSED','MERGED',undefined]) {
+ const rows=batch.prepareBatch('/unused','owner/repo',[1],{dryRun:true},{load:()=>({number:1,state}),approve:()=>{analyses++;return {approvedRuns:[]};}});
+ assert.equal(rows[0].failureCode,'PR_NOT_OPEN');assert.equal(rows[0].status,'blocked');assert.equal(rows[0].prepared,undefined);
+}
+assert.equal(analyses,0,'closed/unknown PRs must stop before content analysis or workflow approval');

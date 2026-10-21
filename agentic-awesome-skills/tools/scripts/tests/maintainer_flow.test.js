@@ -180,7 +180,7 @@ assert.throws(
 );
 const events = [];
 const deps = {
-  load: (_, __, n) => ({ number: n, headRefOid: sha }),
+  load: (_, __, n) => ({ number: n, state:"OPEN", headRefOid: sha }),
   approve: (_, __, pr, options) => {
     events.push(pr.number);
     assert.equal(options.evaluatorOid, oid);
@@ -199,7 +199,7 @@ assert.ok(prepared.every((pr) => !pr.merged));
 assert.equal(parseArgs(["--prepare-only"]).prepareOnly, true);
 const conflicts = prepareBatch(
   "/tmp", "owner/repo", [3, 4], { evaluatorOid: oid },
-  { ...deps, load: (_, __, n) => n === 3 ? { mergeable: "CONFLICTING" } : { number: n, headRefOid: sha } },
+  { ...deps, load: (_, __, n) => n === 3 ? { state:"OPEN", mergeable: "CONFLICTING" } : { number: n, state:"OPEN", headRefOid: sha } },
 );
 assert.equal(conflicts[0].status, "blocked");
 assert.match(conflicts[0].reason, /conflicts/);

@@ -1,6 +1,7 @@
 "use strict";
 // Failure handling is deliberately conservative: retries are only for reads.
 const ACTIONS = {
+  PR_NOT_OPEN: 'Refresh PR state and exclude closed PRs from preparation. For a merged PR, resume merge to verify ancestry without another write; do not repeat its content review.',
   REVIEW_REQUIRED: 'Review this exact full head and complete changed bundle/code, then supply --reviewed-head. This does not waive any required checks or protection.',
   POLICY_BLOCKED: 'Repair the source or use a separately reviewed protected-base policy change; an attestation alone cannot authorize this contributor change.',
   NETWORK_UNAVAILABLE: 'Resume after connectivity recovers; refresh PR identity, protection and checks. Do not repeat a write whose outcome is unknown.',
