@@ -376,8 +376,9 @@ for (const filePath of findTextFiles(path.join(repoRoot, 'skills'))) {
 }
 
 assert.strictEqual(violationCount(violations), 0, violations.join('\n'));
-assert.match(audioExample, /python3 << 'EOF'/, 'audio example should use a quoted heredoc for Python');
-assert.match(audioExample, /AUDIO_FILE_ENV/, 'audio example should pass shell variables through the environment');
+assert.match(audioExample, /exec python3 "\$SCRIPT_DIR\/\.\.\/scripts\/transcribe\.py" "\$1"/, 'audio wrapper must pass the input as one quoted argv value to the bundled implementation');
+assert.match(audioExample, /--model "\$\{MODEL:-base\}"/, 'audio wrapper must quote the model environment value');
+assert.strictEqual(/\beval\b|python3\s+-c/.test(audioExample), false, 'audio wrapper must not interpolate input into executable Python or shell text');
 assert.strictEqual(/\|\s*(bash|sh)\b/.test(apifySkill), false, 'SKILL.md must not recommend pipe-to-shell installs');
 assert.strictEqual(/\|\s*iex\b/i.test(apifySkill), false, 'SKILL.md must not recommend PowerShell pipe-to-iex installs');
 assert.strictEqual(/apify login -t\b/.test(apifySkill), false, 'SKILL.md must not put tokens on the command line');
@@ -523,9 +524,11 @@ assert.doesNotMatch(
 );
 assert.match(
   eclEnvironmentGuide,
-  /redis-server --requirepass/,
-  'Harness Redis examples should require authentication when publishing a local port',
+  /redis-server \/run\/secrets\/redis\.conf/,
+  'Harness Redis examples should use a private mounted configuration rather than a password in process arguments',
 );
+assert.match(eclEnvironmentGuide, /configuration must contain `requirepass`/);
+assert.match(eclEnvironmentGuide, /mode-0600/);
 assert.doesNotMatch(
   lovableCleanupSkill,
   /grep -rin "lovable" \.env \.env\.local \.env\.example 2>\/dev\/null\s*$/,

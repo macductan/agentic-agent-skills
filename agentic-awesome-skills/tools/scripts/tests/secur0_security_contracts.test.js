@@ -14,7 +14,9 @@ assert.match(catalog, /JSON\.parse\(catalogBytes\)/);
 assert.doesNotMatch(catalog, /JSON\.parse\(fs\.readFileSync\(catalogPath/);
 
 const gguf = read("skills/hugging-face-model-trainer/scripts/convert_to_gguf.py");
-assert.match(gguf, /TemporaryDirectory\(prefix="aas-gguf-"\)/);
+assert.match(gguf, /out\.mkdir\(mode=0o700, exist_ok=False\)/);
+assert.match(gguf, /output parents may not be symlinks/);
+assert.match(gguf, /open\("x", encoding="utf-8"\)/);
 assert.doesNotMatch(gguf, /["']\/tmp\/(?:llama\.cpp|merged_model|gguf_output)/);
 
 const downloader = read("skills/2slides-ppt-generator/scripts/download_slides_pages_voices.py");
@@ -23,10 +25,10 @@ assert.match(downloader, /server_hostname=parsed\.hostname/);
 assert.match(downloader, /Download redirects are refused/);
 assert.doesNotMatch(downloader, /requests\.get\(download_url/);
 
-const pptx = read("skills/pptx-official/scripts/html2pptx.js");
-assert.match(pptx, /function resolveTrustedAsset/);
-assert.match(pptx, /Slide asset escapes the HTML directory/);
-assert.match(pptx, /constrainSlideAssets\(slideData, assetRoot\)/);
+// Restricted upstream implementation was removed, not moved into fixtures.
+for (const removed of ["docx-official", "pptx-official"]) {
+  assert.ok(!fs.existsSync(path.join(root, "skills", removed)), `${removed} must remain absent`);
+}
 
 const vercel = read("skills/deploy-to-vercel/resources/deploy.sh");
 assert.match(vercel, /\.vercelignore is present/);
