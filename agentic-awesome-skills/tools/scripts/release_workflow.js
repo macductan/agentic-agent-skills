@@ -66,6 +66,7 @@ function runCommand(command, args, cwd, options = {}) {
   const result = spawnSync(invocation.command, invocation.args, {
     cwd,
     encoding: "utf8",
+    env: options.env || process.env,
     stdio: options.capture ? ["ignore", "pipe", "pipe"] : "inherit",
     shell: false,
   });
@@ -118,6 +119,143 @@ function githubReleaseExists(projectRoot, tagName) {
     stdio: "ignore",
   });
   return result.status === 0;
+}
+
+const NPM_PUBLICATION_WORKFLOW = ".github/workflows/publish-npm.yml";
+
+function npmPublicationTitle(version, commit) {
+  return `Publish npm v${version} at ${commit}`;
+}
+
+function npmPublicationRuns(projectRoot, version, commit, dependencies = {}) {
+  const execute = dependencies.runCommand || runCommand;
+  const payload = JSON.parse(execute(
+    "gh",
+    [
+      "api",
+      "--method",
+      "GET",
+      "repos/{owner}/{repo}/actions/workflows/publish-npm.yml/runs",
+      "-f",
+      "event=workflow_dispatch",
+      "-f",
+      "branch=main",
+      "-f",
+      "per_page=100",
+    ],
+    projectRoot,
+    { capture: true },
+  ));
+  if (!Array.isArray(payload.workflow_runs)) {
+    throw new Error("npm publication response is malformed.");
+  }
+  return payload.workflow_runs.filter(run => (
+    run.display_title === npmPublicationTitle(version, commit)
+    && run.path === NPM_PUBLICATION_WORKFLOW
+    && run.event === "workflow_dispatch"
+    && run.head_branch === "main"
+  )).sort((left, right) => right.id - left.id);
+}
+
+function requireSuccessfulNpmPublication(projectRoot, version, commit, dependencies = {}) {
+  const repository = JSON.parse((dependencies.runCommand || runCommand)(
+    "gh",
+    ["repo", "view", "--json", "nameWithOwner"],
+    projectRoot,
+    { capture: true },
+  )).nameWithOwner;
+  const successful = npmPublicationRuns(projectRoot, version, commit, dependencies).filter(run => (
+    run.repository?.full_name === repository
+    && run.head_repository?.full_name === repository
+    && run.status === "completed"
+    && run.conclusion === "success"
+    && Number.isSafeInteger(run.id)
+    && run.id > 0
+  ));
+  if (!successful.length) {
+    throw new Error(`Refusing to create GitHub Release v${version}: npm publication has not succeeded for ${commit}.`);
+  }
+  return successful[0];
+}
+
+function dispatchNpmPublication(projectRoot, version, commit, dependencies = {}) {
+  try {
+    return requireSuccessfulNpmPublication(projectRoot, version, commit, dependencies);
+  } catch (error) {
+    if (!/npm publication has not succeeded/u.test(error.message)) throw error;
+  }
+
+  const execute = dependencies.runCommand || runCommand;
+  const sleep = dependencies.sleep || (ms => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms));
+  const now = dependencies.now || Date.now;
+  const timeoutMs = dependencies.timeoutMs || 45 * 60 * 1000;
+  const intervalMs = dependencies.intervalMs || 15_000;
+  const tag = `v${version}`;
+  const started = now();
+  execute(
+    "gh",
+    ["workflow", "run", "publish-npm.yml", "--ref", "main", "-f", `tag=${tag}`, "-f", `commit=${commit}`],
+    projectRoot,
+  );
+  while (now() - started <= timeoutMs) {
+    try {
+      return requireSuccessfulNpmPublication(projectRoot, version, commit, dependencies);
+    } catch (error) {
+      if (!/npm publication has not succeeded/u.test(error.message)) throw error;
+    }
+    sleep(intervalMs);
+  }
+  throw new Error(`Timed out waiting for npm publication of v${version} at ${commit}.`);
+}
+
+function distributionCandidateRuns(projectRoot, commit, dependencies = {}) {
+  const execute = dependencies.runCommand || runCommand;
+  const payload = JSON.parse(execute(
+    "gh",
+    [
+      "api",
+      "--method",
+      "GET",
+      "repos/{owner}/{repo}/actions/workflows/distribution-candidate.yml/runs",
+      "-f",
+      `head_sha=${commit}`,
+      "-f",
+      "per_page=100",
+    ],
+    projectRoot,
+    { capture: true },
+  ));
+  if (!Array.isArray(payload.workflow_runs)) {
+    throw new Error("Distribution candidate response is malformed.");
+  }
+  return payload.workflow_runs;
+}
+
+function requireSuccessfulDistributionCandidate(projectRoot, version, commit, dependencies = {}) {
+  const tag = `v${version}`;
+  const execute = dependencies.runCommand || runCommand;
+  const repository = JSON.parse(execute(
+    "gh",
+    ["repo", "view", "--json", "nameWithOwner"],
+    projectRoot,
+    { capture: true },
+  )).nameWithOwner;
+  const successful = distributionCandidateRuns(projectRoot, commit, dependencies).filter((run) => (
+    run.head_sha === commit
+    && run.repository?.full_name === repository
+    && run.head_repository?.full_name === repository
+    && run.path === ".github/workflows/distribution-candidate.yml"
+    && ["push", "workflow_dispatch"].includes(run.event)
+    && run.head_branch === tag
+    && run.status === "completed"
+    && run.conclusion === "success"
+    && Number.isSafeInteger(run.id)
+    && run.id > 0
+  )).sort((left, right) => right.id - left.id);
+  if (!successful.length) {
+    throw new Error(`Refusing to create GitHub Release ${tag}: no successful immutable distribution candidate exists for ${commit}.`);
+  }
+  return successful[0];
 }
 
 function localTagTarget(projectRoot, tagName) {
@@ -263,10 +401,21 @@ function writeReleaseNotes(projectRoot, version, sectionContent) {
 }
 
 function runReleaseSuite(projectRoot) {
-  // Source changes have already passed their protected component checks. Full
-  // runtime/web/platform validation executes once on the immutable tag candidate.
   for (const script of ["sync:release-state", "validate:references", "security:docs", "plugin-compat:check", "bundles:check", "check:aas-v1-catalog"])
     runCommand("npm", ["run", script], projectRoot);
+}
+
+function runPreparedReleaseTestSuite(projectRoot, options = {}) {
+  const temporary = fs.mkdtempSync(path.join(require("os").tmpdir(), "aas-release-tests-"));
+  try {
+    (options.runReleaseSuite || runReleaseSuite)(projectRoot);
+    (options.pack || require("./distribution_pack.cjs").pack)(projectRoot, temporary);
+    (options.run || runCommand)("npm", ["run", "test"], projectRoot, {
+      env: { ...(options.env || process.env), AAS_TEST_CANDIDATE_TARBALL: path.join(temporary, "package.tgz") },
+    });
+  } finally {
+    fs.rmSync(temporary, { recursive: true, force: true });
+  }
 }
 
 function runReleasePreflight(projectRoot, dependencies = {}) {
@@ -358,8 +507,6 @@ function prepareRelease(projectRoot, version, stateDir) {
   // Volatile metadata is an input to catalog timestamps. Refresh it before the
   // canonical release sync so the tagged tree is exactly what publish CI will
   // regenerate and verify.
-  runReleaseSuite(projectRoot);
-
   const refreshedReleaseNotes = ensureChangelogSection(projectRoot, version);
   const notesPath = writeReleaseNotes(projectRoot, version, refreshedReleaseNotes);
   const contract = loadWorkflowContract(projectRoot);
@@ -374,6 +521,7 @@ function prepareRelease(projectRoot, version, stateDir) {
 
   runCommand("git", ["commit", "-m", `chore: release v${version}`], projectRoot);
   convergePreparedRelease(projectRoot, contract);
+  runPreparedReleaseTestSuite(projectRoot);
   require("./distribution_snapshot.cjs").seal(projectRoot);
   runCommand("git", ["add", "data/distribution-snapshot.json"], projectRoot);
   runCommand("git", ["commit", "--amend", "--no-edit"], projectRoot);
@@ -457,8 +605,12 @@ function publishRelease(projectRoot, version) {
     runCommand("git", ["push", "origin", tagName], projectRoot);
   }
 
+  requireSuccessfulDistributionCandidate(projectRoot, version, headCommit);
+  dispatchNpmPublication(projectRoot, version, headCommit);
+  requireSuccessfulNpmPublication(projectRoot, version, headCommit);
+
   if (githubReleaseExists(projectRoot, tagName)) {
-    console.log(`[release] ${tagName} is already published.`);
+    console.log(`[release] ${tagName} already has a GitHub Release after verified npm publication.`);
     return;
   }
   const releaseArgs = ["release", "create", tagName, "--title", tagName, "--notes-file", notesPath];
@@ -495,10 +647,16 @@ function main() {
 
 module.exports = {
   runReleasePreflight,
+  runPreparedReleaseTestSuite,
   convergePreparedRelease,
   localTagTarget,
   remoteTagTarget,
   isPrereleaseVersion,
+  dispatchNpmPublication,
+  npmPublicationRuns,
+  npmPublicationTitle,
+  requireSuccessfulNpmPublication,
+  requireSuccessfulDistributionCandidate,
   resolveCommandInvocation,
   runCommand,
   selectMergedReleaseCandidate,
