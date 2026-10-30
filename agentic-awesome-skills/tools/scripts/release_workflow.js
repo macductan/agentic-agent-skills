@@ -463,18 +463,30 @@ function stageReleaseFiles(projectRoot, contract) {
 // Prepare only: settle HEAD-dependent generated metadata before publishing a branch.
 function convergePreparedRelease(projectRoot, contract, options = {}) {
   const run = options.runCommand || runCommand;
-  run("npm", ["run", "sync:release-state"], projectRoot);
-  stageReleaseFiles(projectRoot, contract);
-  const changed = run("git", ["diff", "--cached", "--name-only"], projectRoot, { capture: true });
-  if (changed) {
-    // No remote branch or tag exists yet. Preserve the author date so doc lastmods settle.
-    run("git", ["commit", "--amend", "--no-edit"], projectRoot);
+  // Docs lastmod comes from Git committer dates, not filesystem mtimes.
+  // Freeze the candidate committer timestamp so amendments cannot move the
+  // generated dates (including when preparation crosses midnight).
+  const committerDate = run("git", ["show", "-s", "--format=%cI", "HEAD"], projectRoot, { capture: true });
+  const amendmentEnv = { ...process.env, GIT_COMMITTER_DATE: committerDate };
+  let amendments = 0;
+  for (let pass = 0; pass < 3; pass += 1) {
+    run("npm", ["run", "sync:release-state"], projectRoot);
+    stageReleaseFiles(projectRoot, contract);
+    const changed = run("git", ["diff", "--cached", "--name-only"], projectRoot, { capture: true });
+    if (changed) {
+      if (amendments === 2) {
+        throw new Error("Prepared release has generated or unmanaged drift; refusing to push.");
+      }
+      run("git", ["commit", "--amend", "--no-edit"], projectRoot, { env: amendmentEnv });
+      amendments += 1;
+      continue;
+    }
+    if (amendments > 0) break;
   }
-  run("npm", ["run", "sync:release-state"], projectRoot);
   ensureCleanWorkingTree(projectRoot, "Prepared release has generated or unmanaged drift; refusing to push.");
 }
 
-function prepareRelease(projectRoot, version, stateDir) {
+function prepareRelease(projectRoot, version, stateDir, options = {}) {
   if (!version) {
     throw new Error("Usage: npm run release:prepare -- X.Y.Z");
   }
@@ -482,10 +494,14 @@ function prepareRelease(projectRoot, version, stateDir) {
 
   ensureOnMain(projectRoot);
   ensureCleanWorkingTree(projectRoot, "release:prepare requires a clean tracked working tree.");
-  ensureTagMissing(projectRoot, `v${version}`);
+  if (options.localOnly !== true) ensureTagMissing(projectRoot, `v${version}`);
   ensureChangelogSection(projectRoot, version);
   const cycleGate = require('./release_cycle_gate.cjs');
-  const cycleProof = cycleGate.prepareProof(projectRoot, version, stateDir);
+  if (options.localOnly === true && runCommand("git", ["remote"], projectRoot, { capture: true }))
+    throw Error("Local rehearsal must have no remote destinations");
+  const cycleProof = options.localOnly === true && options.cycleProof
+    ? cycleGate.validateProof(options.cycleProof, version, cycleGate.dependencies(projectRoot))
+    : cycleGate.prepareProof(projectRoot, version, stateDir);
   const releaseBranch = `release/v${version}`;
   runCommand("git", ["switch", "-c", releaseBranch], projectRoot);
 
@@ -521,11 +537,23 @@ function prepareRelease(projectRoot, version, stateDir) {
 
   runCommand("git", ["commit", "-m", `chore: release v${version}`], projectRoot);
   convergePreparedRelease(projectRoot, contract);
-  runPreparedReleaseTestSuite(projectRoot);
   require("./distribution_snapshot.cjs").seal(projectRoot);
   runCommand("git", ["add", "data/distribution-snapshot.json"], projectRoot);
-  runCommand("git", ["commit", "--amend", "--no-edit"], projectRoot);
+  const sealedDate = runCommand("git", ["show", "-s", "--format=%cI", "HEAD"], projectRoot, { capture: true });
+  runCommand("git", ["commit", "--amend", "--no-edit"], projectRoot, {
+    env: { ...process.env, GIT_COMMITTER_DATE: sealedDate },
+  });
   require("./distribution_snapshot.cjs").verify(projectRoot);
+  // Test the final sealed commit, not a predecessor amended after testing.
+  runPreparedReleaseTestSuite(projectRoot);
+  for (const script of ["app:install", "app:test:coverage", "app:build"])
+    runCommand("npm", ["run", script], projectRoot);
+  ensureCleanWorkingTree(projectRoot, "Release tests changed the sealed candidate; refusing to push.");
+  require("./distribution_snapshot.cjs").verify(projectRoot);
+  if (options.localOnly === true) {
+    console.log(`[release] Rehearsal passed for v${version}; no push, tag, PR or publication.`);
+    return { version, commit: runCommand("git", ["rev-parse", "HEAD"], projectRoot, { capture: true }) };
+  }
   runCommand("git", ["push", "-u", "origin", releaseBranch], projectRoot);
   runCommand(
     "gh",
@@ -629,6 +657,11 @@ function main() {
     return;
   }
 
+  if (args.command === "rehearse") {
+    require("./release_rehearsal.cjs").rehearse(projectRoot, args.version, args.stateDir);
+    return;
+  }
+
   if (args.command === "prepare") {
     prepareRelease(projectRoot, args.version, args.stateDir);
     return;
@@ -640,12 +673,13 @@ function main() {
   }
 
   throw new Error(
-    "Usage: node tools/scripts/release_workflow.js <preflight|prepare|publish> [X.Y.Z]",
+    "Usage: node tools/scripts/release_workflow.js <preflight|rehearse|prepare|publish> [X.Y.Z]",
   );
 }
 
 
 module.exports = {
+  prepareRelease,
   runReleasePreflight,
   runPreparedReleaseTestSuite,
   convergePreparedRelease,
