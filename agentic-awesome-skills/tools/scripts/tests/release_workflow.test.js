@@ -6,6 +6,24 @@ const { spawnSync } = require("child_process");
 
 const release = require("../release_workflow.js");
 
+assert.strictEqual(release.parseArgs(["publish", "20.3.0", "--skip-npm"]).skipNpm, true);
+assert.strictEqual(release.parseArgs(["publish", "20.3.0"]).skipNpm, undefined);
+assert.throws(() => release.parseArgs(["prepare", "20.3.0", "--skip-npm"]), /state-dir/);
+assert.throws(() => release.parseArgs(["publish", "20.3.0", "--skip-npm", "--state-dir", "/tmp/x"]), /state-dir/);
+assert.match(release.releaseNotesForPublication("notes", true), /not published to npm/);
+assert.strictEqual(release.releaseNotesForPublication("notes", false), "notes");
+release.requireSkippedNpmDisclosure(release.releaseNotesForPublication("notes", true));
+assert.throws(() => release.requireSkippedNpmDisclosure("notes"), /does not disclose/);
+const publicationCalls = [];
+const publicationDependencies = {
+  dispatch: (...args) => publicationCalls.push(["dispatch", ...args]),
+  verify: (...args) => publicationCalls.push(["verify", ...args]),
+};
+assert.strictEqual(release.publishNpmUnlessSkipped("/repo", "20.3.0", "commit", true, publicationDependencies), false);
+assert.deepStrictEqual(publicationCalls, []);
+assert.strictEqual(release.publishNpmUnlessSkipped("/repo", "20.3.0", "commit", false, publicationDependencies), true);
+assert.deepStrictEqual(publicationCalls.map(([call]) => call), ["dispatch", "verify"]);
+
 assert.strictEqual(release.isPrereleaseVersion("15.0.0-rc.1"), true);
 assert.strictEqual(release.isPrereleaseVersion("15.0.0"), false);
 assert.strictEqual(release.isPrereleaseVersion("15.0.0+build.1"), false);
@@ -167,6 +185,7 @@ for (const override of [
   );
 }
 
+assert.throws(()=>release.prepareRelease('/fixture','1.2.3','/state',{localOnly:true,candidateDir:'/candidate'}),/Local-only/);
 let preparedSuite = null;
 release.runPreparedReleaseTestSuite("/fixture", {
   pack(root, destination) {
@@ -179,7 +198,8 @@ release.runPreparedReleaseTestSuite("/fixture", {
     preparedSuite = { ...preparedSuite, command, args, cwd, env: options.env };
   },
 });
-assert.deepStrictEqual(preparedSuite.args, ["run", "test"]);
+assert.deepStrictEqual(preparedSuite.args, ["tools/scripts/release_parallel_checks.cjs"]);
+assert.strictEqual(preparedSuite.command, process.execPath);
 assert.strictEqual(preparedSuite.packedRoot, "/fixture");
 assert.strictEqual(preparedSuite.suiteRoot, "/fixture");
 assert.strictEqual(preparedSuite.cwd, "/fixture");

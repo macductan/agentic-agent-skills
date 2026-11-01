@@ -13,6 +13,8 @@ function rehearse(source, version, stateDir, dependencies = {}) {
   const prepare = dependencies.prepare || prepareRelease;
   const status = run('git', ['status', '--porcelain'], source, { capture: true });
   if (status) throw Error('Rehearsal requires a clean committed source checkout');
+  (dependencies.doctor || require("./maintenance_doctor.cjs").doctor)(source);
+  if (dependencies.candidateDir) require("../lib/maintenance-state").openStore(dependencies.candidateDir, source);
   const head = run('git', ['rev-parse', 'HEAD'], source, { capture: true });
   const temporary = fs.mkdtempSync(path.join(fs.realpathSync(os.tmpdir()), 'aas-release-rehearsal-'));
   const clone = path.join(temporary, 'source');
@@ -21,6 +23,8 @@ function rehearse(source, version, stateDir, dependencies = {}) {
     run('git', ['checkout', '-B', 'main', head], clone);
     run('git', ['config', 'user.name', 'AAS local rehearsal'], clone);
     run('git', ['config', 'user.email', 'rehearsal@localhost'], clone);
+    // Materialize attribution history while the source promisor is still available.
+    run('git', ['log', 'HEAD', '--diff-filter=A', '--format=%H', '--name-only', '--', 'skills/'], clone);
     // Remove push destinations before running any candidate-controlled script.
     run('git', ['remote', 'remove', 'origin'], clone);
     const privateState = path.join(temporary, 'state');
@@ -39,11 +43,21 @@ function rehearse(source, version, stateDir, dependencies = {}) {
     run('git', ['checkout', '-B', 'main', verifiedMain], clone);
     const cycleProof = (dependencies.gate || require('./release_cycle_gate.cjs')).prepareProof(clone, version, privateState);
     run('git', ['checkout', '-B', 'main', head], clone);
-    const result = prepare(clone, version, privateState, { localOnly: true, cycleProof });
+    // Reuse only the existing verified local cache, including across disposable rehearsals.
+    const previousCache=process.env.AAS_WEB_CACHE_DIR;
+    let result;
+    try {
+      if(!previousCache) process.env.AAS_WEB_CACHE_DIR=path.join(source,'.turbo','cache');
+      result=prepare(clone, version, privateState, { localOnly: true, cycleProof });
+    } finally {
+      if(previousCache===undefined) delete process.env.AAS_WEB_CACHE_DIR;
+      else process.env.AAS_WEB_CACHE_DIR=previousCache;
+    }
     if (run('git', ['remote'], clone, { capture: true })) throw Error('Rehearsal created a remote');
     if (run('git', ['rev-parse', 'HEAD'], source, { capture: true }) !== head ||
         run('git', ['status', '--porcelain'], source, { capture: true }))
       throw Error('Source checkout changed during rehearsal');
+    if (dependencies.candidateDir) require("./release_candidate_receipt.cjs").save(clone, dependencies.candidateDir, head, version, run);
     console.log(JSON.stringify({ rehearsal: true, publicationAuthority: false,
       sourceCommit: head, ...result, platform: process.platform, arch: process.arch }, null, 2));
     return result;

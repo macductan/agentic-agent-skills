@@ -49,6 +49,7 @@ const MAX_EVIDENCE_BYTES = 8 * 1024 * 1024;
 const APPROVAL_WORKFLOW_PATHS = new Set([
   ".github/workflows/actionlint.yml",
   ".github/workflows/ci.yml",
+  ".github/workflows/pr-metadata.yml",
   ".github/workflows/codeql.yml",
   ".github/workflows/dependency-review.yml",
   // Runs with `contents: read`, no secrets and SHA-pinned actions; it is the
@@ -1394,8 +1395,9 @@ function prepareBatch(projectRoot, repoSlug, prNumbers, options, dependencies = 
   const load = dependencies.load || loadPullRequestDetails;
   const approve = dependencies.approve || approveActionRequiredRuns;
   return prNumbers.map((prNumber) => {
+    let details;
     try {
-    const details = load(projectRoot, repoSlug, prNumber);
+    details = load(projectRoot, repoSlug, prNumber);
     if(details.state!=="OPEN") throw failure("PR_NOT_OPEN", `PR #${prNumber} is ${details.state || "unknown"}; intake requires an OPEN PR before analysis or review.`);
     if (mergeableIsConflict(details)) throw new Error(`PR #${prNumber} has conflicts`);
     if (String(details.mergeStateStatus).toUpperCase() === "BEHIND") throw new Error(`PR #${prNumber} is BEHIND main; align the observed head once before checks`);
@@ -1407,7 +1409,7 @@ function prepareBatch(projectRoot, repoSlug, prNumbers, options, dependencies = 
     return { prNumber, merged: false, approvedRuns: approval.approvedRuns.map((run) => run.id),
       headSha: details.headRefOid, prepared: true, reviewAttested: (options.reviewedHeads || []).includes(details.headRefOid) };
     } catch (error) {
-      return { prNumber, merged: false, status: "blocked", reason: error.message, ...describeFailure(error) };
+      return { prNumber, headSha: details?.headRefOid, merged: false, status: "blocked", reason: error.message, ...describeFailure(error) };
     }
   });
 }
