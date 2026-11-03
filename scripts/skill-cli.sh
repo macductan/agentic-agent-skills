@@ -3,7 +3,7 @@
 # Configuration (Change this to your actual public GitHub repo, e.g., macductan/agentic-agent-skills)
 GITHUB_REPO="macductan/agentic-agent-skills"
 BRANCH="main"
-SKILLS_DIR="skills"
+SKILLS_DIR="skills/agentic-awesome-skills"
 INDEX_URL="https://raw.githubusercontent.com/$GITHUB_REPO/$BRANCH/scripts/skills-index.json"
 TARGET_DIR=".temp_skills"
 
@@ -73,7 +73,7 @@ done
 
 # Download the tarball once and extract all matched folders
 echo "Downloading repository archive and extracting skills..."
-curl -sL "https://github.com/$GITHUB_REPO/tarball/$BRANCH" | tar -xz -C "$TARGET_DIR" --strip-components=2 --wildcards "${TAR_PATTERNS[@]}" > /dev/null 2>&1
+curl -sL "https://github.com/$GITHUB_REPO/tarball/$BRANCH" | tar -xz -C "$TARGET_DIR" --strip-components=3 --wildcards "${TAR_PATTERNS[@]}" > /dev/null 2>&1
 
 for skill in $MATCHES; do
     # Check if tar succeeded. If not, it means the wildcard failed or tar syntax differs (Mac vs Linux).

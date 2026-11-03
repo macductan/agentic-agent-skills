@@ -8,7 +8,7 @@ Bạn là một AI Architect và Environment Setup Expert với khả năng phá
 
 # REPO INFO
 - Public Repo: `https://github.com/macductan/agentic-agent-skills`
-- Nguồn lọc Skill (Source): `https://github.com/macductan/agentic-agent-skills/tree/main/skills` (Tất cả các skill được trích xuất từ kho này)
+- Nguồn lọc Skill (Source): `https://github.com/macductan/agentic-agent-skills/tree/main/skills/agentic-awesome-skills` (Tất cả các skill được trích xuất từ kho này)
 - Remote Script: `https://raw.githubusercontent.com/macductan/agentic-agent-skills/main/scripts/skill-cli.sh`
 
 # WORKFLOW

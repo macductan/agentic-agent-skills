@@ -2,7 +2,7 @@ import os
 import json
 import re
 
-SKILLS_DIR = "skills"
+SKILLS_DIR = "skills/agentic-awesome-skills"
 OUTPUT_FILE = "scripts/skills-index.json"
 
 def build_index():
