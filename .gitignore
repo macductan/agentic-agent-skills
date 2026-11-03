@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+.temp_skills/
+.DS_Store

@@ -2,7 +2,7 @@ import os
 import json
 import re
 
-SKILLS_DIR = "agentic-awesome-skills"
+SKILLS_DIR = "skills"
 OUTPUT_FILE = "scripts/skills-index.json"
 
 def build_index():
@@ -11,7 +11,7 @@ def build_index():
         print(f"Directory {SKILLS_DIR} not found.")
         return
 
-    for skill_name in os.listdir(SKILLS_DIR):
+    for skill_name in sorted(os.listdir(SKILLS_DIR)):
         skill_path = os.path.join(SKILLS_DIR, skill_name)
         if not os.path.isdir(skill_path):
             continue

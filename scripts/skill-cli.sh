@@ -3,7 +3,7 @@
 # Configuration (Change this to your actual public GitHub repo, e.g., macductan/agentic-agent-skills)
 GITHUB_REPO="macductan/agentic-agent-skills"
 BRANCH="main"
-SKILLS_DIR="agentic-awesome-skills"
+SKILLS_DIR="skills"
 INDEX_URL="https://raw.githubusercontent.com/$GITHUB_REPO/$BRANCH/scripts/skills-index.json"
 TARGET_DIR=".temp_skills"
 

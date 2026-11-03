@@ -25,9 +25,9 @@ jobs:
           echo "Cloning upstream repo..."
           git clone --depth 1 https://github.com/sickn33/agentic-awesome-skills.git /tmp/upstream
           echo "Copying skills to local directory..."
-          mkdir -p agentic-awesome-skills
-          # Copy all folders from upstream root, ignoring git files
-          rsync -a /tmp/upstream/ agentic-awesome-skills/ --exclude '.git' --exclude '.github' --exclude 'README.md'
+          mkdir -p skills
+          # Copy all folders from upstream skills directory, preserving custom skills
+          rsync -a /tmp/upstream/skills/ skills/ --exclude 'skill-installer' --exclude 'skill-curator'
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -42,7 +42,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add agentic-awesome-skills/
+          git add skills/
           git add scripts/skills-index.json
           
           # Only commit if there are changes
