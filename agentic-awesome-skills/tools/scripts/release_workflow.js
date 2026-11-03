@@ -502,8 +502,9 @@ function prepareRelease(projectRoot, version, stateDir, options = {}) {
 
   ensureOnMain(projectRoot);
   ensureCleanWorkingTree(projectRoot, "release:prepare requires a clean tracked working tree.");
+  require("./release_resources.cjs").checkSpace();
   if (options.localOnly !== true) ensureTagMissing(projectRoot, `v${version}`);
-  ensureChangelogSection(projectRoot, version);
+  require("./release_credits.cjs").validateCredits(projectRoot, ensureChangelogSection(projectRoot, version));
   const cycleGate = require('./release_cycle_gate.cjs');
   if (options.localOnly === true && runCommand("git", ["remote"], projectRoot, { capture: true }))
     throw Error("Local rehearsal must have no remote destinations");

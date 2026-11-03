@@ -7,6 +7,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [20.4.0] - 2026-11-02 - "Design, Motion & Production Tools"
+
+> Adds **33** catalog skills, bringing the release catalog to **2,917** skills. GitHub and the hosted catalog are the publication targets; npm publication is intentionally excluded because account access is unavailable.
+
+### Added
+
+- **Design and motion:** `animate`, `animate-expo`, `animation-performance`, `animation-vocabulary`, `apple-design`, `ask-sonner`, `break-ui`, `emil-ui-prototype`, `find-animation-opportunities`, `improve-animations`, `mobile-native`, `pick-ui-library`, `remove-animations` and `write-swift` from Emil Kowalski's collection; plus `unslop-ui`, `stageshow` and `mobbin`.
+- **Creative production:** `figma`, `hyperframes`, `hyperframes-cli`, `hyperframes-registry`, `media-use`, `remotion-to-hyperframes`, `reverse-any-video` and `slideshow` from HeyGen, plus `sfxmint`.
+- **Development and research:** `desearch-mcp`, `logbrew-debug-production`, `mac-api-connection-diagnostics`, `blockvectra-docs`, `ponder`, `lightweight-charts-react-components` and `show-the-change`.
+
+### Changed
+
+- Refresh Openhook for private agent channels, keeping peer messages outside the local approval boundary.
+- Update Datacircle's comparison schema and examples, and Arcmira's disclosed default search window.
+- Document Mercury's skill directory in the setup table.
+- Improve catalog preparation, preview scheduling, cache retention and CI evidence selection while retaining protected checks and complete semantic review.
+
+### Security and distribution
+
+- Apply the reviewed dependency and documentation repairs since 20.3.0, including the HyperFrames/Remotion fixture dependency pins and integrity checks for their pinned GSAP script.
+- Keep generated catalog/plugin snapshots aligned through the protected release preparation flow. npm is excluded from this GitHub/site release and is not reported as published.
+
+### Thanks
+
+Thanks to the contributors whose pull requests are included in this release:
+
+- @liaujianjie — add mobbin skill for real app UI references ([#2217](https://github.com/sickn33/agentic-awesome-skills/pull/2217)).
+- @LydiaTools — add show-the-change for non-programmer acceptance ([#2218](https://github.com/sickn33/agentic-awesome-skills/pull/2218)).
+- @waynehamadi — Update Datacircle's skill ([#2219](https://github.com/sickn33/agentic-awesome-skills/pull/2219)).
+- @berkantay — refresh Openhook for private agent channels ([#2232](https://github.com/sickn33/agentic-awesome-skills/pull/2232)).
+- @Whq02 — add Mercury CLI to Choose Your Tool ([#2220](https://github.com/sickn33/agentic-awesome-skills/pull/2220)).
+- @ukorvl — add lightweight-charts-react-components skill ([#2221](https://github.com/sickn33/agentic-awesome-skills/pull/2221)).
+- @Quinnod345 — add ponder skill for convergent multi-pass review ([#2236](https://github.com/sickn33/agentic-awesome-skills/pull/2236)).
+- @gjwang — add source-cited BlockVectra documentation skill ([#2233](https://github.com/sickn33/agentic-awesome-skills/pull/2233)).
+- @seifip — add Mac API connection diagnostics skill ([#2234](https://github.com/sickn33/agentic-awesome-skills/pull/2234)).
+- @zealous1 — use a 90-day default for Arcmira quote search ([#2235](https://github.com/sickn33/agentic-awesome-skills/pull/2235)).
+- @furkanerday — add logbrew-debug-production skill (official, LogBrew production debugging) ([#2238](https://github.com/sickn33/agentic-awesome-skills/pull/2238)).
+- @Chkhikvadze — add desearch-mcp for Desearch MCP search and research ([#2213](https://github.com/sickn33/agentic-awesome-skills/pull/2213)).
+- @flreey — add sfxmint skill (official, CC0 sound effects for apps and games) ([#2211](https://github.com/sickn33/agentic-awesome-skills/pull/2211)).
+
+Thanks also to @emilkowalski, @heygen-com, @benjitaylor and @heydamir for the upstream design, motion and creative-production collections imported in this release. Individual source notices and bundled licenses retain attribution.
+
+---
+
 ## [20.3.0] - 2026-10-31 - "New Skills And Reviewed Updates"
 
 > Adds **7** reviewed catalog skills and updates existing workflows. This GitHub release is not published to npm because npm publication is unavailable; npm distribution and full release alignment remain incomplete.
