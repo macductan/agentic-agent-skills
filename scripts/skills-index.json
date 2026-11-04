@@ -1879,6 +1879,10 @@
     "name": "bounce-rate-estimator",
     "description": "Bounce Rate Estimator. Use when working with sessions and bounced sessions, or sessions and engaged sessions with metric definition."
   },
+  "bowmark": {
+    "name": "bowmark",
+    "description": "Use Bowmark when a task depends on what a live website shows right now: current prices, availability or stock, fares and quotes, a site search, or data behind a form or a login. The agent writes a short JavaScript script against typed site functions and gets typed results back."
+  },
   "box-automation": {
     "name": "box-automation",
     "description": "Automate Box operations including file upload/download, content search, folder management, collaboration, metadata queries, and sign requests through Composio's Box toolkit."
@@ -2161,7 +2165,7 @@
   },
   "career-ops": {
     "name": "career-ops",
-    "description": "Multi-CLI job-search command center: evaluate offers, scan portals,"
+    "description": "Open-source AI job search agent for AI coding CLIs: evaluate offers,"
   },
   "carrier-relationship-management": {
     "name": "carrier-relationship-management",
@@ -4151,6 +4155,10 @@
     "name": "figma-automation",
     "description": "Automate Figma tasks via Rube MCP (Composio): files, components, design tokens, comments, exports. Always search tools first for current schemas."
   },
+  "figma-designer": {
+    "name": "figma-designer",
+    "description": "Create structured Figma screens and libraries with ELAYA spacing, radius, semantic color variables, text styles, auto layout, and component states."
+  },
   "file-organizer": {
     "name": "file-organizer",
     "description": "Organize files and folders by inspecting their contents, proposing a structure, and reviewing duplicates before authorized changes."
@@ -5936,6 +5944,10 @@
     "name": "landing-page",
     "description": "Build landing, home and pricing pages that look like a real product instead of AI output: honest copy, one design system, checked on phone and desktop."
   },
+  "landing-page-design": {
+    "name": "landing-page-design",
+    "description": "Plan and build conversion-focused landing pages with intake, proof-based copy, explicit page structure, and the ELAYA visual system."
+  },
   "landing-page-generator": {
     "name": "landing-page-generator",
     "description": "Generates high-converting Next.js/React landing pages with Tailwind CSS. Uses PAS, AIDA, and BAB frameworks for optimized copy/components (Heroes, Features, Pricing). Focuses on Core Web Vitals/SEO."
@@ -7064,6 +7076,10 @@
     "name": "n8n-workflow-patterns",
     "description": "Proven architectural patterns for building n8n workflows."
   },
+  "nano-settlement-verify": {
+    "name": "nano-settlement-verify",
+    "description": "Check that a Nano (XNO) payment settled before a seller serves a paid call: one inline read-only script asks a public node about a send block and returns a verdict. No seed, no wallet."
+  },
   "nanobanana-ppt-skills": {
     "name": "nanobanana-ppt-skills",
     "description": "AI-powered PPT generation with document analysis and styled images"
@@ -7834,7 +7850,7 @@
   },
   "pixeltable": {
     "name": "pixeltable",
-    "description": "Build Pixeltable apps in app.py with tables, computed columns, embedding search, and HTTP routes. Use for RAG, media pipelines, and tool-calling agents."
+    "description": "Build Pixeltable apps for multimodal RAG, video and image search, audio transcription, agent memory, embeddings stored with the data, incremental pipelines, dataset versioning, and tool-calling agents."
   },
   "placecall": {
     "name": "placecall",
@@ -9215,6 +9231,10 @@
   "sequence-psychologist": {
     "name": "sequence-psychologist",
     "description": "Plan email nurture and multi-touch communication sequences when each message should build trust and prepare the next decision."
+  },
+  "sequenzy-email-marketing": {
+    "name": "sequenzy-email-marketing",
+    "description": "Operate Sequenzy email campaigns through an authorized CLI or MCP connection: inspect audiences, prepare drafts, schedule approved sends, and verify delivery results."
   },
   "serply-search-mcp": {
     "name": "serply-search-mcp",
