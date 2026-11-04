@@ -4467,6 +4467,11 @@
     "name": "gbp-local-seo-intent",
     "description": "Google Business Profile register: element, primary and supporting keywords, search intent, landing page, post dates, review rating and reply status, visibility and status. Use for local SEO."
   },
+  "gchat-thread-exporter": {
+    "name": "gchat-thread-exporter",
+    "description": "Export full Google Chat (google-chat, gg-chat, gchat) thread conversations and attached/inline images to local Markdown (.md) files. Use when the user shares a chat.google.com or mail.google.com/chat thread/topic URL or spaces/.../threads/... ID and asks to export, save, archive, or convert a Google Chat thread (hội thoại gg chat) to Markdown with images. Supports official Google Chat REST API via OAuth key with built-in key setup prompts, plus a zero-key browser fallback.",
+    "path": "skills/custom/gchat-thread-exporter"
+  },
   "gcp-audit-logs": {
     "name": "gcp-audit-logs",
     "description": "Configure GCP Cloud Audit Logs for compliance. Set up log routing and"

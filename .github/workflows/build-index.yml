@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'scripts/build_index.py'
+      - 'skills/custom/**'
   schedule:
     - cron: '0 0 * * *' # Run daily at midnight to sync upstream skills
   workflow_dispatch: # Allow manual trigger

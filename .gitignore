@@ -2,3 +2,7 @@ __pycache__/
 *.pyc
 .temp_skills/
 .DS_Store
+credentials.json
+token.json
+pending_oauth.json
+exports/
