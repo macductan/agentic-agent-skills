@@ -4740,6 +4740,11 @@
     "name": "gitops-workflow",
     "description": "Complete guide to implementing GitOps workflows with ArgoCD and Flux for automated Kubernetes deployments."
   },
+  "glab": {
+    "name": "glab",
+    "description": "GitLab CLI (glab) for working with GitLab from the command line. Read this skill before running any `glab` or GitLab API command — it applies to every GitLab operation, whether reading or writing (for example merge requests, issues, work items, discussions and threaded replies, comments, CI/CD pipelines, releases, packages, members, and project settings). Whenever a task touches GitLab in any way, consult this skill first so you use the correct, safe command on the first try. Prefer glab over raw API calls for all GitLab operations.",
+    "path": "skills/custom/glab"
+  },
   "glasser": {
     "name": "glasser",
     "description": "Search, inspect, and run third-party data APIs through one CLI when the environment has no suitable integration."
