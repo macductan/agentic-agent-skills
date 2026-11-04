@@ -2887,6 +2887,10 @@
     "name": "cost-optimization",
     "description": "Strategies and patterns for optimizing cloud costs across AWS, Azure, and GCP."
   },
+  "coupler-marketing-analytics": {
+    "name": "coupler-marketing-analytics",
+    "description": "Analyze cross-channel marketing performance from live Coupler.io data through its hosted MCP server: channel and campaign comparison, ROI, anomalies and budget insights."
+  },
   "course-upskilling-requests": {
     "name": "course-upskilling-requests",
     "description": "Training request register: course, provider, cost, duration, budget line, the three approval steps, service bond and completion evidence. Use for upskilling approvals."
