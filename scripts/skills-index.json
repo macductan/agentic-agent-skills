@@ -9703,7 +9703,7 @@
   },
   "stageshow": {
     "name": "stageshow",
-    "description": "Create React product illustrations and cursor demos using a reusable UI kit, examples, motion guidance, and visual verification tools."
+    "description": "Use when a user asks for a React product illustration, animated walkthrough, product demo, or cursor-led UI animation. Build from the reusable UI kit and verify the result in the browser."
   },
   "stakeholder-investor-reports": {
     "name": "stakeholder-investor-reports",
@@ -10228,6 +10228,10 @@
   "time-ledger": {
     "name": "time-ledger",
     "description": "Natural-language time tracking: parse what the user says they did into Activity/Minutes/Date rows in their own Notion database — asking instead of guessing when unsure."
+  },
+  "time-machine-recovery": {
+    "name": "time-machine-recovery",
+    "description": "Diagnose failed or stalled macOS Time Machine backups and recover space on local APFS destinations that remain full after backup deletion."
   },
   "time-tracking": {
     "name": "time-tracking",
