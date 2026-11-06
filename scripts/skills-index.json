@@ -1795,6 +1795,34 @@
     "name": "behavioral-modes",
     "description": "AI operational modes (brainstorm, implement, debug, review, teach, ship, orchestrate). Use to adapt behavior based on task type."
   },
+  "better-accessibility": {
+    "name": "better-accessibility",
+    "description": "Reviews and fixes keyboard and focus behavior, ARIA, accessible names, forms, screen-reader announcements, motion and zoom against WCAG 2.2."
+  },
+  "better-colors": {
+    "name": "better-colors",
+    "description": "Builds and checks color systems by generating palettes, naming semantic tokens, converting between formats and measuring contrast."
+  },
+  "better-interface": {
+    "name": "better-interface",
+    "description": "Reviews a screen, flow or whole interface across accessibility, layout, writing, typography, color and UI polish, and returns one ranked report."
+  },
+  "better-layout": {
+    "name": "better-layout",
+    "description": "Sets grouping, alignment, reading order, responsive structure and room for translated text, so a layout holds up when it is resized, translated or mirrored."
+  },
+  "better-typography": {
+    "name": "better-typography",
+    "description": "Sets and reviews how text renders, from the type scale and spacing to font features, wrapping, truncation and punctuation."
+  },
+  "better-ui": {
+    "name": "better-ui",
+    "description": "Polishes surfaces, icons and motion with exact values for border radius, optical alignment, shadows, icon states and animation."
+  },
+  "better-writing": {
+    "name": "better-writing",
+    "description": "Writes and reviews interface copy, from labels and errors to empty states and confirmations, so it matches the product's voice and tells people what to do next."
+  },
   "bevy-ecs-expert": {
     "name": "bevy-ecs-expert",
     "description": "Master Bevy's Entity Component System (ECS) in Rust, covering Systems, Queries, Resources, and parallel scheduling."
@@ -1923,6 +1951,10 @@
     "name": "brave-man",
     "description": "Runs a structured clarifying interview for new project requests before building. Instead of writing code, it outputs a fully specified prompt.md for a fresh agent session to execute, preventing expensive mistakes."
   },
+  "break": {
+    "name": "break",
+    "description": "Renders a component you choose under every scenario that can reach it on a temporary page and stress tests it."
+  },
   "break-ai-fix-loops": {
     "name": "break-ai-fix-loops",
     "description": "Stop ineffective AI coding repair loops with stable failure fingerprints, a three-attempt budget, real-path proof, negative controls, and tested rollback."
@@ -2038,6 +2070,10 @@
   "build": {
     "name": "build",
     "description": "Use when developing a major feature: research the project, create a phased implementation plan, track progress and verify phase outcomes before declaring completion."
+  },
+  "build-design": {
+    "name": "build-design",
+    "description": "Builds UI from a Figma file or a design image so it matches the design, using the project's existing tokens and components."
   },
   "build-ui": {
     "name": "build-ui",
@@ -3963,6 +3999,10 @@
     "name": "expense-management",
     "description": "Expense claim register: claim id, employee and department, amount and tax, approver and level, category, cost centre, budget line, receipt flag and status. Use for claim approvals."
   },
+  "explain-interface": {
+    "name": "explain-interface",
+    "description": "Explains how a website, a visual effect or an animation was built, from a live URL or a screenshot."
+  },
   "explain-like-socrates": {
     "name": "explain-like-socrates",
     "description": ">"
@@ -5613,6 +5653,10 @@
     "name": "intercom-automation",
     "description": "Automate Intercom tasks via Rube MCP (Composio): conversations, contacts, companies, segments, admins. Always search tools first for current schemas."
   },
+  "interface-review": {
+    "name": "interface-review",
+    "description": "Reviews a branch, pull request or uncommitted change for the interface problems it introduced or regressed, across accessibility, layout, writing, typography, color and UI."
+  },
   "intern-program": {
     "name": "intern-program",
     "description": "Internship register: intern and department, supervisor and mentor, institution, start and end dates, stipend, learning goals, mid-term and final scores, conversion flags. Use for intern tracking."
@@ -6401,6 +6445,10 @@
     "name": "lovable-cleanup",
     "description": "Audits and strips Lovable scaffolding from Vite + React projects — removes lovable-tagger, swaps placeholder assets, prunes unused Radix deps, cleans generated docs, and neutralizes stale favicon/CDN caching so the codebase ships as yours."
   },
+  "lurkapi-ad-research": {
+    "name": "lurkapi-ad-research",
+    "description": "Tear down the ads a brand or market runs in the Meta, Google, LinkedIn and TikTok ad libraries via LurkAPI: live ads, long-running winners, angles, hooks, offers and tests."
+  },
   "m365-agents-dotnet": {
     "name": "m365-agents-dotnet",
     "description": "Microsoft 365 Agents SDK for .NET. Build multichannel agents for Teams/M365/Copilot Studio with ASP.NET Core hosting, AgentApplication routing, and MSAL-based auth."
@@ -6796,6 +6844,10 @@
   "minecraft-bukkit-pro": {
     "name": "minecraft-bukkit-pro",
     "description": "Master Minecraft server plugin development with Bukkit, Spigot, and Paper APIs."
+  },
+  "minicut-film-studio": {
+    "name": "minicut-film-studio",
+    "description": "Install and use the official MiniCut film studio skill, pinned by commit, to make multi-shot AI short films with the paid MiniCut CLI."
   },
   "minimalist-ui": {
     "name": "minimalist-ui",
@@ -7959,7 +8011,7 @@
   },
   "postel-writing": {
     "name": "postel-writing",
-    "description": "Draft X (Twitter) or LinkedIn posts in the user's own voice, research high-performing posts, and schedule or publish them through the user's Postel account."
+    "description": "Find posts going viral in the user's niche, write their own version in their voice for X (Twitter), LinkedIn, Bluesky or Mastodon, and schedule or publish it through the user's Postel account."
   },
   "poster-design-studio": {
     "name": "poster-design-studio",
@@ -9737,6 +9789,10 @@
     "name": "startup-metrics-framework",
     "description": "Comprehensive guide to tracking, calculating, and optimizing key performance metrics for different startup business models from seed through Series A."
   },
+  "state-machine": {
+    "name": "state-machine",
+    "description": "Renders every state of a component you choose on a throwaway page, with mock data and a switcher, so you can work on each state."
+  },
   "statsmodels": {
     "name": "statsmodels",
     "description": "Statsmodels is Python's premier library for statistical modeling, providing tools for estimation, inference, and diagnostics across a wide range of statistical methods."
@@ -10016,6 +10072,10 @@
   "team-composition-analysis": {
     "name": "team-composition-analysis",
     "description": "Design optimal team structures, hiring plans, compensation strategies, and equity allocation for early-stage startups from pre-seed through Series A."
+  },
+  "teardown": {
+    "name": "teardown",
+    "description": "Creates technical illustrations of physical objects and of how things work, such as display pixels or interface layers, with coherent views, fine linework and part fills."
   },
   "tech-writing-proofread": {
     "name": "tech-writing-proofread",
@@ -10565,6 +10625,10 @@
     "name": "unsplash-integration",
     "description": "Integration skill for searching and fetching high-quality, free-to-use professional photography from Unsplash."
   },
+  "untangle-codebase": {
+    "name": "untangle-codebase",
+    "description": "Untangle a whole codebase in one pass, so agents working in it read less per change, break less without noticing, and debug faster."
+  },
   "update-swiftui-apis": {
     "name": "update-swiftui-apis",
     "description": "Scan Apple's SwiftUI documentation for deprecated APIs and update the SwiftUI Expert Skill with modern replacements."
@@ -10676,6 +10740,10 @@
   "uxui-principles": {
     "name": "uxui-principles",
     "description": "Evaluate interfaces against 168 research-backed UX/UI principles, detect antipatterns, and inject UX context into AI coding sessions."
+  },
+  "variant": {
+    "name": "variant",
+    "description": "Builds multiple variants of a component you're working on and helps you iterate and pick one."
   },
   "variant-analysis": {
     "name": "variant-analysis",
