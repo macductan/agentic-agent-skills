@@ -5805,6 +5805,10 @@
     "name": "jet-browser",
     "description": "Verify or integrate Jet Browser when a project needs isolated WPE WebKit sessions, native input, screenshots, ordered JSONL automation, or reproducible runtime checks."
   },
+  "jev-memory": {
+    "name": "jev-memory",
+    "description": "Set up an explicitly requested Claude Code memory mod using Treg and Jev, with informed consent for prompt transmission, recurring charges and local preference storage."
+  },
   "jev-social": {
     "name": "jev-social",
     "description": "Run read-only, browser-grounded Instagram, TikTok, or LinkedIn research through Jev routing and socai CLI, returning source-linked evidence and reports."
@@ -6052,6 +6056,10 @@
   "lead-magnets": {
     "name": "lead-magnets",
     "description": "Plan and optimize lead magnets for email capture and lead generation. Use when designing gated content, checklists, templates, downloadable resources, or other offers that convert visitors into subscribers."
+  },
+  "lead-signals": {
+    "name": "lead-signals",
+    "description": "Find and qualify public buying signals through Treg, rank fitting business accounts and optionally enrich authorized business contact information."
   },
   "learn": {
     "name": "learn",
@@ -6528,6 +6536,10 @@
   "make-automation": {
     "name": "make-automation",
     "description": "Automate Make (Integromat) tasks via Rube MCP (Composio): operations, enums, language and timezone lookups. Always search tools first for current schemas."
+  },
+  "make-ugc": {
+    "name": "make-ugc",
+    "description": "Create original AI UGC-style product videos through Treg: research hooks, approve a licensed presenter and voice, generate clips, add captions and report costs."
   },
   "makepad-2-0-animation": {
     "name": "makepad-2-0-animation",
@@ -8477,6 +8489,10 @@
     "name": "re-create",
     "description": "Completely delete and rewrite a file or module from scratch when structural rot makes patching impossible."
   },
+  "rea-growth": {
+    "name": "rea-growth",
+    "description": "Analyze a company’s public growth and content through Treg, distinguish observations from hypotheses, and produce an evidence-linked playbook within an approved budget."
+  },
   "react-best-practices": {
     "name": "react-best-practices",
     "description": "Comprehensive performance optimization guide for React and Next.js applications, adapted from Vercel’s published guidance. Use when writing new React components or Next.js pages, implementing data fetching (client or server-side), or reviewing code for performance issues."
@@ -8556,6 +8572,10 @@
   "recon-scope-triage": {
     "name": "recon-scope-triage",
     "description": "Triage ASM/recon output for ownership before testing"
+  },
+  "recruit": {
+    "name": "recruit",
+    "description": "Turn a job description into an evidence-linked candidate shortlist through Treg, with job-related ranking and optional authorized business contact enrichment."
   },
   "recruitment-pipeline": {
     "name": "recruitment-pipeline",
@@ -10401,6 +10421,10 @@
     "name": "tree-ring-memory",
     "description": "Use Tree Ring Memory for local-first AI-agent memory lifecycle work: recall, evidence, audit, forgetting, and consolidation without transcript dumping."
   },
+  "treg": {
+    "name": "treg",
+    "description": "Use the Treg CLI or MCP catalog to discover, price and call authorized external tools with team-scoped credentials and a user-approved budget."
+  },
   "trello-automation": {
     "name": "trello-automation",
     "description": "Automate Trello boards, cards, and workflows via Rube MCP (Composio). Create cards, manage lists, assign members, and search across boards programmatically."
@@ -10992,6 +11016,10 @@
   "weaviate-cookbooks": {
     "name": "weaviate-cookbooks",
     "description": "Build Weaviate AI apps from official cookbook blueprints for RAG, agentic RAG, data exploration, multimodal PDF search, async clients, and frontends."
+  },
+  "web-access": {
+    "name": "web-access",
+    "description": "Use Treg for public web or platform data only when existing search, browser and connected tools cannot cover the task, with explicit cost and data boundaries."
   },
   "web-artifacts-builder": {
     "name": "web-artifacts-builder",
