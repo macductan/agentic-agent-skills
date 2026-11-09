@@ -35,8 +35,8 @@ Tải skill trực tiếp vào thư mục `skills/` của dự án với cấu t
 # Tải script CLI
 curl -sLO https://raw.githubusercontent.com/macductan/agentic-agent-skills/main/scripts/skill-cli.sh && chmod +x skill-cli.sh
 
-# Tìm kiếm và tải skill theo keyword (bao gồm tech stack, spec technologies, UI/UX, tools nội bộ)
-./skill-cli.sh download "react, state, ui/ux, bun, cloudflare, gchat"
+# Tìm kiếm và tải skill theo keyword
+./skill-cli.sh download "react, state, gchat"
 ```
 Cấu trúc được bảo toàn tại thư mục dự án:
 - `skills/custom/<skill-name>`
