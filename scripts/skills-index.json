@@ -9471,7 +9471,7 @@
   },
   "skill-curator": {
     "name": "skill-curator",
-    "description": "AI Agent chủ động phân tích sâu dự án (đọc package, FE state), tự phản biện, tìm kiếm và chắt lọc các skills tối ưu từ kho Public."
+    "description": "AI Agent chủ động phân tích sâu dự án (đọc file cấu hình, tài liệu spec/PRD/kiến trúc, công nghệ mới, UI/UX design, FE state), tự phản biện, tìm kiếm và chắt lọc các skills tối ưu từ kho Public."
   },
   "skill-developer": {
     "name": "skill-developer",
@@ -9487,7 +9487,7 @@
   },
   "skill-installer": {
     "name": "skill-installer",
-    "description": "AI Agent chủ động phân tích sâu dự án (đọc package, FE state), tự phản biện, tìm kiếm và chắt lọc các skills tối ưu từ kho Public."
+    "description": "AI Agent chủ động phân tích sâu dự án (đọc file cấu hình, tài liệu spec/PRD/kiến trúc, công nghệ mới, UI/UX design, FE state), tự phản biện, tìm kiếm và chắt lọc các skills tối ưu từ kho Public."
   },
   "skill-issue": {
     "name": "skill-issue",

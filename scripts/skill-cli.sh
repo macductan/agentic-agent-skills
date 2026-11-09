@@ -64,9 +64,15 @@ import sys
 raw_keywords = sys.argv[1].lower()
 default_dir = sys.argv[2]
 
-# Normalize common multi-word aliases before splitting so "gg chat" / "google chat" don't fan out to generic "google"/"chat"
+# Normalize common multi-word aliases and special characters before splitting
 raw_keywords = re.sub(r"\bgg\s+chat\b", "gg-chat", raw_keywords)
 raw_keywords = re.sub(r"\bgoogle\s+chat\b", "google-chat", raw_keywords)
+raw_keywords = re.sub(r"\bui/ux\b", "ui-ux ui ux", raw_keywords)
+raw_keywords = re.sub(r"\bui\s+ux\b", "ui-ux ui ux", raw_keywords)
+raw_keywords = re.sub(r"\bdesign\s+system\b", "design-system", raw_keywords)
+raw_keywords = re.sub(r"\bclean\s+code\b", "clean-code", raw_keywords)
+raw_keywords = re.sub(r"\bcode\s+review\b", "code-review review", raw_keywords)
+raw_keywords = re.sub(r"\bci/cd\b", "ci-cd ci cd", raw_keywords)
 
 try:
     with open("/tmp/skills-index.json", "r", encoding="utf-8") as f:
@@ -74,7 +80,7 @@ try:
 except Exception:
     sys.exit(0)
 
-keywords = [k.strip() for k in raw_keywords.replace(",", " ").split() if k.strip()]
+keywords = list(dict.fromkeys([k.strip() for k in raw_keywords.replace(",", " ").replace("/", " ").split() if k.strip()]))
 matched = []
 
 for k, v in sorted(data.items()):
