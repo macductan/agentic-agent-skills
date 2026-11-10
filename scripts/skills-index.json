@@ -77,7 +77,7 @@
   },
   "accesslint-diff": {
     "name": "accesslint-diff",
-    "description": "Diff a live page's accessibility violations against a baseline — by default compares uncommitted changes (stash-based), or pass --branch [<name>] to diff against a branch. Reports only new violations introduced, violations fixed, and pre-existing count. Use `scan` for a full audit with no diffing."
+    "description": "Diff a live page's accessibility violations against a baseline — by default compares uncommitted changes (stash-based), or pass --branch [name] to diff against a branch. Reports only new violations introduced, violations fixed, and pre-existing count. Use `scan` for a full audit with no diffing."
   },
   "accesslint-scan": {
     "name": "accesslint-scan",
@@ -1054,6 +1054,10 @@
   "autonomous-agents": {
     "name": "autonomous-agents",
     "description": "Autonomous agents are AI systems that can independently decompose"
+  },
+  "autorekt": {
+    "name": "autorekt",
+    "description": "Read live market data with the autorekt CLI before answering questions about prices, market moves, liquidity, positioning, options or prediction-market odds"
   },
   "avalonia-layout-zafiro": {
     "name": "avalonia-layout-zafiro",
@@ -2415,6 +2419,10 @@
     "name": "cline-pilot",
     "description": ">-"
   },
+  "cloro-mcp": {
+    "name": "cloro-mcp",
+    "description": "Get Google results with the AI Overview, and ChatGPT, Google AI Mode, Bing AI Mode and Gemini answers with their cited sources, through cloro's hosted MCP server. Use when the user chooses cloro."
+  },
   "close-automation": {
     "name": "close-automation",
     "description": "Automate Close CRM tasks via Rube MCP (Composio): create leads, manage calls/SMS, handle tasks, and track notes. Always search tools first for current schemas."
@@ -2505,7 +2513,7 @@
   },
   "code-documentation-doc-generate": {
     "name": "code-documentation-doc-generate",
-    "description": "You are a documentation expert specializing in creating comprehensive, maintainable documentation from code. Generate API docs, architecture diagrams, user guides, and technical references using AI-powered analysis and industry best practices."
+    "description": "Compatibility alias of documentation-generation-doc-generate. Generate scoped documentation from verified source while preserving existing callers of this ID."
   },
   "code-of-conduct": {
     "name": "code-of-conduct",
@@ -2541,7 +2549,7 @@
   },
   "code-review-excellence": {
     "name": "code-review-excellence",
-    "description": "Transform code reviews from gatekeeping to knowledge sharing through constructive feedback, systematic analysis, and collaborative improvement."
+    "description": "Review a defined code diff for correctness, security, performance and maintainability; report evidence-backed findings with severity and actionable feedback."
   },
   "code-review-sensei": {
     "name": "code-review-sensei",
@@ -2553,7 +2561,7 @@
   },
   "code-showcase-core-components": {
     "name": "code-showcase-core-components",
-    "description": "Core component library and design system patterns. Use when building UI, using design tokens, or working with the component library."
+    "description": "Apply the ChrisWiles code-showcase component and token conventions when the target project actually uses that API; examples require local adaptation."
   },
   "code-showcase-react-ui-patterns": {
     "name": "code-showcase-react-ui-patterns",
@@ -2917,7 +2925,7 @@
   },
   "core-components": {
     "name": "core-components",
-    "description": "Core component library and design system patterns. Use when building UI, using design tokens, or working with the component library."
+    "description": "Adapt an existing project component library and design tokens to a UI change; inspect real exports, preserve native behavior, and verify accessibility."
   },
   "cost-optimization": {
     "name": "cost-optimization",
@@ -3261,7 +3269,7 @@
   },
   "debugger": {
     "name": "debugger",
-    "description": "Debugging specialist for errors, test failures, and unexpected"
+    "description": "Investigate a reproducible error or failing test, test root-cause hypotheses, implement a scoped fix when authorized, and report actual verification evidence."
   },
   "debugging-and-error-recovery": {
     "name": "debugging-and-error-recovery",
@@ -3322,6 +3330,10 @@
   "dei-dashboard": {
     "name": "dei-dashboard",
     "description": "Diversity, equity and inclusion dashboard: metric by department and period, value against target, group size and minimum-threshold flag. Use for DEI reporting."
+  },
+  "deja-history": {
+    "name": "deja-history",
+    "description": "Search this machine's past AI coding sessions across Claude Code, Codex, Cursor, Gemini CLI and thirty-nine other agents before editing, debugging, or denying something exists."
   },
   "delegate-setup": {
     "name": "delegate-setup",
@@ -3629,7 +3641,7 @@
   },
   "documentation-generation-doc-generate": {
     "name": "documentation-generation-doc-generate",
-    "description": "You are a documentation expert specializing in creating comprehensive, maintainable documentation from code. Generate API docs, architecture diagrams, user guides, and technical references using AI-powered analysis and industry best practices."
+    "description": "Generate API, architecture or user documentation from current code and tests; validate examples and label gaps without inventing behavior or deploying a site."
   },
   "documentation-templates": {
     "name": "documentation-templates",
@@ -5565,6 +5577,10 @@
     "name": "imagen",
     "description": "AI image generation skill powered by Google Gemini, enabling seamless visual content creation for UI placeholders, documentation, and design assets."
   },
+  "imagera-media": {
+    "name": "imagera-media",
+    "description": "Generate or edit images, video clips, voiceovers and music through the hosted Imagera MCP server, quoting the credit cost and getting approval before each paid call."
+  },
   "implement": {
     "name": "implement",
     "description": "Implement a piece of work based on a PRD or set of issues."
@@ -7088,6 +7104,10 @@
   "multi-tenant-llm-hosting": {
     "name": "multi-tenant-llm-hosting",
     "description": "Design secure, multi-tenant LLM hosting platforms with tenant isolation,"
+  },
+  "music-for-robots": {
+    "name": "music-for-robots",
+    "description": ">-"
   },
   "music-generation-studio": {
     "name": "music-generation-studio",
@@ -8997,6 +9017,10 @@
     "name": "score-eval",
     "description": "Use when scoring an evaluation diff against a supplied rubric and baseline fixture: retain evidence for detected/fixed findings and report unscorable or unexecuted checks."
   },
+  "scrapingbee-cli": {
+    "name": "scrapingbee-cli",
+    "description": "Fetch web pages, crawl sites and get Google, Amazon, Walmart and YouTube data as JSON with the ScrapingBee CLI. Use when a task needs content from a website that plain HTTP returns empty."
+  },
   "screen-adverse-media": {
     "name": "screen-adverse-media",
     "description": "Screen a person or organisation for adverse media coverage, PEP status, and sanctions exposure — corroboration-gated, returns \"review\" never \"guilty\". Use when the user asks to screen someone before onboarding, partnership, or investment; for AML/CTF flows; or for ongoing counterparty monitoring."
@@ -9964,6 +9988,10 @@
   "sympy": {
     "name": "sympy",
     "description": "SymPy is a Python library for symbolic mathematics that enables exact computation using mathematical symbols rather than numerical approximations."
+  },
+  "sync-lipsync": {
+    "name": "sync-lipsync",
+    "description": "Lip-sync an existing video of a real person to new audio or a typed script with sync. labs through its hosted MCP server, quoting the cost and waiting for approval first."
   },
   "syncbook-discovery": {
     "name": "syncbook-discovery",
