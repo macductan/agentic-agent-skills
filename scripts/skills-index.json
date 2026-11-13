@@ -4682,7 +4682,7 @@
   },
   "get-seen-in-replies": {
     "name": "get-seen-in-replies",
-    "description": "Write a reply to someone else's tweet that is worth reading on its own. Use when someone asks what to reply, wants to grow by replying on Twitter/X, or says their replies go nowhere."
+    "description": "Write a reply to someone else's tweet that is worth reading on its own. Use when someone asks what to reply, wants to grow by replying on Twitter, or says their replies go nowhere."
   },
   "gh-attach": {
     "name": "gh-attach",
@@ -6468,6 +6468,10 @@
   "lovable-cleanup": {
     "name": "lovable-cleanup",
     "description": "Audits and strips Lovable scaffolding from Vite + React projects — removes lovable-tagger, swaps placeholder assets, prunes unused Radix deps, cleans generated docs, and neutralizes stale favicon/CDN caching so the codebase ships as yours."
+  },
+  "lumify-odds": {
+    "name": "lumify-odds",
+    "description": "Lumify's hosted sports MCP/REST API for sportsbook odds, line-movement history, public betting splits, and player props across MLB, NFL, NBA, NHL, soccer, tennis, NCAAF, NCAAB. Read-only market data."
   },
   "lurkapi-ad-research": {
     "name": "lurkapi-ad-research",
@@ -8735,7 +8739,7 @@
   },
   "repurpose-into-a-post": {
     "name": "repurpose-into-a-post",
-    "description": "Turn an article, newsletter, transcript or video into a Twitter/X or LinkedIn post that stands on its own. Use when someone wants to repurpose, share or promote content they already made."
+    "description": "Turn an article, newsletter, transcript or video into a Twitter or LinkedIn post that stands on its own. Use when someone wants to repurpose, share or promote content they already made."
   },
   "requesting-code-review": {
     "name": "requesting-code-review",
@@ -8951,7 +8955,7 @@
   },
   "same-idea-both-platforms": {
     "name": "same-idea-both-platforms",
-    "description": "Write one idea as a Twitter/X post and a LinkedIn post that read as written separately, not pasted twice. Use when someone wants to cross-post or adapt a post for the other platform."
+    "description": "Write one idea as a Twitter post and a LinkedIn post that read as written separately, not pasted twice. Use when someone wants to cross-post or adapt a post for the other platform."
   },
   "sandbase-mcp": {
     "name": "sandbase-mcp",
@@ -9016,6 +9020,10 @@
   "score-eval": {
     "name": "score-eval",
     "description": "Use when scoring an evaluation diff against a supplied rubric and baseline fixture: retain evidence for detected/fixed findings and report unscorable or unexecuted checks."
+  },
+  "scrapely-scrape": {
+    "name": "scrapely-scrape",
+    "description": "Collect web data with ready-made Scrape.ly scrapers: Google Maps places, Amazon products, LinkedIn jobs, reviews, social posts. Use when the user wants structured data from a site."
   },
   "scrapingbee-cli": {
     "name": "scrapingbee-cli",
@@ -10499,7 +10507,7 @@
   },
   "turn-this-into-a-thread": {
     "name": "turn-this-into-a-thread",
-    "description": "Turn a long idea, transcript, article or draft into a Twitter/X thread where every tweet stands alone. Use when someone asks for a thread or to break long writing into tweets."
+    "description": "Turn a long idea, transcript, article or draft into a Twitter thread where every tweet stands alone. Use when someone asks for a thread or to break long writing into tweets."
   },
   "tutorial-engineer": {
     "name": "tutorial-engineer",
@@ -11155,7 +11163,7 @@
   },
   "why-did-this-post-flop": {
     "name": "why-did-this-post-flop",
-    "description": "Diagnose why one Twitter/X or LinkedIn post underperformed: not seen, seen and skipped, or read and ignored. Use when someone asks why a post did badly or got no engagement."
+    "description": "Diagnose why one Twitter or LinkedIn post underperformed: not seen, seen and skipped, or read and ignored. Use when someone asks why a post did badly or got no engagement."
   },
   "wifi-wireless": {
     "name": "wifi-wireless",
@@ -11299,7 +11307,7 @@
   },
   "write-in-my-voice": {
     "name": "write-in-my-voice",
-    "description": "Draft a Twitter/X or LinkedIn post that sounds like the person asking, from posts they already wrote. Use when someone asks for a post or rewrite in their voice, or asks if text sounds like them."
+    "description": "Draft a Twitter or LinkedIn post that sounds like the person asking, from posts they already wrote. Use when someone asks for a post or rewrite in their voice, or asks if text sounds like them."
   },
   "write-swift": {
     "name": "write-swift",
