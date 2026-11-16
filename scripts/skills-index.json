@@ -335,6 +335,10 @@
     "name": "ai-code-generation-guardrails",
     "description": "Use when reviewing AI-generated code before merge or execution: plan AST/security checks, isolated behavior tests and evidence, with language-specific coverage limits."
   },
+  "ai-code-review-triage": {
+    "name": "ai-code-review-triage",
+    "description": "Review AI-authored pull requests when line-by-line reading no longer scales; separate defect detection, product-context checks, and scoped human sign-off."
+  },
   "ai-coding-agent-guardrails": {
     "name": "ai-coding-agent-guardrails",
     "description": "Secure AI coding agents (Claude Code, Cursor, Codex, Copilot) with permission"
@@ -2966,6 +2970,10 @@
   "create-pr": {
     "name": "create-pr",
     "description": "Alias for pr-writer. Use when users explicitly ask for \"create-pr\" or reference the legacy skill name. Redirects to the canonical PR writing workflow."
+  },
+  "creative-psychology-hooks": {
+    "name": "creative-psychology-hooks",
+    "description": "Generate and grade ad hooks, angles and video openers with a creative psychology framework when paid social ideas need a clear mechanism instead of generic brainstorming."
   },
   "cred-omega": {
     "name": "cred-omega",
@@ -7304,6 +7312,10 @@
   "nika": {
     "name": "nika",
     "description": "Runs repeatable AI work as checked, budgeted workflow files."
+  },
+  "no-free-work": {
+    "name": "no-free-work",
+    "description": "Classify a client request against the agreed scope, then draft the reply and a priced change order. Use for scope creep, extra requests, or 'should I charge for this'."
   },
   "noaa-radar-satellite-fetching": {
     "name": "noaa-radar-satellite-fetching",
