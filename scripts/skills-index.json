@@ -939,6 +939,10 @@
     "name": "asana-automation",
     "description": "Automate Asana tasks via Rube MCP (Composio): tasks, projects, sections, teams, workspaces. Always search tools first for current schemas."
   },
+  "asin-mcp": {
+    "name": "asin-mcp",
+    "description": "Find Amazon ASINs, read current offers and price history, and manage a price watchlist with target-price alerts through Asin's MCP server. Use when the user chooses Asin."
+  },
   "ask-copilot": {
     "name": "ask-copilot",
     "description": "Use GitHub Copilot CLI in non-interactive mode to ask questions, review code, or generate snippets without manual interaction."
@@ -1046,6 +1050,10 @@
   "auto-research": {
     "name": "auto-research",
     "description": "Research uncertain questions with an explicit, user-approved web search or ChatGPT consultation, then present options and wait for implementation approval."
+  },
+  "autom-mcp": {
+    "name": "autom-mcp",
+    "description": "Get Google, Bing, Brave, DuckDuckGo and Yahoo results as JSON (web, news, maps, shopping, jobs, images, AI Mode) through Autom's MCP server. Use when the user chooses Autom."
   },
   "automated-triage": {
     "name": "automated-triage",
@@ -1955,6 +1963,10 @@
     "name": "brand-perception-psychologist",
     "description": "Audit visual, verbal, and behavioral brand signals and propose alignment changes when market perception differs from the intended position."
   },
+  "brand-vibes": {
+    "name": "brand-vibes",
+    "description": "Apply a company's design language to a site from 66 brand profiles, or extract a brand's DNA into semantic tokens for Tailwind, CSS variables or shadcn."
+  },
   "brave-man": {
     "name": "brave-man",
     "description": "Runs a structured clarifying interview for new project requests before building. Instead of writing code, it outputs a fully specified prompt.md for a fresh agent session to execute, preventing expensive mistakes."
@@ -2207,6 +2219,10 @@
     "name": "capacity-workload-planner",
     "description": "Weekly capacity and workload register: available and allocated hours, utilisation percentage, over-allocation check and leave days. Use for resource planning."
   },
+  "capturekit-mcp": {
+    "name": "capturekit-mcp",
+    "description": "Take page screenshots or PDFs, extract page content, metadata and links, or get a page summary through CaptureKit's MCP server. Use when the user chooses CaptureKit."
+  },
   "career-ops": {
     "name": "career-ops",
     "description": "Open-source AI job search agent for AI coding CLIs: evaluate offers,"
@@ -2274,6 +2290,10 @@
   "changelog-updates": {
     "name": "changelog-updates",
     "description": "Create release notes and product updates that developers actually read and care about. This skill covers changelog formatting, versioning communication, breaking change announcements, deprecation notices, and building anticipation for new features."
+  },
+  "chartquery-mcp": {
+    "name": "chartquery-mcp",
+    "description": "Render Chart.js charts, Mermaid and other diagrams, QR codes, barcodes and thermal printer labels (ZPL, TSC, EPL) as images through ChartQuery's MCP server. Use when the user chooses ChartQuery."
   },
   "chat-widget": {
     "name": "chat-widget",
@@ -3131,6 +3151,10 @@
     "name": "darkmoon-pentest",
     "description": "Start, follow and triage authorized autonomous AI pentest runs on a self-hosted Darkmoon Pro instance through its MCP server."
   },
+  "darpa-audit": {
+    "name": "darpa-audit",
+    "description": "Stress-test a startup or product idea against the Heilmeier Catechism before you build: 5 forcing prompts, assumption labels, and a SURVIVES or DOES NOT SURVIVE verdict."
+  },
   "dast-scanning": {
     "name": "dast-scanning",
     "description": "Perform dynamic application security testing with OWASP ZAP, Burp Suite,"
@@ -3715,6 +3739,10 @@
     "name": "doubt-driven-development",
     "description": "Subjects every non-trivial decision to a fresh-context adversarial review before it stands."
   },
+  "dox-init": {
+    "name": "dox-init",
+    "description": "Initialize a DOX AGENTS.md tree in a project: fetch the DOX contract, scan the real structure, then write nested AGENTS.md files with purpose, ownership and child indexes."
+  },
   "draft-my-comments": {
     "name": "draft-my-comments",
     "description": "Write a LinkedIn comment that adds something the post did not have, not agreement. Use when someone asks what to comment, wants to engage with creators, or says their comments go nowhere."
@@ -4259,6 +4287,10 @@
     "name": "find-matching-tenders",
     "description": "Find open AU/NZ government tenders matching what a company does, ranked by fit with why and gap analysis. Use when the user asks to find tenders, bid opportunities, government contracts, or RFPs for their business (or a client's)."
   },
+  "finetune-llm": {
+    "name": "finetune-llm",
+    "description": "Fine-tune or post-train an LLM against measured VRAM budgets: probe the GPU, pick the engine, hash the data, smoke test, train instrumented, verify with a neutral evaluator."
+  },
   "finishing-a-development-branch": {
     "name": "finishing-a-development-branch",
     "description": "Use when implementation is complete, all tests pass, and you need to decide how to integrate the work - guides completion of development work by presenting structured options for merge, PR, or cleanup"
@@ -4310,6 +4342,10 @@
   "fixing-motion-performance": {
     "name": "fixing-motion-performance",
     "description": "Audit and fix animation performance issues including layout thrashing, compositor properties, scroll-linked motion, and blur effects. Use when animations stutter, transitions jank, or reviewing CSS/JS animation performance."
+  },
+  "flash-compare": {
+    "name": "flash-compare",
+    "description": "Compare products before buying: check OEM specs against owner reports, load tests and verified reviews, then keep at most two and reject the rest with one-line causes."
   },
   "flowhunt-skill": {
     "name": "flowhunt-skill",
@@ -4876,6 +4912,10 @@
   "google-calendar-automation": {
     "name": "google-calendar-automation",
     "description": "Plan and perform authorized Google Calendar workflows through an existing authenticated integration; inspect events, draft changes and verify results."
+  },
+  "google-code-review": {
+    "name": "google-code-review",
+    "description": "Review code or prepare a change for review using Google's engineering practices: reviewer and author modes, severity labels, CL descriptions, review speed and pushback."
   },
   "google-docs-automation": {
     "name": "google-docs-automation",
@@ -5476,6 +5516,10 @@
   "hunt-xxe": {
     "name": "hunt-xxe",
     "description": "Hunting skill for xxe vulnerabilities."
+  },
+  "huntapi-mcp": {
+    "name": "huntapi-mcp",
+    "description": "Read media metadata, or download video and audio the user has the rights to, from public media URLs through HuntAPI's MCP server and its async jobs. Use when the user chooses HuntAPI."
   },
   "hybrid-cloud-architect": {
     "name": "hybrid-cloud-architect",
@@ -6665,6 +6709,10 @@
     "name": "market-sizing-analysis",
     "description": "Comprehensive market sizing methodologies for calculating Total Addressable Market (TAM), Serviceable Available Market (SAM), and Serviceable Obtainable Market (SOM) for startup opportunities."
   },
+  "market-validator": {
+    "name": "market-validator",
+    "description": "Validate a product idea against real user complaints from Reddit, X, G2, Quora, Hacker News, Product Hunt and YouTube, then score demand, competition gap and reachability."
+  },
   "marketing-ideas": {
     "name": "marketing-ideas",
     "description": "Provide proven marketing strategies and growth ideas for SaaS and software products, prioritized using a marketing feasibility scoring system."
@@ -6732,6 +6780,10 @@
   "marlin-bed-leveling": {
     "name": "marlin-bed-leveling",
     "description": "Calibrates Marlin 2.x 3D printer firmware bed leveling: Unified Bed Leveling (UBL), Bilinear ABL, M420 S1 post-homing, Z-probe offsets, G26 mesh prints, and EEPROM slots. Trigger phrases: marlin bed leveling, ubl calibration, m420 s1, z probe offset, g29 bed level, first layer adhesion."
+  },
+  "master-pitcher": {
+    "name": "master-pitcher",
+    "description": "Audit, draft or roast a pitch deck against a VC's 3-minute scan: 18 checks across 6 dimensions, a score out of 18, ranked fixes and placement violations."
   },
   "matematico-tao": {
     "name": "matematico-tao",
@@ -7317,6 +7369,10 @@
     "name": "no-free-work",
     "description": "Classify a client request against the agreed scope, then draft the reply and a priced change order. Use for scope creep, extra requests, or 'should I charge for this'."
   },
+  "no-obvious-questions": {
+    "name": "no-obvious-questions",
+    "description": "Filter every question before asking the user: skip ones answerable from context, tools, common sense or prior authorization; send the rest once, with a recommendation."
+  },
   "noaa-radar-satellite-fetching": {
     "name": "noaa-radar-satellite-fetching",
     "description": "Retrieve NOAA NEXRAD and GOES products from public cloud archives using verified site, product, channel, sector, and scan-time selection."
@@ -7845,6 +7901,10 @@
     "name": "penetration-testing",
     "description": "Perform basic penetration testing and security assessments."
   },
+  "pennylane": {
+    "name": "pennylane",
+    "description": "Write, simulate and train PennyLane quantum circuits: QNodes, devices, templates, measurements, autodiff with NumPy/JAX/PyTorch, gradients, shots and noise."
+  },
   "pentest-checklist": {
     "name": "pentest-checklist",
     "description": "Provide a comprehensive checklist for planning, executing, and following up on penetration tests. Ensure thorough preparation, proper scoping, and effective remediation of discovered vulnerabilities."
@@ -7901,6 +7961,10 @@
     "name": "permission-manager",
     "description": "Manage opencode permissions: review always-allow lists, suggest safe read-only commands, configure permission patterns"
   },
+  "perp-dex-costs": {
+    "name": "perp-dex-costs",
+    "description": "Before a perpetual futures trade, find which perp DEX is cheapest now for the size (fees plus slippage on the live book) and compare funding across 25+ venues."
+  },
   "perq": {
     "name": "perq",
     "description": "Find verified free AI credits, free tiers, startup programs and student perks for AI APIs, GPUs and dev tools, each with the vendor's source link and a last-verified date."
@@ -7944,6 +8008,10 @@
   "pilot-protocol": {
     "name": "pilot-protocol",
     "description": "Give an AI agent a permanent network address, encrypted P2P messaging, and an installable app store via Pilot Protocol"
+  },
+  "piloterr-mcp": {
+    "name": "piloterr-mcp",
+    "description": "Get structured JSON from 391 Piloterr scraping endpoints (Amazon, LinkedIn, Zillow, Crunchbase, Google...) through Piloterr's MCP server. Use when the user chooses Piloterr."
   },
   "pipecat-friday-agent": {
     "name": "pipecat-friday-agent",
@@ -9057,6 +9125,10 @@
     "name": "screenstudio-alt",
     "description": "Open-source headless Screen Studio alternative: auto speed-up of idle, auto-zoom on click clusters, keystroke overlay chips, smoothed synthetic cursor, and 9:16 vertical export that follows the action — post-production for screen recordings from the CLI."
   },
+  "scroll-3d-world": {
+    "name": "scroll-3d-world",
+    "description": "Build a scroll-scrubbed Three.js fly-through landing page: one continuous camera path through diorama scenes, with no AI video, no seams and no render credits."
+  },
   "scroll-experience": {
     "name": "scroll-experience",
     "description": "Expert in building immersive scroll-driven experiences - parallax"
@@ -9744,6 +9816,10 @@
   "speckit-updater": {
     "name": "speckit-updater",
     "description": "SpecKit Safe Update"
+  },
+  "specstream-browser-sessions": {
+    "name": "specstream-browser-sessions",
+    "description": "Open, drive and release a hosted SpecStream browser session over CDP (Playwright, Puppeteer) or one REST action at a time, with domain limits and per-second billing."
   },
   "speed": {
     "name": "speed",
@@ -10841,6 +10917,10 @@
     "name": "vector-index-tuning",
     "description": "Optimize vector index performance for latency, recall, and memory. Use when tuning HNSW parameters, selecting quantization strategies, or scaling vector search infrastructure."
   },
+  "veille-mcp": {
+    "name": "veille-mcp",
+    "description": "Check emails, domains, phone numbers and IPs for fraud signals, and validate EU VAT numbers and IBANs, through Veille's MCP server. Use when the user chooses Veille."
+  },
   "vendor-contractor-management": {
     "name": "vendor-contractor-management",
     "description": "Vendor register: name, type, services, contact, linked contract dates, payment terms and rating. Use for vendor and contractor management."
@@ -10896,6 +10976,10 @@
   "vexor-cli": {
     "name": "vexor-cli",
     "description": "Semantic file discovery via `vexor`. Use whenever locating where something is implemented/loaded/defined in a medium or large repo, or when the file location is unclear. Prefer this over manual browsing."
+  },
+  "vibe-abliteration": {
+    "name": "vibe-abliteration",
+    "description": "Run Heretic directional abliteration to reduce a model's refusals: set up, optimize, read the Pareto front, verify the export, then save or upload with a proper model card."
   },
   "vibe-code-auditor": {
     "name": "vibe-code-auditor",
