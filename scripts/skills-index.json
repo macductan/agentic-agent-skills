@@ -1919,6 +1919,134 @@
     "name": "boost-asio-pro",
     "description": "Use when writing asynchronous C++ networking code with Boost.Asio or standalone Asio — TCP/UDP servers and clients, SSL/TLS, timers, strands, composed async ops. Covers io_context, co_spawn, awaitable, async_read/async_write, asio::spawn, yield_context, and pre-C++20 callback styles."
   },
+  "boring-marketing-ads-incrementality-check": {
+    "name": "boring-marketing-ads-incrementality-check",
+    "description": "Design a matched ad pause test using call or sales logs."
+  },
+  "boring-marketing-ai-search": {
+    "name": "boring-marketing-ai-search",
+    "description": "Audit and improve a brand's citations in AI search results."
+  },
+  "boring-marketing-audience-research": {
+    "name": "boring-marketing-audience-research",
+    "description": "Mine public conversations for audience segments and verbatim customer language."
+  },
+  "boring-marketing-brand-voice": {
+    "name": "boring-marketing-brand-voice",
+    "description": "Extract a brand voice profile with evidence and observable writing checks."
+  },
+  "boring-marketing-competitive-intel": {
+    "name": "boring-marketing-competitive-intel",
+    "description": "Compare competitor positioning, offers, ads and public customer feedback."
+  },
+  "boring-marketing-content-atomizer": {
+    "name": "boring-marketing-content-atomizer",
+    "description": "Adapt an existing asset into native social drafts for the brand's priority channels."
+  },
+  "boring-marketing-creative": {
+    "name": "boring-marketing-creative",
+    "description": "Plan and produce campaign visuals, product media and short advertising videos."
+  },
+  "boring-marketing-direct-response-copy": {
+    "name": "boring-marketing-direct-response-copy",
+    "description": "Draft conversion copy from customer language, evidence and offer constraints."
+  },
+  "boring-marketing-email-sequences": {
+    "name": "boring-marketing-email-sequences",
+    "description": "Draft lifecycle and sales email sequences with send timing and delivery checks."
+  },
+  "boring-marketing-find-local-clients": {
+    "name": "boring-marketing-find-local-clients",
+    "description": "Build a ranked list of local businesses from public search and directory evidence."
+  },
+  "boring-marketing-first-screen-check": {
+    "name": "boring-marketing-first-screen-check",
+    "description": "Audit what a mobile visitor sees on an ad destination or business homepage."
+  },
+  "boring-marketing-google-ads-tracking": {
+    "name": "boring-marketing-google-ads-tracking",
+    "description": "Audit Google Ads lead signals and plan or verify tracking corrections."
+  },
+  "boring-marketing-google-business-profile": {
+    "name": "boring-marketing-google-business-profile",
+    "description": "Audit a Google Business Profile against nearby competitors and draft profile posts."
+  },
+  "boring-marketing-keyword-research": {
+    "name": "boring-marketing-keyword-research",
+    "description": "Organize search queries into topic families, intent and prioritized content briefs."
+  },
+  "boring-marketing-landing-page": {
+    "name": "boring-marketing-landing-page",
+    "description": "Build or audit a mobile-first offer page with message match and conversion checks."
+  },
+  "boring-marketing-lead-magnet": {
+    "name": "boring-marketing-lead-magnet",
+    "description": "Research and prototype a useful opt-in resource, quiz or calculator."
+  },
+  "boring-marketing-local-seo-plan": {
+    "name": "boring-marketing-local-seo-plan",
+    "description": "Prioritize local SEO fixes, service coverage and location page decisions."
+  },
+  "boring-marketing-long-form-article": {
+    "name": "boring-marketing-long-form-article",
+    "description": "Research and draft a long-form guide with sourced facts and platform-specific edits."
+  },
+  "boring-marketing-meta-ads": {
+    "name": "boring-marketing-meta-ads",
+    "description": "Run account preflight, create paused Meta campaigns, and verify pixel and Conversions API events. Use for Facebook Ads API launches, permission errors, and tracking audits."
+  },
+  "boring-marketing-newsletter": {
+    "name": "boring-marketing-newsletter",
+    "description": "Plan and draft newsletter editions with a clear editorial angle and sourced material."
+  },
+  "boring-marketing-paid-ads": {
+    "name": "boring-marketing-paid-ads",
+    "description": "Turn an ad matrix into campaign drafts, creative briefs and a measurement plan."
+  },
+  "boring-marketing-performance-review": {
+    "name": "boring-marketing-performance-review",
+    "description": "Analyze campaign data to identify a measurable bottleneck and rank next tests."
+  },
+  "boring-marketing-pitch-the-fix": {
+    "name": "boring-marketing-pitch-the-fix",
+    "description": "Draft a targeted prospect email around one observable business problem and a proposed fix."
+  },
+  "boring-marketing-positioning-angles": {
+    "name": "boring-marketing-positioning-angles",
+    "description": "Build positioning options and an ad matrix from customer and competitive research."
+  },
+  "boring-marketing-programmatic-seo": {
+    "name": "boring-marketing-programmatic-seo",
+    "description": "Validate a dataset and build templated SEO pages with genuinely distinct information."
+  },
+  "boring-marketing-reviews": {
+    "name": "boring-marketing-reviews",
+    "description": "Assess review coverage, draft owner replies and plan compliant review requests."
+  },
+  "boring-marketing-seo-content": {
+    "name": "boring-marketing-seo-content",
+    "description": "Draft or refresh search content using intent, firsthand evidence and citation gaps."
+  },
+  "boring-marketing-service-area-pages": {
+    "name": "boring-marketing-service-area-pages",
+    "description": "Create distinct local service pages backed by credible evidence for each location."
+  },
+  "boring-marketing-site-audit": {
+    "name": "boring-marketing-site-audit",
+    "description": "Crawl a site and prioritize technical SEO fixes. Use to check robots.txt, sitemaps, noindex, duplicate pages, broken links, metadata, page speed, and AI crawler access."
+  },
+  "boring-marketing-social-content": {
+    "name": "boring-marketing-social-content",
+    "description": "Draft original X and LinkedIn posts grounded in a brand's past posts and real numbers."
+  },
+  "boring-marketing-speed-to-lead": {
+    "name": "boring-marketing-speed-to-lead",
+    "description": "Analyze missed calls and response time, then design a follow-up workflow."
+  },
+  "boring-marketing-start-here": {
+    "name": "boring-marketing-start-here",
+    "description": "Build project marketing context from business evidence and route work to a matching skill."
+  },
   "bounce-rate-estimator": {
     "name": "bounce-rate-estimator",
     "description": "Bounce Rate Estimator. Use when working with sessions and bounced sessions, or sessions and engaged sessions with metric definition."
@@ -3778,6 +3906,10 @@
   "dx-optimizer": {
     "name": "dx-optimizer",
     "description": "Developer Experience specialist. Improves tooling, setup, and workflows. Use for requested project setup or measured development friction; respect existing team conventions."
+  },
+  "e2e": {
+    "name": "e2e",
+    "description": "Write, run and debug e2e tests for web and iOS/Android apps that mix plain-language agent steps with exact assertions, replaying cached agent steps without model calls."
   },
   "e2e-testing": {
     "name": "e2e-testing",
@@ -7028,6 +7160,10 @@
   "modellix": {
     "name": "modellix",
     "description": "Integrate the Modellix API/CLI for async AI image, video, and speech generation or transcription (model run --wait, task download)."
+  },
+  "modern-java-guidance": {
+    "name": "modern-java-guidance",
+    "description": "Guides agents to write Java 17/21+ and Spring Boot 3.x+ code with version detection and the mjg CLI scanner instead of Java 8 and Boot 2.x patterns."
   },
   "modern-javascript-patterns": {
     "name": "modern-javascript-patterns",
@@ -10993,6 +11129,10 @@
     "name": "vibe-delegate",
     "description": "Delegate coding tasks to the Mistral Vibe CLI (`vibe`) only when the"
   },
+  "vibe-shield": {
+    "name": "vibe-shield",
+    "description": "Audit Next.js, React, Express, Hono, Supabase SQL, Stripe webhooks, and SKILL.md or MCP configs across 92 static security and prompt-injection rules."
+  },
   "vibecode-production-qa-validator": {
     "name": "vibecode-production-qa-validator",
     "description": "13-phase production QA for fullstack Next.js apps: build verification, SEO tags, OG images, favicon, route regression, API auth, page speed, lazy load, vulnerability scan, UI/UX cards, error boundaries, database, secure rendering, and cleanup."
@@ -11384,6 +11524,10 @@
   "workorai": {
     "name": "workorai",
     "description": "WorkorAI talent-marketplace skill: candidates search jobs and manage applications; employers run the job lifecycle and get ranked candidate matches with white-box fit explanations."
+  },
+  "worktable-mcp": {
+    "name": "worktable-mcp",
+    "description": "Find, cite and update Docs, Records, HTML Docs, annotations and threads in a Worktable workspace through Worktable's MCP server. Use when the user chooses Worktable."
   },
   "wp-guard": {
     "name": "wp-guard",
