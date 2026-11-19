@@ -2351,6 +2351,10 @@
     "name": "capturekit-mcp",
     "description": "Take page screenshots or PDFs, extract page content, metadata and links, or get a page summary through CaptureKit's MCP server. Use when the user chooses CaptureKit."
   },
+  "carbonmark-carbon-retirement": {
+    "name": "carbonmark-carbon-retirement",
+    "description": "Price and retire verified carbon credits on Base through Carbonmark's x402 API. Use when a user asks to offset emissions or buy and retire carbon credits."
+  },
   "career-ops": {
     "name": "career-ops",
     "description": "Open-source AI job search agent for AI coding CLIs: evaluate offers,"
@@ -4879,6 +4883,10 @@
   "ghidra-reverse": {
     "name": "ghidra-reverse",
     "description": "Free/open reverse engineering with Ghidra (headless or GUI): decompilation, cross-references, scripting, and optional Ghidra MCP workflows when IDA is unavailable."
+  },
+  "ghost-qa": {
+    "name": "ghost-qa",
+    "description": "Run autonomous headless Playwright browser QA across Desktop, Tablet, and Mobile viewports to catch hydration, layout, overflow, and a11y bugs."
   },
   "git-advanced-workflows": {
     "name": "git-advanced-workflows",
@@ -8669,6 +8677,10 @@
     "name": "quit-sponsor",
     "description": "Helps an AI agent provide non-judgmental, evidence-informed quit-smoking support with user-consented tracking, craving check-ins, and escalation to human or clinical help. Not medical care."
   },
+  "qurl-private-review": {
+    "name": "qurl-private-review",
+    "description": "Share one local web app with an approved browser reviewer through qURL, check the app loads, and delete the share when the review ends."
+  },
   "radar-satellite-analysis": {
     "name": "radar-satellite-analysis",
     "description": "Interpret weather radar and satellite observations by validating product metadata and geometry, deriving storm and cloud structures, tracking evolution, and quantifying uncertainty."
@@ -10153,6 +10165,10 @@
     "name": "supabase-automation",
     "description": "Automate Supabase database queries, table management, project administration, storage, edge functions, and SQL execution via Rube MCP (Composio). Always search tools first for current schemas."
   },
+  "supabase-edge-function-caller-auth": {
+    "name": "supabase-edge-function-caller-auth",
+    "description": "Audit and fix who can call each Supabase Edge Function: verify_jwt settings, withSupabase auth modes, role checks, webhook signatures and CORS, especially in Lovable/Bolt SPAs."
+  },
   "supabase-postgres-best-practices": {
     "name": "supabase-postgres-best-practices",
     "description": "Postgres performance optimization and best practices from Supabase. Use this skill when writing, reviewing, or optimizing Postgres queries, schema designs, or database configurations."
@@ -10900,6 +10916,10 @@
   "unslop-ui": {
     "name": "unslop-ui",
     "description": "Audit and redesign AI-generated interfaces with product-specific visual direction, structured design passes, and optional snapshots or story video."
+  },
+  "unslop-ui-audit": {
+    "name": "unslop-ui-audit",
+    "description": "Use the Unslop UI design linter for static frontend diagnostics, contrast checks, and reviewing design presets."
   },
   "unsloth-finetuning": {
     "name": "unsloth-finetuning",
