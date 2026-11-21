@@ -1703,6 +1703,10 @@
     "name": "azure-web-pubsub-ts",
     "description": "Real-time messaging with WebSocket connections and pub/sub patterns."
   },
+  "b2b-hiring-intent-radar": {
+    "name": "b2b-hiring-intent-radar",
+    "description": "Query public read-only ATS feeds across 9 platforms to extract company tech-stack signals, disclosed salary bands, and B2B hiring intent."
+  },
   "babysit-pr": {
     "name": "babysit-pr",
     "description": "Babysit a pull request through its bot review rounds: verify, fix, reply,"
@@ -2459,6 +2463,10 @@
     "name": "cicd-automation-workflow-automate",
     "description": "You are a workflow automation expert specializing in creating efficient CI/CD pipelines, GitHub Actions workflows, and automated development processes. Design and implement automation that reduces manual work, improves consistency, and accelerates delivery while maintaining quality and security."
   },
+  "cinematic-ui-ux": {
+    "name": "cinematic-ui-ux",
+    "description": "Build high-performance cinematic web experiences with GSAP 3.12+, Lenis smooth scroll, canvas frame scrubbing, kinetic typography, and WCAG 2.2 motion accessibility."
+  },
   "circleci": {
     "name": "circleci",
     "description": "Configure CircleCI workflows and orbs for continuous integration and"
@@ -2742,6 +2750,10 @@
   "codebase-audit-pre-push": {
     "name": "codebase-audit-pre-push",
     "description": "Deep audit before GitHub push: removes junk files, dead code, security holes, and optimization issues. Checks every file line-by-line for production readiness."
+  },
+  "codebase-aware-ui-prompts": {
+    "name": "codebase-aware-ui-prompts",
+    "description": "Transform product requirements into precise, architecture-preserving UI implementation prompts for Cursor, Claude Code, v0, Lovable, and Stitch without duplicating packages or breaking design tokens."
   },
   "codebase-cleanup-deps-audit": {
     "name": "codebase-cleanup-deps-audit",
@@ -4599,6 +4611,10 @@
     "name": "footval-value-and-compare-players",
     "description": "Explain what a footballer is worth with FootVal: its own transfer value next to the market value, the factors behind the gap, and comparisons of two to four players."
   },
+  "foragent-call": {
+    "name": "foragent-call",
+    "description": "Connect two AI agents by private phone number so they can talk directly and exchange files across computers or teammates using ForAgent."
+  },
   "form-cro": {
     "name": "form-cro",
     "description": "Optimize any form that is NOT signup or account registration — including lead capture, contact, demo request, application, survey, quote, and checkout forms."
@@ -4947,6 +4963,10 @@
   "get-seen-in-replies": {
     "name": "get-seen-in-replies",
     "description": "Write a reply to someone else's tweet that is worth reading on its own. Use when someone asks what to reply, wants to grow by replying on Twitter, or says their replies go nowhere."
+  },
+  "getyoutubetranscript": {
+    "name": "getyoutubetranscript",
+    "description": "Fetch YouTube transcripts in any caption language a video has, search YouTube, and list channel videos, Shorts, live streams, posts and playlists via the GetYouTubeTranscript API."
   },
   "gh-attach": {
     "name": "gh-attach",
@@ -8664,6 +8684,10 @@
   "pubmed-database": {
     "name": "pubmed-database",
     "description": "Direct REST API access to PubMed. Advanced Boolean/MeSH queries, E-utilities API, batch processing, citation management. For Python workflows, prefer biopython (Bio.Entrez). Use this for direct HTTP/REST work or custom API implementations."
+  },
+  "punchtape": {
+    "name": "punchtape",
+    "description": "Use a user-authorized punchtape zone to verify agreed project checks and record a machine verdict."
   },
   "puppeteer-skill": {
     "name": "puppeteer-skill",
